@@ -1,0 +1,15 @@
+[workspace]
+members = ["crates/columnscope"]
+resolver = "2"
+
+[workspace.package]
+authors = ["Anuj Dakhara"]
+edition = "2024"
+repository = "https://github.com/AnujDakhara7888/ColumnScope"
+rust-version = "1.96"
+version = "0.1.0"
+
+[workspace.dependencies]
+arrow = { version = "=60.1.0", default-features = false }
+parquet = { version = "=60.1.0", default-features = false, features = ["arrow", "snap"] }
+tempfile = "=3.27.0"
