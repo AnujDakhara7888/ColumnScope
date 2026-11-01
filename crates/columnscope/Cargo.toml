@@ -1,0 +1,19 @@
+[package]
+name = "columnscope"
+description = "A small columnar query engine for typed plans over Parquet"
+authors.workspace = true
+edition.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+
+[dependencies]
+arrow.workspace = true
+parquet.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true
+
+[[bin]]
+name = "parquet-fixture"
+path = "src/bin/parquet_fixture.rs"
