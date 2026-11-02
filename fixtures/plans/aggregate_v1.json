@@ -1,0 +1,26 @@
+{
+  "format_version": 1,
+  "input_schema": {
+    "fields": [
+      { "name": "id", "data_type": "int64", "nullable": false },
+      { "name": "metric", "data_type": "float64", "nullable": true },
+      { "name": "active", "data_type": "boolean", "nullable": true },
+      { "name": "region", "data_type": "utf8", "nullable": false }
+    ]
+  },
+  "plan": {
+    "type": "aggregate",
+    "input": { "type": "scan" },
+    "group_by": [
+      { "alias": "region", "expr": { "type": "column", "name": "region" } }
+    ],
+    "aggregates": [
+      { "function": "count_star", "alias": "rows" },
+      { "function": "count", "alias": "metric_count", "expr": { "type": "column", "name": "metric" } },
+      { "function": "sum", "alias": "metric_sum", "expr": { "type": "column", "name": "metric" } },
+      { "function": "min", "alias": "metric_min", "expr": { "type": "column", "name": "metric" } },
+      { "function": "max", "alias": "metric_max", "expr": { "type": "column", "name": "metric" } },
+      { "function": "avg", "alias": "metric_avg", "expr": { "type": "column", "name": "metric" } }
+    ]
+  }
+}

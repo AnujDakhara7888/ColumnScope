@@ -24,13 +24,17 @@ The storage foundation is implemented and verified:
 - Snappy-compressed Parquet write and batched decode;
 - explicit rejection of zero-sized decode batches and propagation of corrupt
   input errors;
+- versioned JSON logical plans with schema, name, alias, and expression type
+  validation before execution;
+- a validated version-1 pinned snapshot descriptor with canonical schema
+  fingerprints and normalized relative object keys;
 - a consumer that counts every decoded batch, column, and row;
 - Linux CI for formatting, strict Clippy linting, and tests.
 
-The logical plan, expression evaluator, physical query operators, optimizer,
-scalar baseline, SnapshotStore adapter, and performance results are not yet
-implemented. The repository does not claim query-engine or benchmark behavior
-before those components have executable evidence.
+The physical query operators, expression evaluator, optimizer, scalar baseline,
+live SnapshotStore adapter, and performance results are not yet implemented.
+The repository does not claim query execution or benchmark behavior before
+those components have executable evidence.
 
 ## Quick start
 
@@ -56,12 +60,11 @@ cargo clippy --locked --workspace --all-targets -- -D warnings
 cargo test --locked --workspace
 ```
 
-The initial storage slice has four integration tests covering value/schema/null
-preservation, partial batching and complete consumption, invalid batch size,
-and corrupt Parquet input. The last local verification completed with 4 passed,
-0 failed, and 0 ignored tests. The pinned DuckDB package was also installed and
-imported successfully under Python 3.14.5; it is not used by the production
-Rust path.
+The current suite covers Parquet values/nulls and decode errors, logical plan
+parsing and type binding, alias/schema failures, non-finite literals, and pinned
+snapshot descriptor validation. See [Testing](docs/TESTING.md) for the latest
+observed counts. The pinned DuckDB package is reserved for the correctness
+oracle and is not used by the production Rust path.
 
 ## Design
 
@@ -71,8 +74,9 @@ path. Apache Arrow supplies column buffers and primitive array operations;
 Apache Parquet supplies file encoding and decoding. DuckDB will be used only as
 an independent correctness oracle, never as the production query path.
 
-See [Architecture](docs/ARCHITECTURE.md), [Testing](docs/TESTING.md), and
-[Benchmarks](docs/BENCHMARKS.md) for the public design and evidence boundaries.
+See [Plan format](docs/PLAN_FORMAT.md), [Snapshot descriptor](docs/SNAPSHOT_DESCRIPTOR.md),
+[Architecture](docs/ARCHITECTURE.md), [Testing](docs/TESTING.md), and
+[Benchmarks](docs/BENCHMARKS.md) for the public contracts and evidence boundaries.
 
 ## Scope and limitations
 

@@ -7,6 +7,10 @@ The current API establishes the Arrow/Parquet storage boundary:
 - `write_fixture` writes it as Snappy-compressed Parquet;
 - `read_parquet_batches` decodes with an explicit positive batch size;
 - `summarize_batches` consumes decoded output and reports observable counts.
+- `QueryPlan::from_json` parses a strict versioned logical plan.
+- `bind_query` resolves columns, validates expressions, and infers output schema.
+- `SnapshotDescriptor::from_json` validates immutable file metadata and schema
+  fingerprints.
 
 Run the verified storage example from the workspace root:
 
@@ -14,5 +18,7 @@ Run the verified storage example from the workspace root:
 cargo run --bin parquet-fixture -- /tmp/columnscope-fixture.parquet
 ```
 
-The query plan and execution operator APIs will be documented here when they
-exist. See the [workspace README](../../README.md) for current limitations.
+The JSON contracts are documented in [Plan format](../../docs/PLAN_FORMAT.md)
+and [Snapshot descriptor](../../docs/SNAPSHOT_DESCRIPTOR.md). Physical execution
+operators remain unimplemented. See the [workspace README](../../README.md) for
+current limitations.

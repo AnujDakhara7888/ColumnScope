@@ -1,0 +1,27 @@
+{
+  "format_version": 1,
+  "table_id": "events",
+  "version": 2,
+  "commit_id": "commit-0002",
+  "schema": {
+    "fields": [
+      { "name": "id", "data_type": "int64", "nullable": false },
+      { "name": "metric", "data_type": "float64", "nullable": true },
+      { "name": "active", "data_type": "boolean", "nullable": true },
+      { "name": "region", "data_type": "utf8", "nullable": false }
+    ]
+  },
+  "schema_fingerprint": "8bd4d7479180be8f27b16b60b0e00eadbc0c6e9777e16dae39625048cb5345ca",
+  "files": [
+    {
+      "object_key": "data/part-00000.parquet",
+      "byte_size": 1310,
+      "row_count": 4,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "schema_fingerprint": "8bd4d7479180be8f27b16b60b0e00eadbc0c6e9777e16dae39625048cb5345ca"
+    }
+  ]
+}
