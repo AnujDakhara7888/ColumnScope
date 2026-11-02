@@ -11,6 +11,11 @@ performance evidence can fail independently.
 | Batch size 2 yields two batches and the sink consumes all 4 rows | pass |
 | Batch size 0 is rejected before opening input | pass |
 | Corrupt Parquet input returns an error | pass |
+| Filter/project plan parses, binds aliases, and infers nullability | pass |
+| All six aggregate forms infer documented output types | pass |
+| Unknown fields, versions, columns, aliases, and implicit coercion fail | pass |
+| Pinned snapshot canonical fingerprint and JSON round trip validate | pass |
+| Unsafe/duplicate object keys and schema mismatches fail | pass |
 
 The tests use temporary directories and do not depend on checked-in generated
 data. Run the complete current suite with:
@@ -37,6 +42,10 @@ python3 -m venv .venv
 
 DuckDB 2.0.0 has been installed and imported successfully with Python 3.14.5.
 No oracle query is claimed until the query-plan harness exists.
+
+The latest local workspace run completed with 20 passed, 0 failed, and 0
+ignored integration tests. Physical operator, oracle, concurrency, and recovery
+tests are not present yet because those components have not been implemented.
 
 ## Correctness strategy for engine operators
 

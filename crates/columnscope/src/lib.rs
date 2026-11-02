@@ -1,8 +1,15 @@
 //! Core building blocks for ColumnScope.
 //!
-//! The current implementation provides a small, deterministic Arrow/Parquet
-//! round trip used to verify the storage foundation before query operators are
-//! introduced.
+//! The crate currently provides a deterministic Arrow/Parquet round trip,
+//! versioned logical plan parsing and binding, and a validated pinned-snapshot
+//! descriptor contract.
+
+pub mod bind;
+pub mod error;
+pub mod expr;
+pub mod logical;
+pub mod schema;
+pub mod snapshot;
 
 use std::error::Error;
 use std::fs::File;

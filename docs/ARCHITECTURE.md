@@ -24,9 +24,9 @@ A separate scalar executor will evaluate the same supported semantics one row
 at a time over the same decoded Arrow buffers. It is a comparison path, not an
 alternate storage stack.
 
-## Implemented foundation
+## Implemented plan and storage contracts
 
-The current crate implements the lowest storage boundary only. A deterministic
+A deterministic
 Arrow batch is written with the Apache Parquet writer using Snappy compression
 and decoded through `ParquetRecordBatchReaderBuilder` with a caller-selected
 batch size. The reader returns `RecordBatch` values without introducing custom
@@ -35,6 +35,18 @@ row materialization. A small sink consumes all decoded batches and counts rows.
 Arrow owns array buffers and validity masks. Parquet owns encoding, compression,
 and decoding. ColumnScope will own the control flow and semantics above that
 boundary; these library capabilities are not presented as custom engine work.
+
+Plan format version 1 is a strict serde contract. A plan document owns its input
+schema and a recursive Scan/Filter/Project/Aggregate tree. Binding resolves each
+column name to an input position, validates expression and aggregate types,
+checks aliases, and infers the schema after every node. The bound tree is not
+executable yet; keeping it separate prevents parsing or name lookup from being
+hidden inside future operator loops.
+
+The snapshot boundary accepts an immutable version-1 descriptor. It validates
+the canonical schema fingerprint, file-level schema agreement, lowercase
+SHA-256 values, unique normalized relative object keys, and nonnegative sizes,
+row counts, and versions. It never discovers files by listing a directory.
 
 ## Planned semantic boundaries
 
@@ -50,5 +62,5 @@ boundary; these library capabilities are not presented as custom engine work.
 - Optimization: projection pruning, safe filter movement, and conservative
   numeric row-group pruning with a residual filter retained for correctness.
 
-These boundaries describe the design target. Only behavior listed under
-“Implemented foundation” is currently available.
+These execution boundaries describe the design target. Parsing and binding are
+available; evaluation and physical execution are not.
