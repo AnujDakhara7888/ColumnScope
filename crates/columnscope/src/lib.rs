@@ -2,12 +2,15 @@
 //!
 //! The crate currently provides a deterministic Arrow/Parquet round trip,
 //! versioned logical plan parsing and binding, and a validated pinned-snapshot
-//! descriptor contract.
+//! descriptor contract. Physical execution begins with a pull-based Parquet
+//! scan that yields one Arrow batch at a time.
 
 pub mod bind;
 pub mod error;
+pub mod execution;
 pub mod expr;
 pub mod logical;
+pub mod scan;
 pub mod schema;
 pub mod snapshot;
 
@@ -21,9 +24,11 @@ use arrow::array::{ArrayRef, BooleanArray, Float64Array, Int64Array, StringArray
 use arrow::datatypes::{DataType, Field, Schema};
 use arrow::record_batch::RecordBatch;
 use parquet::arrow::ArrowWriter;
-use parquet::arrow::arrow_reader::ParquetRecordBatchReaderBuilder;
 use parquet::basic::Compression;
 use parquet::file::properties::WriterProperties;
+
+use crate::execution::BatchOperator;
+use crate::scan::ParquetScan;
 
 /// Error type used by the storage bootstrap API.
 pub type BoxError = Box<dyn Error + Send + Sync>;
@@ -83,17 +88,12 @@ pub fn read_parquet_batches(
     path: impl AsRef<Path>,
     batch_size: usize,
 ) -> Result<Vec<RecordBatch>, BoxError> {
-    if batch_size == 0 {
-        return Err(
-            io::Error::new(io::ErrorKind::InvalidInput, "batch size must be positive").into(),
-        );
+    let mut scan = ParquetScan::try_new(path, batch_size)?;
+    let mut batches = Vec::new();
+    while let Some(batch) = scan.next_batch()? {
+        batches.push(batch);
     }
-
-    let file = File::open(path)?;
-    let reader = ParquetRecordBatchReaderBuilder::try_new(file)?
-        .with_batch_size(batch_size)
-        .build()?;
-    Ok(reader.collect::<Result<Vec<_>, _>>()?)
+    Ok(batches)
 }
 
 /// Consumes decoded batches and returns observable row/column counts.

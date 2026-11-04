@@ -1,5 +1,22 @@
 use thiserror::Error;
 
+/// Errors produced while constructing or pulling physical operators.
+#[derive(Debug, Error)]
+pub enum ExecutionError {
+    #[error("batch size must be positive")]
+    InvalidBatchSize,
+    #[error("failed to access Parquet input: {0}")]
+    Io(#[from] std::io::Error),
+    #[error("failed to open Parquet input: {0}")]
+    Parquet(#[from] parquet::errors::ParquetError),
+    #[error("failed to decode an Arrow batch: {0}")]
+    Arrow(#[from] arrow::error::ArrowError),
+    #[error("operator output counters overflowed")]
+    CounterOverflow,
+    #[error("operator cannot resume after an earlier pull failure")]
+    OperatorFailed,
+}
+
 /// Errors produced while parsing, validating, or binding a query contract.
 #[derive(Debug, Error, PartialEq)]
 pub enum PlanError {

@@ -15,3 +15,5 @@ All notable changes to ColumnScope will be documented here.
   with typed literals, expression binding, alias checks, and schema inference.
 - Version-1 pinned snapshot descriptors with canonical SHA-256 schema
   fingerprints and safe relative file metadata.
+- Pull-based Parquet scan operator with stable schema, lifecycle state,
+  cumulative counters, and sticky end-of-stream behavior.
