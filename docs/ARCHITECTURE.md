@@ -16,9 +16,9 @@ ParquetScan -> FilterExec -> ProjectExec -> HashAggregateExec -> result sink
 ```
 
 Logical nodes describe scans, filters, projections, and aggregation. Binding
-will resolve names against the input schema and reject invalid types before
-execution where possible. The physical layer will use a pull interface that
-returns one Arrow `RecordBatch` at a time and exposes operator metrics.
+resolves names against the input schema and rejects invalid types before
+execution. The physical layer uses a pull interface that returns at most one
+Arrow `RecordBatch` at a time and exposes operator metrics.
 
 A separate scalar executor will evaluate the same supported semantics one row
 at a time over the same decoded Arrow buffers. It is a comparison path, not an
@@ -26,11 +26,19 @@ alternate storage stack.
 
 ## Implemented plan and storage contracts
 
-A deterministic
-Arrow batch is written with the Apache Parquet writer using Snappy compression
-and decoded through `ParquetRecordBatchReaderBuilder` with a caller-selected
-batch size. The reader returns `RecordBatch` values without introducing custom
-row materialization. A small sink consumes all decoded batches and counts rows.
+A deterministic Arrow batch is written with the Apache Parquet writer using
+Snappy compression and decoded through `ParquetRecordBatchReaderBuilder` with a
+caller-selected batch size. `ParquetScan` wraps that decoder behind the
+`BatchOperator` contract. Each pull returns one batch, a decode error, or an
+end-of-stream marker without introducing custom row materialization.
+
+Every operator exposes its output schema, lifecycle state, and cumulative pull,
+output-batch, and output-row counters. Successful end-of-stream is sticky, so
+repeated pulls remain `Ok(None)` and never reopen or restart the input. A decode
+failure moves the operator to a terminal failed state because resuming from an
+uncertain Parquet position could duplicate or omit rows. The scan owns its open
+file handle for its lifetime; a small compatibility sink consumes all output and
+counts rows.
 
 Arrow owns array buffers and validity masks. Parquet owns encoding, compression,
 and decoding. ColumnScope will own the control flow and semantics above that
@@ -62,5 +70,6 @@ row counts, and versions. It never discovers files by listing a directory.
 - Optimization: projection pruning, safe filter movement, and conservative
   numeric row-group pruning with a residual filter retained for correctness.
 
-These execution boundaries describe the design target. Parsing and binding are
-available; evaluation and physical execution are not.
+These execution boundaries describe the design target. Parsing, binding, and
+the physical Parquet scan are available; expression evaluation and downstream
+physical operators are not.

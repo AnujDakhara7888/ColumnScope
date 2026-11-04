@@ -14,7 +14,8 @@ correctness, runtime, and memory for the same query semantics?
 
 ## Current capabilities
 
-The storage foundation is implemented and verified:
+The storage foundation and first physical operator are implemented and
+verified:
 
 - a pinned Rust workspace using Arrow and Parquet 60.1.0;
 - a Python 3.14.5 development environment with DuckDB 2.0.0 reserved for the
@@ -28,13 +29,15 @@ The storage foundation is implemented and verified:
   validation before execution;
 - a validated version-1 pinned snapshot descriptor with canonical schema
   fingerprints and normalized relative object keys;
-- a consumer that counts every decoded batch, column, and row;
+- a pull-based Parquet scan operator with a stable output schema, cumulative
+  pull/batch/row counters, and repeatable end-of-stream behavior;
+- a compatibility consumer that counts every decoded batch, column, and row;
 - Linux CI for formatting, strict Clippy linting, and tests.
 
-The physical query operators, expression evaluator, optimizer, scalar baseline,
-live SnapshotStore adapter, and performance results are not yet implemented.
-The repository does not claim query execution or benchmark behavior before
-those components have executable evidence.
+Filter, projection, and aggregation operators, the expression evaluator,
+optimizer, scalar baseline, live SnapshotStore adapter, and performance results
+are not yet implemented. The repository does not claim complete query execution
+or benchmark behavior before those components have executable evidence.
 
 ## Quick start
 
@@ -60,11 +63,12 @@ cargo clippy --locked --workspace --all-targets -- -D warnings
 cargo test --locked --workspace
 ```
 
-The current suite covers Parquet values/nulls and decode errors, logical plan
-parsing and type binding, alias/schema failures, non-finite literals, and pinned
-snapshot descriptor validation. See [Testing](docs/TESTING.md) for the latest
-observed counts. The pinned DuckDB package is reserved for the correctness
-oracle and is not used by the production Rust path.
+The current suite covers Parquet values/nulls, decode errors, scan lifecycle and
+counters, logical plan parsing and type binding, alias/schema failures,
+non-finite literals, and pinned snapshot descriptor validation. See
+[Testing](docs/TESTING.md) for the latest observed counts. The pinned DuckDB
+package is reserved for the correctness oracle and is not used by the
+production Rust path.
 
 ## Design
 
