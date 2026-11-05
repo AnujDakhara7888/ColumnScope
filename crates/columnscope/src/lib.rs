@@ -7,9 +7,11 @@
 
 pub mod bind;
 pub mod error;
+pub mod evaluate;
 pub mod execution;
 pub mod expr;
 pub mod logical;
+pub mod operators;
 pub mod scan;
 pub mod schema;
 pub mod snapshot;

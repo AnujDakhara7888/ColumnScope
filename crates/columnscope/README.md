@@ -12,7 +12,9 @@ The current API establishes the Arrow/Parquet storage boundary:
 - `SnapshotDescriptor::from_json` validates immutable file metadata and schema
   fingerprints;
 - `ParquetScan` implements the `BatchOperator` pull interface and reports
-  cumulative pull, output-batch, and output-row counters.
+  cumulative pull, output-batch, and output-row counters;
+- `evaluate` applies bound typed expressions to Arrow arrays;
+- `FilterExec` and `ProjectExec` stream filtered and projected batches.
 
 Run the verified storage example from the workspace root:
 
@@ -21,7 +23,7 @@ cargo run --bin parquet-fixture -- /tmp/columnscope-fixture.parquet
 ```
 
 The JSON contracts are documented in [Plan format](../../docs/PLAN_FORMAT.md)
-and [Snapshot descriptor](../../docs/SNAPSHOT_DESCRIPTOR.md). The Parquet scan
-is the first physical operator; expression evaluation and downstream operators
-remain unimplemented. See the [workspace README](../../README.md) for current
-limitations.
+and [Snapshot descriptor](../../docs/SNAPSHOT_DESCRIPTOR.md). Scan, filter, and
+projection physical operators are implemented; aggregation and automatic
+physical planning remain unimplemented. See the
+[workspace README](../../README.md) for current limitations.

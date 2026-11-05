@@ -40,6 +40,14 @@ uncertain Parquet position could duplicate or omit rows. The scan owns its open
 file handle for its lifetime; a small compatibility sink consumes all output and
 counts rows.
 
+`FilterExec` evaluates a bound Boolean expression into an Arrow validity-aware
+mask and uses Arrow's batch filter kernel. Mask nulls do not pass the filter,
+matching SQL `WHERE`. `ProjectExec` evaluates named bound expressions into
+arrays and creates a batch with the inferred output schema. Comparisons operate
+only on binder-approved equal types; Boolean `AND` and `OR` use Kleene
+three-valued logic. Both operators preserve the pull lifecycle and become
+terminal after an evaluation or child error.
+
 Arrow owns array buffers and validity masks. Parquet owns encoding, compression,
 and decoding. ColumnScope will own the control flow and semantics above that
 boundary; these library capabilities are not presented as custom engine work.
@@ -48,8 +56,9 @@ Plan format version 1 is a strict serde contract. A plan document owns its input
 schema and a recursive Scan/Filter/Project/Aggregate tree. Binding resolves each
 column name to an input position, validates expression and aggregate types,
 checks aliases, and infers the schema after every node. The bound tree is not
-executable yet; keeping it separate prevents parsing or name lookup from being
-hidden inside future operator loops.
+automatically lowered yet; keeping it separate prevents parsing or name lookup
+from being hidden inside operator loops. Scan/filter/project plans can be
+assembled manually from their bound nodes.
 
 The snapshot boundary accepts an immutable version-1 descriptor. It validates
 the canonical schema fingerprint, file-level schema agreement, lowercase
@@ -70,6 +79,6 @@ row counts, and versions. It never discovers files by listing a directory.
 - Optimization: projection pruning, safe filter movement, and conservative
   numeric row-group pruning with a residual filter retained for correctness.
 
-These execution boundaries describe the design target. Parsing, binding, and
-the physical Parquet scan are available; expression evaluation and downstream
-physical operators are not.
+These execution boundaries describe the design target. Parsing, binding,
+vectorized expression evaluation, and scan/filter/project execution are
+available. Aggregation, automatic physical planning, and optimization are not.

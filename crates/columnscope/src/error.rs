@@ -15,6 +15,13 @@ pub enum ExecutionError {
     CounterOverflow,
     #[error("operator cannot resume after an earlier pull failure")]
     OperatorFailed,
+    #[error("physical expression expected {expected}, found {actual}")]
+    ExpressionType {
+        expected: &'static str,
+        actual: String,
+    },
+    #[error("physical column index {index} is outside a {columns}-column batch")]
+    ColumnOutOfBounds { index: usize, columns: usize },
 }
 
 /// Errors produced while parsing, validating, or binding a query contract.
