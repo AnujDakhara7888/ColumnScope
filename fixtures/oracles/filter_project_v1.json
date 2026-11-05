@@ -1,0 +1,7 @@
+{
+  "columns": ["event_id", "area"],
+  "rows": [
+    [0, "north"],
+    [3, "north"]
+  ]
+}

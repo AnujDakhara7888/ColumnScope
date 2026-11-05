@@ -17,3 +17,5 @@ All notable changes to ColumnScope will be documented here.
   fingerprints and safe relative file metadata.
 - Pull-based Parquet scan operator with stable schema, lifecycle state,
   cumulative counters, and sticky end-of-stream behavior.
+- Vectorized typed comparison, Boolean/null expression evaluation, streaming
+  filter and projection operators, and a checked DuckDB oracle fixture.

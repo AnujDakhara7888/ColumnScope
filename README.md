@@ -31,13 +31,17 @@ verified:
   fingerprints and normalized relative object keys;
 - a pull-based Parquet scan operator with a stable output schema, cumulative
   pull/batch/row counters, and repeatable end-of-stream behavior;
+- vectorized typed comparisons, Kleene Boolean/null evaluation, batch filtering,
+  and named expression projection over Arrow arrays;
+- a checked DuckDB oracle fixture for the first filter/project pipeline;
 - a compatibility consumer that counts every decoded batch, column, and row;
 - Linux CI for formatting, strict Clippy linting, and tests.
 
-Filter, projection, and aggregation operators, the expression evaluator,
-optimizer, scalar baseline, live SnapshotStore adapter, and performance results
-are not yet implemented. The repository does not claim complete query execution
-or benchmark behavior before those components have executable evidence.
+Aggregation, logical-to-physical planning, optimization, a scalar baseline,
+live SnapshotStore adapter, and performance results are not yet implemented.
+Physical filter/project operators currently require manual assembly from bound
+plans. The repository does not claim complete query execution or benchmark
+behavior before those components have executable evidence.
 
 ## Quick start
 
@@ -64,11 +68,10 @@ cargo test --locked --workspace
 ```
 
 The current suite covers Parquet values/nulls, decode errors, scan lifecycle and
-counters, logical plan parsing and type binding, alias/schema failures,
-non-finite literals, and pinned snapshot descriptor validation. See
-[Testing](docs/TESTING.md) for the latest observed counts. The pinned DuckDB
-package is reserved for the correctness oracle and is not used by the
-production Rust path.
+counters, typed expression semantics, filter/project execution, logical plan
+binding, and pinned snapshot validation. See [Testing](docs/TESTING.md) for the
+latest observed counts. DuckDB supplies checked expected results only and is not
+used by the production Rust path.
 
 ## Design
 
