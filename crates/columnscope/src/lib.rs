@@ -17,6 +17,7 @@ pub mod logical;
 pub mod operators;
 pub mod optimizer;
 pub mod planner;
+pub mod scalar;
 pub mod scan;
 pub mod schema;
 pub mod snapshot;

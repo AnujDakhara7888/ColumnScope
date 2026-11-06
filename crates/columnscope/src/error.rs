@@ -55,6 +55,12 @@ pub enum ExecutionError {
     },
     #[error("optimizer invariant failed: {0}")]
     OptimizerInvariant(String),
+    #[error("row index {index} is outside a {rows}-row batch")]
+    RowOutOfBounds { index: usize, rows: usize },
+    #[error("unsupported Arrow type in scalar execution: {0}")]
+    UnsupportedArrowType(String),
+    #[error("non-finite Float64 input is not supported")]
+    NonFiniteFloatInput,
 }
 
 /// Errors produced while parsing, validating, or binding a query contract.
