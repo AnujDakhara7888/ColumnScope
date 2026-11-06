@@ -12,6 +12,7 @@ pub mod execution;
 pub mod expr;
 pub mod logical;
 pub mod operators;
+pub mod scalar;
 pub mod scan;
 pub mod schema;
 pub mod snapshot;

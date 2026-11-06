@@ -33,15 +33,17 @@ verified:
   pull/batch/row counters, and repeatable end-of-stream behavior;
 - vectorized typed comparisons, Kleene Boolean/null evaluation, batch filtering,
   and named expression projection over Arrow arrays;
+- an independent row-at-a-time scan/filter/project path over the same decoded
+  Arrow buffers, with a common typed result collector for exact comparisons;
 - a checked DuckDB oracle fixture for the first filter/project pipeline;
 - a compatibility consumer that counts every decoded batch, column, and row;
 - Linux CI for formatting, strict Clippy linting, and tests.
 
-Aggregation, logical-to-physical planning, optimization, a scalar baseline,
-live SnapshotStore adapter, and performance results are not yet implemented.
-Physical filter/project operators currently require manual assembly from bound
-plans. The repository does not claim complete query execution or benchmark
-behavior before those components have executable evidence.
+Aggregation, logical-to-physical planning, optimization, live SnapshotStore
+integration, and performance results are not yet implemented. Physical
+filter/project and scalar pipelines currently require manual assembly from
+bound plans. The repository does not claim complete query execution or
+benchmark behavior before those components have executable evidence.
 
 ## Quick start
 
@@ -68,10 +70,10 @@ cargo test --locked --workspace
 ```
 
 The current suite covers Parquet values/nulls, decode errors, scan lifecycle and
-counters, typed expression semantics, filter/project execution, logical plan
-binding, and pinned snapshot validation. See [Testing](docs/TESTING.md) for the
-latest observed counts. DuckDB supplies checked expected results only and is not
-used by the production Rust path.
+counters, typed expression semantics, vectorized/scalar parity,
+filter/project execution, logical plan binding, and pinned snapshot validation.
+See [Testing](docs/TESTING.md) for the latest observed counts. DuckDB supplies
+checked expected results only and is not used by either execution path.
 
 ## Design
 
