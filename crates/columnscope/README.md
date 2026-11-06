@@ -14,7 +14,11 @@ The current API establishes the Arrow/Parquet storage boundary:
 - `ParquetScan` implements the `BatchOperator` pull interface and reports
   cumulative pull, output-batch, and output-row counters;
 - `evaluate` applies bound typed expressions to Arrow arrays;
-- `FilterExec` and `ProjectExec` stream filtered and projected batches.
+- `FilterExec` and `ProjectExec` stream filtered and projected batches;
+- `ScalarFilterProject` independently evaluates the same bound semantics one
+  row at a time;
+- `collect_batch_result` and `collect_scalar_result` normalize outputs for
+  exact comparison outside execution.
 
 Run the verified storage example from the workspace root:
 
@@ -25,5 +29,6 @@ cargo run --bin parquet-fixture -- /tmp/columnscope-fixture.parquet
 The JSON contracts are documented in [Plan format](../../docs/PLAN_FORMAT.md)
 and [Snapshot descriptor](../../docs/SNAPSHOT_DESCRIPTOR.md). Scan, filter, and
 projection physical operators are implemented; aggregation and automatic
-physical planning remain unimplemented. See the
+physical planning remain unimplemented. The scalar path is a correctness and
+performance comparison path, not an alternate storage stack. See the
 [workspace README](../../README.md) for current limitations.

@@ -20,9 +20,9 @@ resolves names against the input schema and rejects invalid types before
 execution. The physical layer uses a pull interface that returns at most one
 Arrow `RecordBatch` at a time and exposes operator metrics.
 
-A separate scalar executor will evaluate the same supported semantics one row
-at a time over the same decoded Arrow buffers. It is a comparison path, not an
-alternate storage stack.
+A separate scalar executor evaluates the same supported scan/filter/project
+semantics one row at a time over decoded Arrow buffers. It is a comparison path,
+not an alternate storage stack.
 
 ## Implemented plan and storage contracts
 
@@ -47,6 +47,13 @@ arrays and creates a batch with the inferred output schema. Comparisons operate
 only on binder-approved equal types; Boolean `AND` and `OR` use Kleene
 three-valued logic. Both operators preserve the pull lifecycle and become
 terminal after an evaluation or child error.
+
+`ScalarFilterProject` pulls the same Arrow batches but extracts and evaluates
+one typed value at a time without calling vectorized expression kernels. It has
+independent Kleene logic, comparison, filtering, and projection code. Both
+execution paths can be collected into the same typed row representation, so
+correctness checks do not depend on path-specific result handling. Non-finite
+Float64 inputs fail explicitly in the scalar path.
 
 Arrow owns array buffers and validity masks. Parquet owns encoding, compression,
 and decoding. ColumnScope will own the control flow and semantics above that
@@ -81,4 +88,5 @@ row counts, and versions. It never discovers files by listing a directory.
 
 These execution boundaries describe the design target. Parsing, binding,
 vectorized expression evaluation, and scan/filter/project execution are
-available. Aggregation, automatic physical planning, and optimization are not.
+available in vectorized and scalar forms. Aggregation, automatic physical
+planning, and optimization are not.

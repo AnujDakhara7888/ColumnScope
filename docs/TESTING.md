@@ -20,6 +20,12 @@ performance evidence can fail independently.
 | Kleene Boolean evaluation matches SQL three-valued logic | pass |
 | Projection failure is terminal and cannot restart its child | pass |
 | No-match/all-match filters and a worker-thread pipeline complete | pass |
+| Scalar and vectorized filter/project match on shared Arrow buffers | pass |
+| Complete expression grammar and Kleene truth tables have scalar/vectorized parity | pass |
+| Scalar empty input and repeated end-of-stream preserve schema | pass |
+| Scalar non-finite input fails terminally without emitting a row | pass |
+| Scalar Parquet pipeline completes on a worker thread | pass |
+| Scalar row bounds fail before expression evaluation | pass |
 | Filter/project plan parses, binds aliases, and infers nullability | pass |
 | All six aggregate forms infer documented output types | pass |
 | Unknown fields, versions, columns, aliases, and implicit coercion fail | pass |
@@ -52,12 +58,13 @@ python3 -m venv .venv
 DuckDB 2.0.0 has been installed and imported successfully with Python 3.14.5.
 Its checked filter/project result is stored as a small JSON oracle fixture.
 
-The latest local workspace run completed with 31 passed, 0 failed, and 0
+The latest local workspace run completed with 38 passed, 0 failed, and 0
 ignored integration tests. The filter/project oracle fixture was independently
 regenerated with DuckDB 2.0.0 and matched rows `[0, "north"]` and
-`[3, "north"]`. The production path does not invoke DuckDB. Shared-input
-concurrency, aggregation semantics, randomized differential cases, and
-benchmark validation await later components.
+`[3, "north"]`. Scalar and vectorized paths also produced identical schemas and
+typed rows over shared Arrow buffers. Neither production path invokes DuckDB.
+Aggregation semantics, randomized differential cases, and benchmark validation
+await later components.
 
 ## Correctness strategy for engine operators
 

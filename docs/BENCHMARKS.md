@@ -1,8 +1,9 @@
 # Benchmarks
 
-No query performance results are published yet because the query operators and
-scalar baseline are not implemented. The four-row storage smoke test is a
-correctness check, not a benchmark.
+No query performance results are published yet. Scan/filter/project execution
+and its scalar comparison path now exist, but the fixed million-row workload,
+timing harness, aggregation, and optimizer are not implemented. The four-row
+storage and oracle checks are correctness evidence, not benchmarks.
 
 ## Measurement design
 
