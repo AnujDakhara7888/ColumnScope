@@ -2,9 +2,10 @@
 //!
 //! The crate currently provides a deterministic Arrow/Parquet round trip,
 //! versioned logical plan parsing and binding, and a validated pinned-snapshot
-//! descriptor contract. Physical execution begins with a pull-based Parquet
-//! scan that yields one Arrow batch at a time.
+//! descriptor contract. Its initial physical path includes pull-based Parquet
+//! scan, vectorized filter/projection, and global or single-key aggregation.
 
+pub mod aggregate;
 pub mod bind;
 pub mod error;
 pub mod evaluate;

@@ -20,6 +20,14 @@ performance evidence can fail independently.
 | Kleene Boolean evaluation matches SQL three-valued logic | pass |
 | Projection failure is terminal and cannot restart its child | pass |
 | No-match/all-match filters and a worker-thread pipeline complete | pass |
+| Grouped COUNT/SUM/MIN/MAX/AVG matches the DuckDB oracle | pass |
+| Global integer and floating aggregates return expected values | pass |
+| Empty global/grouped inputs follow SQL identity and null behavior | pass |
+| Null keys group together and null aggregate values are skipped | pass |
+| Integer SUM overflow across batches fails terminally | pass |
+| Non-finite Float64 aggregate input fails before output | pass |
+| Composite keys are rejected until their bounded implementation | pass |
+| Grouped results are batch-boundary independent on a worker thread | pass |
 | Filter/project plan parses, binds aliases, and infers nullability | pass |
 | All six aggregate forms infer documented output types | pass |
 | Unknown fields, versions, columns, aliases, and implicit coercion fail | pass |
@@ -50,14 +58,15 @@ python3 -m venv .venv
 ```
 
 DuckDB 2.0.0 has been installed and imported successfully with Python 3.14.5.
-Its checked filter/project result is stored as a small JSON oracle fixture.
+Checked filter/project and grouped-aggregate results are stored as small JSON
+oracle fixtures.
 
-The latest local workspace run completed with 31 passed, 0 failed, and 0
-ignored integration tests. The filter/project oracle fixture was independently
-regenerated with DuckDB 2.0.0 and matched rows `[0, "north"]` and
-`[3, "north"]`. The production path does not invoke DuckDB. Shared-input
-concurrency, aggregation semantics, randomized differential cases, and
-benchmark validation await later components.
+The latest local workspace run completed with 39 passed, 0 failed, and 0
+ignored integration tests. Both oracle fixtures were independently regenerated
+with DuckDB 2.0.0. The grouped fixture matched three region groups, including a
+null-only aggregate group. The production path does not invoke DuckDB.
+Composite-key budgets, randomized differential cases, and benchmark validation
+await later components.
 
 ## Correctness strategy for engine operators
 
@@ -72,5 +81,5 @@ multi-file scans, no/all matches, integer overflow, aggregation memory limits,
 and row counts around the default 8,192-row batch boundary. Randomized cases
 will retain their seeds for reproduction.
 
-The first fixed filter/project plan has oracle parity. Randomized-query and
-aggregate-oracle results are not claimed yet.
+The fixed filter/project and grouped-aggregate plans have oracle parity.
+Randomized-query results are not claimed yet.

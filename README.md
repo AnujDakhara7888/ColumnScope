@@ -14,8 +14,8 @@ correctness, runtime, and memory for the same query semantics?
 
 ## Current capabilities
 
-The storage foundation and first physical operator are implemented and
-verified:
+The storage foundation and initial vectorized execution path are implemented
+and verified:
 
 - a pinned Rust workspace using Arrow and Parquet 60.1.0;
 - a Python 3.14.5 development environment with DuckDB 2.0.0 reserved for the
@@ -33,15 +33,17 @@ verified:
   pull/batch/row counters, and repeatable end-of-stream behavior;
 - vectorized typed comparisons, Kleene Boolean/null evaluation, batch filtering,
   and named expression projection over Arrow arrays;
-- a checked DuckDB oracle fixture for the first filter/project pipeline;
+- global and single-key hash aggregation for COUNT, SUM, MIN, MAX, and AVG;
+- checked DuckDB oracle fixtures for filter/project and grouped aggregation;
 - a compatibility consumer that counts every decoded batch, column, and row;
 - Linux CI for formatting, strict Clippy linting, and tests.
 
-Aggregation, logical-to-physical planning, optimization, a scalar baseline,
-live SnapshotStore adapter, and performance results are not yet implemented.
-Physical filter/project operators currently require manual assembly from bound
-plans. The repository does not claim complete query execution or benchmark
-behavior before those components have executable evidence.
+Composite-key aggregation, state budgets, partial aggregate output, automatic
+physical planning, optimization, a scalar baseline, live SnapshotStore
+integration, and performance results are not yet implemented. Physical
+operators currently require manual assembly from bound plans. The repository
+does not claim complete query execution or benchmark behavior before those
+components have executable evidence.
 
 ## Quick start
 
@@ -68,10 +70,10 @@ cargo test --locked --workspace
 ```
 
 The current suite covers Parquet values/nulls, decode errors, scan lifecycle and
-counters, typed expression semantics, filter/project execution, logical plan
-binding, and pinned snapshot validation. See [Testing](docs/TESTING.md) for the
-latest observed counts. DuckDB supplies checked expected results only and is not
-used by the production Rust path.
+counters, typed expression semantics, filter/project execution, aggregation
+boundaries, logical plan binding, and pinned snapshot validation. See
+[Testing](docs/TESTING.md) for the latest observed counts. DuckDB supplies
+checked expected results only and is not used by the production Rust path.
 
 ## Design
 

@@ -1,0 +1,31 @@
+{
+  "rows": [
+    {
+      "region": "north",
+      "rows": 2,
+      "metric_count": 2,
+      "metric_sum": 5.75,
+      "metric_min": 1.5,
+      "metric_max": 4.25,
+      "metric_avg": 2.875
+    },
+    {
+      "region": "south",
+      "rows": 1,
+      "metric_count": 0,
+      "metric_sum": null,
+      "metric_min": null,
+      "metric_max": null,
+      "metric_avg": null
+    },
+    {
+      "region": "west",
+      "rows": 1,
+      "metric_count": 1,
+      "metric_sum": -2.0,
+      "metric_min": -2.0,
+      "metric_max": -2.0,
+      "metric_avg": -2.0
+    }
+  ]
+}
