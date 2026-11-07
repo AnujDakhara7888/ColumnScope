@@ -14,7 +14,9 @@ The current API establishes the Arrow/Parquet storage boundary:
 - `ParquetScan` implements the `BatchOperator` pull interface and reports
   cumulative pull, output-batch, and output-row counters;
 - `evaluate` applies bound typed expressions to Arrow arrays;
-- `FilterExec` and `ProjectExec` stream filtered and projected batches.
+- `FilterExec` and `ProjectExec` stream filtered and projected batches;
+- `HashAggregateExec` computes global or single-key COUNT, SUM, MIN, MAX, and
+  AVG results.
 
 Run the verified storage example from the workspace root:
 
@@ -23,7 +25,7 @@ cargo run --bin parquet-fixture -- /tmp/columnscope-fixture.parquet
 ```
 
 The JSON contracts are documented in [Plan format](../../docs/PLAN_FORMAT.md)
-and [Snapshot descriptor](../../docs/SNAPSHOT_DESCRIPTOR.md). Scan, filter, and
-projection physical operators are implemented; aggregation and automatic
-physical planning remain unimplemented. See the
+and [Snapshot descriptor](../../docs/SNAPSHOT_DESCRIPTOR.md). Scan, filter,
+projection, and initial aggregation physical operators are implemented;
+composite groups and automatic physical planning remain unimplemented. See the
 [workspace README](../../README.md) for current limitations.

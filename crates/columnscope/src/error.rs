@@ -22,6 +22,14 @@ pub enum ExecutionError {
     },
     #[error("physical column index {index} is outside a {columns}-column batch")]
     ColumnOutOfBounds { index: usize, columns: usize },
+    #[error("aggregate execution supports at most one group key in this version, found {0}")]
+    UnsupportedGroupKeyCount(usize),
+    #[error("integer overflow while computing {0}")]
+    IntegerOverflow(&'static str),
+    #[error("non-finite Float64 value encountered while computing {0}")]
+    NonFiniteAggregate(&'static str),
+    #[error("aggregate received unsupported value type {0}")]
+    UnsupportedAggregateType(String),
 }
 
 /// Errors produced while parsing, validating, or binding a query contract.

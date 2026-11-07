@@ -48,6 +48,14 @@ only on binder-approved equal types; Boolean `AND` and `OR` use Kleene
 three-valued logic. Both operators preserve the pull lifecycle and become
 terminal after an evaluation or child error.
 
+`HashAggregateExec` is a blocking operator: it consumes streaming input batches,
+evaluates aggregate expressions as Arrow arrays, updates one global state or a
+single-key hash table, and emits one result batch. COUNT ignores null expression
+values, numeric SUM/MIN/MAX/AVG skip nulls, and an empty global input returns
+COUNT 0 with nullable aggregates set to null. Integer SUM is checked; overflow
+and non-finite Float64 input are terminal errors. Grouped output order is not a
+contract.
+
 Arrow owns array buffers and validity masks. Parquet owns encoding, compression,
 and decoding. ColumnScope will own the control flow and semantics above that
 boundary; these library capabilities are not presented as custom engine work.
@@ -57,8 +65,8 @@ schema and a recursive Scan/Filter/Project/Aggregate tree. Binding resolves each
 column name to an input position, validates expression and aggregate types,
 checks aliases, and infers the schema after every node. The bound tree is not
 automatically lowered yet; keeping it separate prevents parsing or name lookup
-from being hidden inside operator loops. Scan/filter/project plans can be
-assembled manually from their bound nodes.
+from being hidden inside operator loops. Scan/filter/project/aggregate plans can
+be assembled manually from their bound nodes.
 
 The snapshot boundary accepts an immutable version-1 descriptor. It validates
 the canonical schema fingerprint, file-level schema agreement, lowercase
@@ -80,5 +88,6 @@ row counts, and versions. It never discovers files by listing a directory.
   numeric row-group pruning with a residual filter retained for correctness.
 
 These execution boundaries describe the design target. Parsing, binding,
-vectorized expression evaluation, and scan/filter/project execution are
-available. Aggregation, automatic physical planning, and optimization are not.
+vectorized expression evaluation, scan/filter/project execution, and global or
+single-key aggregation are available. Composite-key aggregation, bounded state,
+partial output, automatic physical planning, and optimization are not.
