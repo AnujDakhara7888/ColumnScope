@@ -79,10 +79,10 @@ must be present. Group keys are limited to Int64, Utf8, and Boolean.
 COUNT outputs non-null Int64. Numeric SUM/MIN/MAX preserve the input type and
 are nullable. AVG accepts Int64 or Float64 and outputs nullable Float64.
 
-The current physical aggregate supports global or one-key grouping. Version 1
-plans may bind two keys, but physical execution rejects that form until the
-composite-key and state-budget implementation is available. Grouped result
-order is unspecified.
+The physical aggregate supports global, one-key, and two-key grouping. Its
+retained state and output batch size are explicit execution options. Grouped
+result order is unspecified; callers that require order must sort outside the
+operator.
 
 ## Expressions
 

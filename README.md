@@ -33,17 +33,19 @@ and verified:
   pull/batch/row counters, and repeatable end-of-stream behavior;
 - vectorized typed comparisons, Kleene Boolean/null evaluation, batch filtering,
   and named expression projection over Arrow arrays;
-- global and single-key hash aggregation for COUNT, SUM, MIN, MAX, and AVG;
+- global, single-key, and two-key hash aggregation for COUNT, SUM, MIN, MAX,
+  and AVG, with an explicit retained-state budget and bounded output batches;
 - checked DuckDB oracle fixtures for filter/project and grouped aggregation;
 - a compatibility consumer that counts every decoded batch, column, and row;
 - Linux CI for formatting, strict Clippy linting, and tests.
 
-Composite-key aggregation, state budgets, partial aggregate output, automatic
-physical planning, optimization, a scalar baseline, live SnapshotStore
-integration, and performance results are not yet implemented. Physical
-operators currently require manual assembly from bound plans. The repository
-does not claim complete query execution or benchmark behavior before those
-components have executable evidence.
+Automatic physical planning, optimization, a scalar baseline, live
+SnapshotStore integration, and performance results are not yet implemented.
+Physical operators currently require manual assembly from bound plans. Hash
+aggregation is blocking and fails rather than spilling when its configured
+state budget is exceeded. The repository does not claim complete query
+execution or benchmark behavior before those components have executable
+evidence.
 
 ## Quick start
 

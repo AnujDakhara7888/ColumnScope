@@ -19,5 +19,6 @@ All notable changes to ColumnScope will be documented here.
   cumulative counters, and sticky end-of-stream behavior.
 - Vectorized typed comparison, Boolean/null expression evaluation, streaming
   filter and projection operators, and a checked DuckDB oracle fixture.
-- Global and single-key COUNT/SUM/MIN/MAX/AVG hash aggregation with checked
-  overflow, empty/null semantics, and grouped DuckDB oracle parity.
+- Global, single-key, and two-key COUNT/SUM/MIN/MAX/AVG hash aggregation with
+  checked overflow, empty/null semantics, an explicit state budget, bounded
+  result batches, and grouped DuckDB oracle parity.

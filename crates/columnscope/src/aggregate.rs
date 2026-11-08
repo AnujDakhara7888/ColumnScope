@@ -1,7 +1,8 @@
 //! Blocking hash aggregation over streaming Arrow input batches.
 
 use std::cmp::Ordering;
-use std::collections::HashMap;
+use std::collections::{HashMap, hash_map};
+use std::mem::size_of;
 use std::sync::Arc;
 
 use arrow::array::{Array, ArrayRef, BooleanArray, Float64Array, Int64Array, StringArray};
@@ -15,14 +16,16 @@ use crate::expr::ScalarValue;
 use crate::logical::{AggregateFunction, BoundAggregateExpr, BoundNamedExpr};
 use crate::schema::ScalarType;
 
+const HASH_ENTRY_OVERHEAD_BYTES: usize = 32;
+
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
-enum GroupKey {
+enum GroupKeyPart {
     Int64(Option<i64>),
     Boolean(Option<bool>),
     Utf8(Option<String>),
 }
 
-impl GroupKey {
+impl GroupKeyPart {
     fn from_value(value: ScalarValue) -> Result<Self, ExecutionError> {
         match value {
             ScalarValue::Int64 { value } => Ok(Self::Int64(value)),
@@ -40,6 +43,48 @@ impl GroupKey {
             Self::Boolean(value) => ScalarValue::Boolean { value },
             Self::Utf8(value) => ScalarValue::Utf8 { value },
         }
+    }
+
+    fn owned_bytes(&self) -> usize {
+        match self {
+            Self::Utf8(Some(value)) => value.len(),
+            Self::Int64(_) | Self::Boolean(_) | Self::Utf8(None) => 0,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+struct GroupKey(Vec<GroupKeyPart>);
+
+impl GroupKey {
+    fn retained_bytes(&self, aggregate_count: usize) -> Result<usize, ExecutionError> {
+        let key_parts = self
+            .0
+            .capacity()
+            .checked_mul(size_of::<GroupKeyPart>())
+            .ok_or(ExecutionError::AggregateStateSizeOverflow)?;
+        let strings = self.0.iter().try_fold(0usize, |total, part| {
+            total
+                .checked_add(part.owned_bytes())
+                .ok_or(ExecutionError::AggregateStateSizeOverflow)
+        })?;
+        let aggregate_states = aggregate_count
+            .checked_mul(size_of::<AggregateState>())
+            .ok_or(ExecutionError::AggregateStateSizeOverflow)?;
+        [
+            HASH_ENTRY_OVERHEAD_BYTES,
+            size_of::<GroupKey>(),
+            key_parts,
+            strings,
+            size_of::<Vec<AggregateState>>(),
+            aggregate_states,
+        ]
+        .into_iter()
+        .try_fold(0usize, |total, bytes| {
+            total
+                .checked_add(bytes)
+                .ok_or(ExecutionError::AggregateStateSizeOverflow)
+        })
     }
 }
 
@@ -173,11 +218,29 @@ impl AggregateState {
     }
 }
 
-/// Global or single-key grouped aggregation.
+/// Resource limits for blocking hash aggregation.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct AggregateOptions {
+    /// Maximum deterministic charge for retained keys and aggregate states.
+    pub state_budget_bytes: usize,
+    /// Maximum number of aggregate rows returned by one pull.
+    pub output_batch_rows: usize,
+}
+
+impl Default for AggregateOptions {
+    fn default() -> Self {
+        Self {
+            state_budget_bytes: 64 * 1024 * 1024,
+            output_batch_rows: 8_192,
+        }
+    }
+}
+
+/// Global, single-key, or two-key grouped hash aggregation.
 ///
-/// The operator consumes its input on the first pull and emits one result batch.
-/// Composite keys, bounded state, and partial output batches are added by the
-/// next aggregation milestone.
+/// The operator consumes its input on the first pull, retains only the hash
+/// table, and drains that table directly into bounded output batches. Grouped
+/// output follows hash-table iteration order and is never implicitly sorted.
 pub struct HashAggregateExec {
     input: Box<dyn BatchOperator>,
     group_by: Vec<BoundNamedExpr>,
@@ -185,7 +248,11 @@ pub struct HashAggregateExec {
     schema: SchemaRef,
     metrics: OperatorMetrics,
     state: OperatorState,
-    produced: bool,
+    options: AggregateOptions,
+    prepared: bool,
+    remaining_groups: Option<hash_map::IntoIter<GroupKey, Vec<AggregateState>>>,
+    empty_output_pending: bool,
+    peak_state_bytes: usize,
 }
 
 impl HashAggregateExec {
@@ -194,8 +261,20 @@ impl HashAggregateExec {
         group_by: Vec<BoundNamedExpr>,
         aggregates: Vec<BoundAggregateExpr>,
     ) -> Result<Self, ExecutionError> {
-        if group_by.len() > 1 {
+        Self::try_new_with_options(input, group_by, aggregates, AggregateOptions::default())
+    }
+
+    pub fn try_new_with_options(
+        input: Box<dyn BatchOperator>,
+        group_by: Vec<BoundNamedExpr>,
+        aggregates: Vec<BoundAggregateExpr>,
+        options: AggregateOptions,
+    ) -> Result<Self, ExecutionError> {
+        if group_by.len() > 2 {
             return Err(ExecutionError::UnsupportedGroupKeyCount(group_by.len()));
+        }
+        if options.output_batch_rows == 0 {
+            return Err(ExecutionError::InvalidAggregateOutputBatchSize);
         }
         let fields = group_by
             .iter()
@@ -221,22 +300,38 @@ impl HashAggregateExec {
             schema: Arc::new(Schema::new(fields)),
             metrics: OperatorMetrics::default(),
             state: OperatorState::Ready,
-            produced: false,
+            options,
+            prepared: false,
+            remaining_groups: None,
+            empty_output_pending: false,
+            peak_state_bytes: 0,
         })
     }
 
-    fn execute(&mut self) -> Result<RecordBatch, ExecutionError> {
-        let mut groups = HashMap::<Option<GroupKey>, Vec<AggregateState>>::new();
+    /// Peak deterministic retained-state charge observed while building groups.
+    pub fn peak_state_bytes(&self) -> usize {
+        self.peak_state_bytes
+    }
+
+    fn prepare(&mut self) -> Result<(), ExecutionError> {
+        let mut groups = HashMap::<GroupKey, Vec<AggregateState>>::new();
+        let mut state_bytes = 0usize;
         if self.group_by.is_empty() {
-            groups.insert(None, new_states(&self.aggregates));
+            insert_group(
+                &mut groups,
+                GroupKey(Vec::new()),
+                &self.aggregates,
+                self.options.state_budget_bytes,
+                &mut state_bytes,
+            )?;
         }
 
         while let Some(batch) = self.input.next_batch()? {
             let group_values = self
                 .group_by
-                .first()
+                .iter()
                 .map(|group| evaluate(&group.expr, &batch))
-                .transpose()?;
+                .collect::<Result<Vec<_>, _>>()?;
             let aggregate_values = self
                 .aggregates
                 .iter()
@@ -250,13 +345,18 @@ impl HashAggregateExec {
                 .collect::<Result<Vec<_>, _>>()?;
 
             for row in 0..batch.num_rows() {
-                let key = group_values
-                    .as_ref()
-                    .map(|values| array_value(values, row).and_then(GroupKey::from_value))
-                    .transpose()?;
-                let states = groups
-                    .entry(key)
-                    .or_insert_with(|| new_states(&self.aggregates));
+                let parts = group_values
+                    .iter()
+                    .map(|values| array_value(values, row).and_then(GroupKeyPart::from_value))
+                    .collect::<Result<Vec<_>, _>>()?;
+                let key = GroupKey(parts);
+                let states = insert_group(
+                    &mut groups,
+                    key,
+                    &self.aggregates,
+                    self.options.state_budget_bytes,
+                    &mut state_bytes,
+                )?;
                 for ((state, aggregate), values) in states
                     .iter_mut()
                     .zip(&self.aggregates)
@@ -271,13 +371,31 @@ impl HashAggregateExec {
             }
         }
 
-        let row_count = groups.len();
+        self.peak_state_bytes = state_bytes;
+        self.empty_output_pending = groups.is_empty();
+        self.remaining_groups = Some(groups.into_iter());
+        self.prepared = true;
+        Ok(())
+    }
+
+    fn next_output_batch(&mut self) -> Result<Option<RecordBatch>, ExecutionError> {
+        let remaining = self
+            .remaining_groups
+            .as_mut()
+            .expect("prepared aggregation owns its group iterator");
+        let row_count = remaining.len().min(self.options.output_batch_rows);
+        if row_count == 0 && !self.empty_output_pending {
+            return Ok(None);
+        }
         let mut columns =
             vec![Vec::<ScalarValue>::with_capacity(row_count); self.schema.fields().len()];
-        for (key, states) in groups {
+        for _ in 0..row_count {
+            let (key, states) = remaining
+                .next()
+                .expect("iterator length was checked before aggregate output");
             let mut index = 0;
-            if let Some(key) = key {
-                columns[index].push(key.into_value());
+            for part in key.0 {
+                columns[index].push(part.into_value());
                 index += 1;
             }
             for state in states {
@@ -291,11 +409,9 @@ impl HashAggregateExec {
             .map(|(values, field)| values_to_array(values, field.data_type()))
             .collect::<Result<Vec<_>, _>>()?;
         let options = RecordBatchOptions::new().with_row_count(Some(row_count));
-        Ok(RecordBatch::try_new_with_options(
-            self.schema.clone(),
-            arrays,
-            &options,
-        )?)
+        let output = RecordBatch::try_new_with_options(self.schema.clone(), arrays, &options)?;
+        self.empty_output_pending = false;
+        Ok(Some(output))
     }
 
     fn fail<T>(&mut self, error: ExecutionError) -> Result<T, ExecutionError> {
@@ -318,19 +434,27 @@ impl BatchOperator for HashAggregateExec {
         if let Err(error) = self.metrics.record_pull() {
             return self.fail(error);
         }
-        if self.produced {
-            self.state = OperatorState::Exhausted;
-            return Ok(None);
+        if !self.prepared
+            && let Err(error) = self.prepare()
+        {
+            return self.fail(error);
         }
-        let output = match self.execute() {
+        let output = match self.next_output_batch() {
             Ok(output) => output,
             Err(error) => return self.fail(error),
         };
-        if let Err(error) = self.metrics.record_output(output.num_rows()) {
-            return self.fail(error);
+        match output {
+            Some(output) => {
+                if let Err(error) = self.metrics.record_output(output.num_rows()) {
+                    return self.fail(error);
+                }
+                Ok(Some(output))
+            }
+            None => {
+                self.state = OperatorState::Exhausted;
+                Ok(None)
+            }
         }
-        self.produced = true;
-        Ok(Some(output))
     }
 
     fn metrics(&self) -> OperatorMetrics {
@@ -339,6 +463,32 @@ impl BatchOperator for HashAggregateExec {
 
     fn state(&self) -> OperatorState {
         self.state
+    }
+}
+
+fn insert_group<'a>(
+    groups: &'a mut HashMap<GroupKey, Vec<AggregateState>>,
+    key: GroupKey,
+    aggregates: &[BoundAggregateExpr],
+    budget: usize,
+    state_bytes: &mut usize,
+) -> Result<&'a mut Vec<AggregateState>, ExecutionError> {
+    match groups.entry(key) {
+        hash_map::Entry::Occupied(entry) => Ok(entry.into_mut()),
+        hash_map::Entry::Vacant(entry) => {
+            let charge = entry.key().retained_bytes(aggregates.len())?;
+            let attempted = state_bytes
+                .checked_add(charge)
+                .ok_or(ExecutionError::AggregateStateSizeOverflow)?;
+            if attempted > budget {
+                return Err(ExecutionError::AggregateStateBudgetExceeded {
+                    limit: budget,
+                    attempted,
+                });
+            }
+            *state_bytes = attempted;
+            Ok(entry.insert(new_states(aggregates)))
+        }
     }
 }
 

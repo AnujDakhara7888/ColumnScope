@@ -1,9 +1,10 @@
 # Benchmarks
 
 No query performance results are published yet. Vectorized scan, filter,
-projection, and initial aggregation exist, but the scalar aggregate comparison,
-fixed million-row workload, and timing/RSS harness are not implemented. The
-four-row storage and oracle checks are correctness evidence, not benchmarks.
+projection, and bounded composite aggregation exist, but the scalar aggregate
+comparison, fixed million-row workload, and timing/RSS harness are not
+implemented. The four-row storage and oracle checks are correctness evidence,
+not benchmarks.
 
 ## Measurement design
 

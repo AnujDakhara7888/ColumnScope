@@ -49,12 +49,20 @@ three-valued logic. Both operators preserve the pull lifecycle and become
 terminal after an evaluation or child error.
 
 `HashAggregateExec` is a blocking operator: it consumes streaming input batches,
-evaluates aggregate expressions as Arrow arrays, updates one global state or a
-single-key hash table, and emits one result batch. COUNT ignores null expression
+evaluates aggregate expressions as Arrow arrays, and updates one global state
+or a hash table keyed by one or two typed values. COUNT ignores null expression
 values, numeric SUM/MIN/MAX/AVG skip nulls, and an empty global input returns
 COUNT 0 with nullable aggregates set to null. Integer SUM is checked; overflow
-and non-finite Float64 input are terminal errors. Grouped output order is not a
-contract.
+and non-finite Float64 input are terminal errors.
+
+Each new group receives a deterministic retained-state charge covering its key
+container, owned Utf8 bytes, aggregate-state vector, and a fixed hash-entry
+allowance. The operator fails before inserting a group that would exceed the
+configured budget; the charge is an enforcement metric, not a claim about exact
+allocator RSS. Once input is exhausted, the hash table is consumed directly
+into caller-sized result batches. There is no result-wide row buffer or hidden
+sort, so grouped output order is deliberately unspecified. Disk spill is not
+implemented.
 
 Arrow owns array buffers and validity masks. Parquet owns encoding, compression,
 and decoding. ColumnScope will own the control flow and semantics above that
@@ -88,6 +96,6 @@ row counts, and versions. It never discovers files by listing a directory.
   numeric row-group pruning with a residual filter retained for correctness.
 
 These execution boundaries describe the design target. Parsing, binding,
-vectorized expression evaluation, scan/filter/project execution, and global or
-single-key aggregation are available. Composite-key aggregation, bounded state,
-partial output, automatic physical planning, and optimization are not.
+vectorized expression evaluation, scan/filter/project execution, and bounded
+global or composite-key aggregation are available. Automatic physical planning
+and optimization are not.
