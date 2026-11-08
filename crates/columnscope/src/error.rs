@@ -22,8 +22,16 @@ pub enum ExecutionError {
     },
     #[error("physical column index {index} is outside a {columns}-column batch")]
     ColumnOutOfBounds { index: usize, columns: usize },
-    #[error("aggregate execution supports at most one group key in this version, found {0}")]
+    #[error("aggregate execution supports at most two group keys, found {0}")]
     UnsupportedGroupKeyCount(usize),
+    #[error("aggregate output batch size must be positive")]
+    InvalidAggregateOutputBatchSize,
+    #[error(
+        "aggregate state budget exceeded: limit is {limit} bytes, next group would require {attempted} total bytes"
+    )]
+    AggregateStateBudgetExceeded { limit: usize, attempted: usize },
+    #[error("aggregate state size accounting overflowed")]
+    AggregateStateSizeOverflow,
     #[error("integer overflow while computing {0}")]
     IntegerOverflow(&'static str),
     #[error("non-finite Float64 value encountered while computing {0}")]

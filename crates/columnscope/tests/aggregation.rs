@@ -4,7 +4,7 @@ use std::sync::Arc;
 use arrow::array::{Array, ArrayRef, Float64Array, Int64Array, StringArray};
 use arrow::datatypes::{DataType, Field, Schema, SchemaRef};
 use arrow::record_batch::RecordBatch;
-use columnscope::aggregate::HashAggregateExec;
+use columnscope::aggregate::{AggregateOptions, HashAggregateExec};
 use columnscope::bind::bind_query;
 use columnscope::error::ExecutionError;
 use columnscope::execution::{BatchOperator, OperatorMetrics, OperatorState};
@@ -101,6 +101,23 @@ fn aggregate_exec(
         panic!("plan root should be Aggregate")
     };
     HashAggregateExec::try_new(input, group_by, aggregates)
+}
+
+fn aggregate_exec_with_options(
+    input: Box<dyn BatchOperator>,
+    plan: QueryPlan,
+    options: AggregateOptions,
+) -> Result<HashAggregateExec, ExecutionError> {
+    let bound = bind_query(plan).expect("bind aggregate plan");
+    let BoundLogicalPlan::Aggregate {
+        group_by,
+        aggregates,
+        ..
+    } = bound.plan
+    else {
+        panic!("plan root should be Aggregate")
+    };
+    HashAggregateExec::try_new_with_options(input, group_by, aggregates, options)
 }
 
 fn grouped_rows(batch: &RecordBatch) -> Vec<AggregateRow> {
@@ -539,22 +556,57 @@ fn nonfinite_float_input_is_rejected_before_output() {
 }
 
 #[test]
-fn composite_keys_are_explicitly_deferred() {
-    let batch = fixture_batch().expect("build fixture");
-    let schema = batch.schema();
+fn composite_keys_preserve_nulls_and_group_by_the_full_tuple() {
+    let schema = Arc::new(Schema::new(vec![
+        Field::new("region", DataType::Utf8, true),
+        Field::new("active", DataType::Boolean, true),
+    ]));
+    let batch = RecordBatch::try_new(
+        schema.clone(),
+        vec![
+            Arc::new(StringArray::from(vec![
+                Some("north"),
+                Some("north"),
+                Some("north"),
+                None,
+                None,
+            ])) as ArrayRef,
+            Arc::new(arrow::array::BooleanArray::from(vec![
+                Some(true),
+                Some(true),
+                None,
+                Some(true),
+                Some(true),
+            ])) as ArrayRef,
+        ],
+    )
+    .expect("build composite-key batch");
     let plan = QueryPlan {
         format_version: 1,
-        input_schema: fixture_schema(),
+        input_schema: SchemaDef {
+            fields: vec![
+                FieldDef {
+                    name: "region".into(),
+                    data_type: ScalarType::Utf8,
+                    nullable: true,
+                },
+                FieldDef {
+                    name: "active".into(),
+                    data_type: ScalarType::Boolean,
+                    nullable: true,
+                },
+            ],
+        },
         plan: LogicalPlan::Aggregate {
             input: Box::new(LogicalPlan::Scan),
             group_by: vec![
                 NamedExpr {
-                    alias: "id".into(),
-                    expr: column("id"),
-                },
-                NamedExpr {
                     alias: "region".into(),
                     expr: column("region"),
+                },
+                NamedExpr {
+                    alias: "active".into(),
+                    expr: column("active"),
                 },
             ],
             aggregates: vec![AggregateExpr::CountStar {
@@ -562,19 +614,154 @@ fn composite_keys_are_explicitly_deferred() {
             }],
         },
     };
-    let bound = bind_query(plan).expect("bind composite aggregate");
-    let BoundLogicalPlan::Aggregate {
-        group_by,
-        aggregates,
-        ..
-    } = bound.plan
-    else {
-        panic!("plan root should be Aggregate")
+    let input = BatchInput::new(vec![batch], schema);
+    let mut aggregate = aggregate_exec(Box::new(input), plan).expect("build aggregate");
+    let output = aggregate.next_batch().expect("execute aggregate").unwrap();
+    let regions = output
+        .column(0)
+        .as_any()
+        .downcast_ref::<StringArray>()
+        .unwrap();
+    let active = output
+        .column(1)
+        .as_any()
+        .downcast_ref::<arrow::array::BooleanArray>()
+        .unwrap();
+    let rows = output
+        .column(2)
+        .as_any()
+        .downcast_ref::<Int64Array>()
+        .unwrap();
+    let mut actual = (0..output.num_rows())
+        .map(|row| {
+            (
+                (!regions.is_null(row)).then(|| regions.value(row).to_owned()),
+                (!active.is_null(row)).then(|| active.value(row)),
+                rows.value(row),
+            )
+        })
+        .collect::<Vec<_>>();
+    actual.sort();
+    assert_eq!(
+        actual,
+        vec![
+            (None, Some(true), 2),
+            (Some("north".into()), None, 1),
+            (Some("north".into()), Some(true), 2),
+        ]
+    );
+}
+
+#[test]
+fn state_budget_fails_before_output_and_failure_is_sticky() {
+    let batch = fixture_batch().expect("build fixture");
+    let schema = batch.schema();
+    let input = BatchInput::new(vec![batch], schema);
+    let mut aggregate = aggregate_exec_with_options(
+        Box::new(input),
+        aggregate_fixture_plan(),
+        AggregateOptions {
+            state_budget_bytes: 1,
+            output_batch_rows: 8_192,
+        },
+    )
+    .expect("build bounded aggregate");
+
+    assert!(matches!(
+        aggregate.next_batch(),
+        Err(ExecutionError::AggregateStateBudgetExceeded {
+            limit: 1,
+            attempted
+        }) if attempted > 1
+    ));
+    assert_eq!(aggregate.state(), OperatorState::Failed);
+    assert_eq!(aggregate.metrics().output_batches, 0);
+    assert!(matches!(
+        aggregate.next_batch(),
+        Err(ExecutionError::OperatorFailed)
+    ));
+}
+
+#[test]
+fn aggregate_output_drains_in_bounded_batches() {
+    let schema = Arc::new(Schema::new(vec![Field::new("id", DataType::Int64, false)]));
+    let batch = RecordBatch::try_new(
+        schema.clone(),
+        vec![Arc::new(Int64Array::from(vec![0, 1, 2, 3, 4])) as ArrayRef],
+    )
+    .expect("build grouped batch");
+    let plan = QueryPlan {
+        format_version: 1,
+        input_schema: SchemaDef {
+            fields: vec![FieldDef {
+                name: "id".into(),
+                data_type: ScalarType::Int64,
+                nullable: false,
+            }],
+        },
+        plan: LogicalPlan::Aggregate {
+            input: Box::new(LogicalPlan::Scan),
+            group_by: vec![NamedExpr {
+                alias: "id".into(),
+                expr: column("id"),
+            }],
+            aggregates: vec![AggregateExpr::CountStar {
+                alias: "rows".into(),
+            }],
+        },
     };
     let input = BatchInput::new(vec![batch], schema);
+    let mut aggregate = aggregate_exec_with_options(
+        Box::new(input),
+        plan,
+        AggregateOptions {
+            state_budget_bytes: 4_096,
+            output_batch_rows: 2,
+        },
+    )
+    .expect("build partially draining aggregate");
+
+    let mut batch_sizes = Vec::new();
+    let mut actual = Vec::new();
+    while let Some(batch) = aggregate.next_batch().expect("drain aggregate") {
+        batch_sizes.push(batch.num_rows());
+        let ids = batch
+            .column(0)
+            .as_any()
+            .downcast_ref::<Int64Array>()
+            .unwrap();
+        let rows = batch
+            .column(1)
+            .as_any()
+            .downcast_ref::<Int64Array>()
+            .unwrap();
+        actual.extend((0..batch.num_rows()).map(|row| (ids.value(row), rows.value(row))));
+    }
+    actual.sort_unstable();
+
+    assert_eq!(batch_sizes, vec![2, 2, 1]);
+    assert_eq!(actual, vec![(0, 1), (1, 1), (2, 1), (3, 1), (4, 1)]);
+    assert_eq!(aggregate.metrics().output_batches, 3);
+    assert_eq!(aggregate.metrics().output_rows, 5);
+    assert!(aggregate.peak_state_bytes() <= 4_096);
+    assert_eq!(aggregate.state(), OperatorState::Exhausted);
+}
+
+#[test]
+fn zero_output_batch_size_is_rejected_during_construction() {
+    let batch = fixture_batch().expect("build fixture");
+    let schema = batch.schema();
+    let input = BatchInput::new(vec![batch], schema);
     assert!(matches!(
-        HashAggregateExec::try_new(Box::new(input), group_by, aggregates),
-        Err(ExecutionError::UnsupportedGroupKeyCount(2))
+        aggregate_exec_with_options(
+            Box::new(input),
+            aggregate_fixture_plan(),
+            AggregateOptions {
+                state_budget_bytes: 1_024,
+                output_batch_rows: 0,
+            },
+        ),
+        Err(ExecutionError::InvalidAggregateOutputBatchSize)
     ));
 }
 

@@ -26,7 +26,10 @@ performance evidence can fail independently.
 | Null keys group together and null aggregate values are skipped | pass |
 | Integer SUM overflow across batches fails terminally | pass |
 | Non-finite Float64 aggregate input fails before output | pass |
-| Composite keys are rejected until their bounded implementation | pass |
+| Two-key groups preserve the full tuple, including nullable key parts | pass |
+| Aggregate state budget fails before output and remains terminal | pass |
+| Five groups drain as bounded result batches of 2, 2, and 1 rows | pass |
+| Zero-sized aggregate output batches are rejected at construction | pass |
 | Grouped results are batch-boundary independent on a worker thread | pass |
 | Filter/project plan parses, binds aliases, and infers nullability | pass |
 | All six aggregate forms infer documented output types | pass |
@@ -61,12 +64,13 @@ DuckDB 2.0.0 has been installed and imported successfully with Python 3.14.5.
 Checked filter/project and grouped-aggregate results are stored as small JSON
 oracle fixtures.
 
-The latest local workspace run completed with 39 passed, 0 failed, and 0
+The latest local workspace run completed with 42 passed, 0 failed, and 0
 ignored integration tests. Both oracle fixtures were independently regenerated
 with DuckDB 2.0.0. The grouped fixture matched three region groups, including a
-null-only aggregate group. The production path does not invoke DuckDB.
-Composite-key budgets, randomized differential cases, and benchmark validation
-await later components.
+null-only aggregate group. Composite nullable keys, terminal state-budget
+failure, and three partial output batches were also exercised. The production
+path does not invoke DuckDB. Randomized differential cases and benchmark
+validation await later components.
 
 ## Correctness strategy for engine operators
 
