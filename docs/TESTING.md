@@ -31,6 +31,11 @@ performance evidence can fail independently.
 | Five groups drain as bounded result batches of 2, 2, and 1 rows | pass |
 | Zero-sized aggregate output batches are rejected at construction | pass |
 | Grouped results are batch-boundary independent on a worker thread | pass |
+| Unoptimized planning preserves Project → Filter → Scan order | pass |
+| Planned filter/project execution completes on a worker thread | pass |
+| Aggregate scan, state, and output limits appear in explain output | pass |
+| Scan, intermediate, and query-output schema mismatches fail planning | pass |
+| Invalid scan batch size fails before input is opened | pass |
 | Filter/project plan parses, binds aliases, and infers nullability | pass |
 | All six aggregate forms infer documented output types | pass |
 | Unknown fields, versions, columns, aliases, and implicit coercion fail | pass |
@@ -64,12 +69,14 @@ DuckDB 2.0.0 has been installed and imported successfully with Python 3.14.5.
 Checked filter/project and grouped-aggregate results are stored as small JSON
 oracle fixtures.
 
-The latest local workspace run completed with 42 passed, 0 failed, and 0
+The latest local workspace run completed with 49 passed, 0 failed, and 0
 ignored integration tests. Both oracle fixtures were independently regenerated
 with DuckDB 2.0.0. The grouped fixture matched three region groups, including a
 null-only aggregate group. Composite nullable keys, terminal state-budget
 failure, and three partial output batches were also exercised. The production
-path does not invoke DuckDB. Randomized differential cases and benchmark
+path does not invoke DuckDB. The planner tests also executed the preserved
+unoptimized tree, checked explain/resource details, and rejected mismatched
+schemas before execution. Randomized differential cases and benchmark
 validation await later components.
 
 ## Correctness strategy for engine operators

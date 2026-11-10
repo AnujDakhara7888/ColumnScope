@@ -38,6 +38,17 @@ pub enum ExecutionError {
     NonFiniteAggregate(&'static str),
     #[error("aggregate received unsupported value type {0}")]
     UnsupportedAggregateType(String),
+    #[error("bound schema for {operator} is invalid: {reason}")]
+    InvalidBoundSchema {
+        operator: &'static str,
+        reason: String,
+    },
+    #[error("physical schema mismatch at {operator}: expected {expected}, found {actual}")]
+    PhysicalSchemaMismatch {
+        operator: &'static str,
+        expected: String,
+        actual: String,
+    },
 }
 
 /// Errors produced while parsing, validating, or binding a query contract.

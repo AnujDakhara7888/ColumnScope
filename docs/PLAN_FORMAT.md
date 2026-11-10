@@ -108,3 +108,9 @@ logic. Non-finite Float64 literals are rejected.
 
 Complete checked-in examples are available in
 [`fixtures/plans/`](../fixtures/plans/).
+
+After binding, `plan_query` lowers this logical tree into physical operators in
+explicit unoptimized mode. The planner validates the Parquet schema and every
+operator output schema against the bound contract, and exposes an explain tree
+with the preserved operator order and physical resource settings. Rewrite rules
+are outside plan format version 1 and are not currently applied.

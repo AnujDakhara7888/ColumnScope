@@ -35,17 +35,18 @@ and verified:
   and named expression projection over Arrow arrays;
 - global, single-key, and two-key hash aggregation for COUNT, SUM, MIN, MAX,
   and AVG, with an explicit retained-state budget and bounded output batches;
+- unoptimized logical-to-physical planning with recursive schema checks and a
+  stable physical explain tree;
 - checked DuckDB oracle fixtures for filter/project and grouped aggregation;
 - a compatibility consumer that counts every decoded batch, column, and row;
 - Linux CI for formatting, strict Clippy linting, and tests.
 
-Automatic physical planning, optimization, a scalar baseline, live
-SnapshotStore integration, and performance results are not yet implemented.
-Physical operators currently require manual assembly from bound plans. Hash
-aggregation is blocking and fails rather than spilling when its configured
-state budget is exceeded. The repository does not claim complete query
-execution or benchmark behavior before those components have executable
-evidence.
+Optimizer rewrites, a scalar baseline, live SnapshotStore integration, and
+performance results are not yet implemented. The current planner deliberately
+preserves the bound logical tree in unoptimized mode. Hash aggregation is
+blocking and fails rather than spilling when its configured state budget is
+exceeded. The repository does not claim complete benchmark behavior before
+those components have executable evidence.
 
 ## Quick start
 
@@ -63,6 +64,27 @@ the output, and prints a summary similar to:
 wrote and decoded 4 rows in 2 batches (4 columns): /tmp/columnscope-fixture.parquet
 ```
 
+To lower a versioned plan into physical operators, inspect it, and pull result
+batches:
+
+```rust
+use columnscope::bind::bind_query;
+use columnscope::logical::QueryPlan;
+use columnscope::planner::{PlannerOptions, plan_query};
+
+let parsed = QueryPlan::from_json(&std::fs::read_to_string("plan.json")?)?;
+let bound = bind_query(parsed)?;
+let mut query = plan_query(bound, "input.parquet", PlannerOptions::default())?;
+
+print!("{}", query.explain());
+while let Some(batch) = query.root.next_batch()? {
+    // Consume each Arrow RecordBatch.
+}
+```
+
+The default planner is explicitly unoptimized. Its explain output includes the
+operator hierarchy, schemas, scan batch size, and aggregate resource limits.
+
 ## Verification
 
 ```sh
@@ -73,7 +95,8 @@ cargo test --locked --workspace
 
 The current suite covers Parquet values/nulls, decode errors, scan lifecycle and
 counters, typed expression semantics, filter/project execution, aggregation
-boundaries, logical plan binding, and pinned snapshot validation. See
+boundaries, physical planning/schema checks, logical plan binding, and pinned
+snapshot validation. See
 [Testing](docs/TESTING.md) for the latest observed counts. DuckDB supplies
 checked expected results only and is not used by the production Rust path.
 
