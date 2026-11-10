@@ -36,6 +36,12 @@ performance evidence can fail independently.
 | Aggregate scan, state, and output limits appear in explain output | pass |
 | Scan, intermediate, and query-output schema mismatches fail planning | pass |
 | Invalid scan batch size fails before input is opened | pass |
+| Optimized and unoptimized results match across three row groups | pass |
+| Projection pushdown decodes 2 of 3 columns and remaps expressions | pass |
+| Numeric statistics prune only provably impossible row groups | pass |
+| Residual filtering retains partial-group row correctness | pass |
+| Filter safely moves below Project; unsupported NOT keeps all groups | pass |
+| COUNT(*) preserves 12 rows with a zero-column scan projection | pass |
 | Filter/project plan parses, binds aliases, and infers nullability | pass |
 | All six aggregate forms infer documented output types | pass |
 | Unknown fields, versions, columns, aliases, and implicit coercion fail | pass |
@@ -69,7 +75,7 @@ DuckDB 2.0.0 has been installed and imported successfully with Python 3.14.5.
 Checked filter/project and grouped-aggregate results are stored as small JSON
 oracle fixtures.
 
-The latest local workspace run completed with 49 passed, 0 failed, and 0
+The latest local workspace run completed with 55 passed, 0 failed, and 0
 ignored integration tests. Both oracle fixtures were independently regenerated
 with DuckDB 2.0.0. The grouped fixture matched three region groups, including a
 null-only aggregate group. Composite nullable keys, terminal state-budget
@@ -78,6 +84,12 @@ path does not invoke DuckDB. The planner tests also executed the preserved
 unoptimized tree, checked explain/resource details, and rejected mismatched
 schemas before execution. Randomized differential cases and benchmark
 validation await later components.
+
+Optimizer parity uses a separate twelve-row fixture written as three four-row
+groups. A `metric >= 12` predicate pruned the `[0, 3]` group, retained the
+partially matching `[10, 13]` group for residual evaluation, and retained the
+`[20, 23]` group. Optimized and unoptimized execution both returned IDs 6–11.
+An unsupported `NOT` predicate retained all three groups.
 
 ## Correctness strategy for engine operators
 

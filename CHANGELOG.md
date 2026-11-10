@@ -24,3 +24,6 @@ All notable changes to ColumnScope will be documented here.
   result batches, and grouped DuckDB oracle parity.
 - Unoptimized logical-to-physical planning with per-operator schema checks,
   physical resource propagation, and stable explain output.
+- Opt-in Filter-through-Project and Parquet projection pushdown, conservative
+  numeric row-group pruning, retained residual filters, and optimizer parity
+  coverage.

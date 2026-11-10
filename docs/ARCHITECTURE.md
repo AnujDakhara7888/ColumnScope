@@ -28,6 +28,21 @@ bound schema, so a mismatch fails before a runnable query is returned. A stable
 explain tree records operator properties and schemas separately from the live
 operator objects.
 
+`Optimized` mode applies two logical/physical boundaries. A Filter above a
+Project moves below it only after the predicate's projected columns are
+substituted with their bound source expressions. Required-column analysis then
+rewrites every surviving column index and supplies a root-column projection to
+the Parquet reader. COUNT(*) can therefore preserve row counts without decoding
+any data column.
+
+For a residual predicate directly above the scan, exact Int64 and Float64
+row-group min/max statistics may exclude a group only when the comparison is
+provably impossible. AND and OR combine these conservative decisions; missing,
+inexact, non-finite, type-mismatched, and unsupported statistics keep the row
+group. The original Filter remains in the physical tree and evaluates every
+decoded row, including rows in partially matching groups. Explain output reports
+decoded/source columns and selected/total row groups.
+
 A separate scalar executor will evaluate the same supported semantics one row
 at a time over the same decoded Arrow buffers. It is a comparison path, not an
 alternate storage stack.
@@ -107,4 +122,5 @@ row counts, and versions. It never discovers files by listing a directory.
 These execution boundaries describe the design target. Parsing, binding,
 vectorized expression evaluation, scan/filter/project execution, and bounded
 global or composite-key aggregation are available through an unoptimized
-physical planner. Optimizer rules are not.
+physical planner or the documented pushdown/pruning mode. Page-index pruning,
+predicate evaluation inside the Parquet decoder, and cost-based rules are not.
