@@ -17,6 +17,8 @@ The current API establishes the Arrow/Parquet storage boundary:
 - `FilterExec` and `ProjectExec` stream filtered and projected batches;
 - `HashAggregateExec` computes global, single-key, or two-key COUNT, SUM, MIN,
   MAX, and AVG results under explicit state and output-batch limits.
+- `plan_query` lowers a bound tree in unoptimized mode, checks every physical
+  schema, and retains a stable explain tree beside the live operator root.
 
 Run the verified storage example from the workspace root:
 
@@ -27,5 +29,6 @@ cargo run --bin parquet-fixture -- /tmp/columnscope-fixture.parquet
 The JSON contracts are documented in [Plan format](../../docs/PLAN_FORMAT.md)
 and [Snapshot descriptor](../../docs/SNAPSHOT_DESCRIPTOR.md). Scan, filter,
 projection, and bounded composite aggregation physical operators are
-implemented; automatic physical planning remains unimplemented. See the
-[workspace README](../../README.md) for current limitations.
+implemented and connected by the unoptimized physical planner. Optimizer
+rewrites remain unimplemented. See the [workspace README](../../README.md) for
+current limitations.

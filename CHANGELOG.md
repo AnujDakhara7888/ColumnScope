@@ -22,3 +22,5 @@ All notable changes to ColumnScope will be documented here.
 - Global, single-key, and two-key COUNT/SUM/MIN/MAX/AVG hash aggregation with
   checked overflow, empty/null semantics, an explicit state budget, bounded
   result batches, and grouped DuckDB oracle parity.
+- Unoptimized logical-to-physical planning with per-operator schema checks,
+  physical resource propagation, and stable explain output.

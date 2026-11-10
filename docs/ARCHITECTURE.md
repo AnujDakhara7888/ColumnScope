@@ -20,6 +20,14 @@ resolves names against the input schema and rejects invalid types before
 execution. The physical layer uses a pull interface that returns at most one
 Arrow `RecordBatch` at a time and exposes operator metrics.
 
+`plan_query` recursively lowers the bound tree into `ParquetScan`, `FilterExec`,
+`ProjectExec`, and `HashAggregateExec`. The current `Unoptimized` mode applies
+no rewrites: operator nesting exactly preserves the logical tree. Construction
+checks the Parquet fields and every operator output against the corresponding
+bound schema, so a mismatch fails before a runnable query is returned. A stable
+explain tree records operator properties and schemas separately from the live
+operator objects.
+
 A separate scalar executor will evaluate the same supported semantics one row
 at a time over the same decoded Arrow buffers. It is a comparison path, not an
 alternate storage stack.
@@ -71,10 +79,11 @@ boundary; these library capabilities are not presented as custom engine work.
 Plan format version 1 is a strict serde contract. A plan document owns its input
 schema and a recursive Scan/Filter/Project/Aggregate tree. Binding resolves each
 column name to an input position, validates expression and aggregate types,
-checks aliases, and infers the schema after every node. The bound tree is not
-automatically lowered yet; keeping it separate prevents parsing or name lookup
-from being hidden inside operator loops. Scan/filter/project/aggregate plans can
-be assembled manually from their bound nodes.
+checks aliases, and infers the schema after every node. Planning consumes that
+bound tree and builds the matching physical hierarchy without parsing or name
+lookup inside operator loops. Keeping binding and physical construction
+separate makes the unoptimized baseline explicit and leaves rewrite decisions
+inspectable.
 
 The snapshot boundary accepts an immutable version-1 descriptor. It validates
 the canonical schema fingerprint, file-level schema agreement, lowercase
@@ -97,5 +106,5 @@ row counts, and versions. It never discovers files by listing a directory.
 
 These execution boundaries describe the design target. Parsing, binding,
 vectorized expression evaluation, scan/filter/project execution, and bounded
-global or composite-key aggregation are available. Automatic physical planning
-and optimization are not.
+global or composite-key aggregation are available through an unoptimized
+physical planner. Optimizer rules are not.

@@ -3,7 +3,8 @@
 //! The crate currently provides a deterministic Arrow/Parquet round trip,
 //! versioned logical plan parsing and binding, and a validated pinned-snapshot
 //! descriptor contract. Its initial physical path includes pull-based Parquet
-//! scan, vectorized filter/projection, and bounded one- or two-key aggregation.
+//! scan, vectorized filter/projection, bounded one- or two-key aggregation, and
+//! unoptimized physical planning with schema validation and explain output.
 
 pub mod aggregate;
 pub mod bind;
@@ -13,6 +14,7 @@ pub mod execution;
 pub mod expr;
 pub mod logical;
 pub mod operators;
+pub mod planner;
 pub mod scan;
 pub mod schema;
 pub mod snapshot;
