@@ -22,6 +22,10 @@ pub enum ExecutionError {
     },
     #[error("physical column index {index} is outside a {columns}-column batch")]
     ColumnOutOfBounds { index: usize, columns: usize },
+    #[error("scan projection column {index} is outside a {columns}-column schema")]
+    ProjectionOutOfBounds { index: usize, columns: usize },
+    #[error("scan projection contains duplicate column {0}")]
+    DuplicateProjectionColumn(usize),
     #[error("aggregate execution supports at most two group keys, found {0}")]
     UnsupportedGroupKeyCount(usize),
     #[error("aggregate output batch size must be positive")]
@@ -49,6 +53,8 @@ pub enum ExecutionError {
         expected: String,
         actual: String,
     },
+    #[error("optimizer invariant failed: {0}")]
+    OptimizerInvariant(String),
 }
 
 /// Errors produced while parsing, validating, or binding a query contract.

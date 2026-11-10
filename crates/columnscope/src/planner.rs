@@ -10,7 +10,8 @@ use crate::error::ExecutionError;
 use crate::execution::BatchOperator;
 use crate::logical::{BoundLogicalPlan, BoundQueryPlan};
 use crate::operators::{FilterExec, ProjectExec};
-use crate::scan::ParquetScan;
+use crate::optimizer::optimize_query;
+use crate::scan::{ParquetScan, ScanPushdowns};
 use crate::schema::SchemaDef;
 
 /// Planning behavior selected for a physical query.
@@ -18,12 +19,15 @@ use crate::schema::SchemaDef;
 pub enum PlanningMode {
     /// Preserve the bound logical tree without applying rewrite rules.
     Unoptimized,
+    /// Apply safe filter/projection pushdown and conservative row-group pruning.
+    Optimized,
 }
 
 impl fmt::Display for PlanningMode {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::Unoptimized => formatter.write_str("unoptimized"),
+            Self::Optimized => formatter.write_str("optimized"),
         }
     }
 }
@@ -100,12 +104,20 @@ pub struct PlannedQuery {
     pub root: Box<dyn BatchOperator>,
     pub mode: PlanningMode,
     pub explain_root: ExplainNode,
+    pub filter_pushdowns: usize,
 }
 
 impl PlannedQuery {
     /// Renders the selected planning mode and physical operator tree.
     pub fn explain(&self) -> String {
-        let mut output = format!("mode={}\n", self.mode);
+        let mut output = if self.mode == PlanningMode::Optimized {
+            format!(
+                "mode={} [filter_pushdowns={}]\n",
+                self.mode, self.filter_pushdowns
+            )
+        } else {
+            format!("mode={}\n", self.mode)
+        };
         self.explain_root.render(0, &mut output);
         output
     }
@@ -121,34 +133,91 @@ pub fn plan_query(
     options: PlannerOptions,
 ) -> Result<PlannedQuery, ExecutionError> {
     ensure_schema_defs("QueryOutput", &query.output_schema, query.plan.schema())?;
-    let (root, explain_root) = build_node(query.plan, parquet_path.as_ref(), options)?;
+    let (query, context) = match options.mode {
+        PlanningMode::Unoptimized => (
+            query,
+            BuildContext {
+                options,
+                scan_projection: None,
+                pruning_predicate: None,
+                filter_pushdowns: 0,
+            },
+        ),
+        PlanningMode::Optimized => {
+            let optimized = optimize_query(query)?;
+            let context = BuildContext {
+                options,
+                scan_projection: Some(optimized.scan_projection),
+                pruning_predicate: optimized.pruning_predicate,
+                filter_pushdowns: optimized.filter_pushdowns,
+            };
+            (optimized.query, context)
+        }
+    };
+    ensure_schema_defs("QueryOutput", &query.output_schema, query.plan.schema())?;
+    let (root, explain_root) = build_node(query.plan, parquet_path.as_ref(), &context)?;
     ensure_physical_schema("QueryOutput", &query.output_schema, root.schema())?;
     Ok(PlannedQuery {
         root,
         mode: options.mode,
         explain_root,
+        filter_pushdowns: context.filter_pushdowns,
     })
+}
+
+struct BuildContext {
+    options: PlannerOptions,
+    scan_projection: Option<Vec<usize>>,
+    pruning_predicate: Option<crate::expr::BoundExpr>,
+    filter_pushdowns: usize,
 }
 
 fn build_node(
     plan: BoundLogicalPlan,
     parquet_path: &Path,
-    options: PlannerOptions,
+    context: &BuildContext,
 ) -> Result<(Box<dyn BatchOperator>, ExplainNode), ExecutionError> {
     match plan {
         BoundLogicalPlan::Scan { schema } => {
-            let scan = ParquetScan::try_new(parquet_path, options.scan_batch_rows)?;
+            let scan = ParquetScan::try_new_with_pushdowns(
+                parquet_path,
+                context.options.scan_batch_rows,
+                ScanPushdowns {
+                    projection: context.scan_projection.clone(),
+                    pruning_predicate: context.pruning_predicate.clone(),
+                },
+            )?;
             ensure_physical_schema("ParquetScan", &schema, scan.schema())?;
+            let mut properties = vec![
+                (
+                    "source".to_owned(),
+                    display_path(parquet_path).to_string_lossy().into_owned(),
+                ),
+                (
+                    "batch_rows".to_owned(),
+                    context.options.scan_batch_rows.to_string(),
+                ),
+            ];
+            if context.options.mode == PlanningMode::Optimized {
+                properties.extend([
+                    (
+                        "columns".to_owned(),
+                        format!("{}/{}", scan.projected_columns(), scan.source_columns()),
+                    ),
+                    (
+                        "row_groups".to_owned(),
+                        format!("{}/{}", scan.selected_row_groups(), scan.total_row_groups()),
+                    ),
+                    (
+                        "pruned_row_groups".to_owned(),
+                        (scan.total_row_groups() - scan.selected_row_groups()).to_string(),
+                    ),
+                ]);
+            }
             let explain = ExplainNode {
                 operator: PhysicalOperatorKind::ParquetScan,
                 schema,
-                properties: vec![
-                    (
-                        "source".to_owned(),
-                        display_path(parquet_path).to_string_lossy().into_owned(),
-                    ),
-                    ("batch_rows".to_owned(), options.scan_batch_rows.to_string()),
-                ],
+                properties,
                 children: Vec::new(),
             };
             Ok((Box::new(scan), explain))
@@ -159,20 +228,26 @@ fn build_node(
             schema,
         } => {
             let predicate_type = predicate.result;
-            let (input, child) = build_node(*input, parquet_path, options)?;
+            let (input, child) = build_node(*input, parquet_path, context)?;
             let operator = FilterExec::try_new(input, predicate)?;
             ensure_physical_schema("FilterExec", &schema, operator.schema())?;
             let explain = ExplainNode {
                 operator: PhysicalOperatorKind::FilterExec,
                 schema,
-                properties: vec![(
-                    "predicate".to_owned(),
-                    format!(
-                        "{}{}",
-                        predicate_type.data_type,
-                        if predicate_type.nullable { "?" } else { "!" }
-                    ),
-                )],
+                properties: {
+                    let mut properties = vec![(
+                        "predicate".to_owned(),
+                        format!(
+                            "{}{}",
+                            predicate_type.data_type,
+                            if predicate_type.nullable { "?" } else { "!" }
+                        ),
+                    )];
+                    if context.options.mode == PlanningMode::Optimized {
+                        properties.push(("residual".to_owned(), "true".to_owned()));
+                    }
+                    properties
+                },
                 children: vec![child],
             };
             Ok((Box::new(operator), explain))
@@ -183,7 +258,7 @@ fn build_node(
             schema,
         } => {
             let expression_count = expressions.len();
-            let (input, child) = build_node(*input, parquet_path, options)?;
+            let (input, child) = build_node(*input, parquet_path, context)?;
             let operator = ProjectExec::new(input, expressions);
             ensure_physical_schema("ProjectExec", &schema, operator.schema())?;
             let explain = ExplainNode {
@@ -202,12 +277,12 @@ fn build_node(
         } => {
             let group_count = group_by.len();
             let aggregate_count = aggregates.len();
-            let (input, child) = build_node(*input, parquet_path, options)?;
+            let (input, child) = build_node(*input, parquet_path, context)?;
             let operator = HashAggregateExec::try_new_with_options(
                 input,
                 group_by,
                 aggregates,
-                options.aggregate,
+                context.options.aggregate,
             )?;
             ensure_physical_schema("HashAggregateExec", &schema, operator.schema())?;
             let explain = ExplainNode {
@@ -218,11 +293,11 @@ fn build_node(
                     ("aggregates".to_owned(), aggregate_count.to_string()),
                     (
                         "state_budget_bytes".to_owned(),
-                        options.aggregate.state_budget_bytes.to_string(),
+                        context.options.aggregate.state_budget_bytes.to_string(),
                     ),
                     (
                         "output_batch_rows".to_owned(),
-                        options.aggregate.output_batch_rows.to_string(),
+                        context.options.aggregate.output_batch_rows.to_string(),
                     ),
                 ],
                 children: vec![child],

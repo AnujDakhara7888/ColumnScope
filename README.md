@@ -37,16 +37,19 @@ and verified:
   and AVG, with an explicit retained-state budget and bounded output batches;
 - unoptimized logical-to-physical planning with recursive schema checks and a
   stable physical explain tree;
+- an opt-in optimizer for safe Filter-through-Project movement, Parquet column
+  projection, and conservative numeric row-group pruning with residual filters;
 - checked DuckDB oracle fixtures for filter/project and grouped aggregation;
 - a compatibility consumer that counts every decoded batch, column, and row;
 - Linux CI for formatting, strict Clippy linting, and tests.
 
-Optimizer rewrites, a scalar baseline, live SnapshotStore integration, and
-performance results are not yet implemented. The current planner deliberately
-preserves the bound logical tree in unoptimized mode. Hash aggregation is
-blocking and fails rather than spilling when its configured state budget is
-exceeded. The repository does not claim complete benchmark behavior before
-those components have executable evidence.
+A scalar baseline, live SnapshotStore integration, and performance results are
+not yet implemented. Unoptimized mode preserves the bound logical tree;
+optimized mode applies only the documented pushdowns and keeps every filter as
+a residual correctness check. Hash aggregation is blocking and fails rather
+than spilling when its configured state budget is exceeded. The repository
+does not claim benchmark behavior before the remaining measurement components
+have executable evidence.
 
 ## Quick start
 
@@ -70,11 +73,15 @@ batches:
 ```rust
 use columnscope::bind::bind_query;
 use columnscope::logical::QueryPlan;
-use columnscope::planner::{PlannerOptions, plan_query};
+use columnscope::planner::{PlannerOptions, PlanningMode, plan_query};
 
 let parsed = QueryPlan::from_json(&std::fs::read_to_string("plan.json")?)?;
 let bound = bind_query(parsed)?;
-let mut query = plan_query(bound, "input.parquet", PlannerOptions::default())?;
+let options = PlannerOptions {
+    mode: PlanningMode::Optimized,
+    ..PlannerOptions::default()
+};
+let mut query = plan_query(bound, "input.parquet", options)?;
 
 print!("{}", query.explain());
 while let Some(batch) = query.root.next_batch()? {
@@ -82,8 +89,9 @@ while let Some(batch) = query.root.next_batch()? {
 }
 ```
 
-The default planner is explicitly unoptimized. Its explain output includes the
-operator hierarchy, schemas, scan batch size, and aggregate resource limits.
+The default planner remains explicitly unoptimized for comparison. Optimized
+explain output additionally reports filter movement, decoded columns, selected
+row groups, and residual filters.
 
 ## Verification
 

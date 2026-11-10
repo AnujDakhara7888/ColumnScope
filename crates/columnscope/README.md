@@ -19,6 +19,9 @@ The current API establishes the Arrow/Parquet storage boundary:
   MAX, and AVG results under explicit state and output-batch limits.
 - `plan_query` lowers a bound tree in unoptimized mode, checks every physical
   schema, and retains a stable explain tree beside the live operator root.
+- `PlanningMode::Optimized` safely moves filters through projections, remaps
+  column indexes, projects Parquet columns, and prunes impossible numeric row
+  groups while retaining residual filters.
 
 Run the verified storage example from the workspace root:
 
@@ -29,6 +32,5 @@ cargo run --bin parquet-fixture -- /tmp/columnscope-fixture.parquet
 The JSON contracts are documented in [Plan format](../../docs/PLAN_FORMAT.md)
 and [Snapshot descriptor](../../docs/SNAPSHOT_DESCRIPTOR.md). Scan, filter,
 projection, and bounded composite aggregation physical operators are
-implemented and connected by the unoptimized physical planner. Optimizer
-rewrites remain unimplemented. See the [workspace README](../../README.md) for
-current limitations.
+implemented and connected by unoptimized and optimized physical planning. See
+the [workspace README](../../README.md) for current limitations.

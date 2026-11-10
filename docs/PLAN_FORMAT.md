@@ -110,7 +110,9 @@ Complete checked-in examples are available in
 [`fixtures/plans/`](../fixtures/plans/).
 
 After binding, `plan_query` lowers this logical tree into physical operators in
-explicit unoptimized mode. The planner validates the Parquet schema and every
-operator output schema against the bound contract, and exposes an explain tree
-with the preserved operator order and physical resource settings. Rewrite rules
-are outside plan format version 1 and are not currently applied.
+explicit unoptimized or optimized mode. The planner validates the Parquet schema
+and every operator output schema against the bound contract, and exposes an
+explain tree with operator order and physical resource settings. Optimized mode
+may move a Filter through a Project and narrow the scan columns, but these are
+execution choices rather than changes to plan format version 1. Every filter
+remains as a residual physical operator.
