@@ -17,6 +17,8 @@ The current API establishes the Arrow/Parquet storage boundary:
 - `FilterExec` and `ProjectExec` stream filtered and projected batches;
 - `HashAggregateExec` computes global, single-key, or two-key COUNT, SUM, MIN,
   MAX, and AVG results under explicit state and output-batch limits.
+- `ScalarFilterProject` and `ScalarAggregate` provide an independent
+  row-at-a-time comparison path over the same decoded Arrow batches.
 - `plan_query` lowers a bound tree in unoptimized mode, checks every physical
   schema, and retains a stable explain tree beside the live operator root.
 - `PlanningMode::Optimized` safely moves filters through projections, remaps

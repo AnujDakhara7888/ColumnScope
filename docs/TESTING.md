@@ -31,6 +31,10 @@ performance evidence can fail independently.
 | Five groups drain as bounded result batches of 2, 2, and 1 rows | pass |
 | Zero-sized aggregate output batches are rejected at construction | pass |
 | Grouped results are batch-boundary independent on a worker thread | pass |
+| Scalar filter/project matches vector execution on shared Arrow buffers | pass |
+| Scalar global and filtered two-key aggregates match vector results | pass |
+| Scalar empty, nullable, overflow, non-finite, and state-limit behavior matches | pass |
+| Scalar aggregation is batch-boundary independent on a worker thread | pass |
 | Unoptimized planning preserves Project → Filter → Scan order | pass |
 | Planned filter/project execution completes on a worker thread | pass |
 | Aggregate scan, state, and output limits appear in explain output | pass |
@@ -75,15 +79,17 @@ DuckDB 2.0.0 has been installed and imported successfully with Python 3.14.5.
 Checked filter/project and grouped-aggregate results are stored as small JSON
 oracle fixtures.
 
-The latest local workspace run completed with 55 passed, 0 failed, and 0
+The latest local workspace run completed with 67 passed, 0 failed, and 0
 ignored integration tests. Both oracle fixtures were independently regenerated
 with DuckDB 2.0.0. The grouped fixture matched three region groups, including a
 null-only aggregate group. Composite nullable keys, terminal state-budget
 failure, and three partial output batches were also exercised. The production
 path does not invoke DuckDB. The planner tests also executed the preserved
 unoptimized tree, checked explain/resource details, and rejected mismatched
-schemas before execution. Randomized differential cases and benchmark
-validation await later components.
+schemas before execution. The scalar comparison consumed the same decoded
+Arrow batches as the vector path and matched unordered result rows for empty,
+global, filtered, nullable composite-key, and all supported aggregate cases.
+Randomized differential cases and benchmark validation await later components.
 
 Optimizer parity uses a separate twelve-row fixture written as three four-row
 groups. A `metric >= 12` predicate pruned the `[0, 3]` group, retained the
@@ -93,9 +99,9 @@ An unsupported `NOT` predicate retained all three groups.
 
 ## Correctness strategy for engine operators
 
-As operators are implemented, optimized, unoptimized, and scalar results will
-be compared with DuckDB over identical Parquet inputs. Integer, string, and
-boolean results must match exactly. Floating aggregates will use a documented
+Optimized, unoptimized, and scalar results are compared over identical inputs,
+with DuckDB supplying checked fixtures for representative plans. Integer,
+string, and boolean results must match exactly. Floating aggregates will use a documented
 absolute-plus-relative tolerance. Result multisets will be compared outside
 the measured interval because the engine does not promise output order.
 
