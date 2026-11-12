@@ -43,9 +43,11 @@ group. The original Filter remains in the physical tree and evaluates every
 decoded row, including rows in partially matching groups. Explain output reports
 decoded/source columns and selected/total row groups.
 
-A separate scalar executor will evaluate the same supported semantics one row
-at a time over the same decoded Arrow buffers. It is a comparison path, not an
-alternate storage stack.
+A separate scalar executor evaluates the same supported expressions, filters,
+projections, and aggregates one row at a time over the same decoded Arrow
+buffers. It is a comparison path, not an alternate storage stack. Scalar hash
+aggregation shares the vector path's global and composite-key semantics,
+retained-state limit, terminal failures, and unspecified output ordering.
 
 ## Implemented plan and storage contracts
 
@@ -105,7 +107,7 @@ the canonical schema fingerprint, file-level schema agreement, lowercase
 SHA-256 values, unique normalized relative object keys, and nonnegative sizes,
 row counts, and versions. It never discovers files by listing a directory.
 
-## Planned semantic boundaries
+## Semantic boundaries
 
 - Types: nullable Int64, Float64, Boolean, and Utf8.
 - Predicates: typed comparisons and three-valued boolean logic.
@@ -119,8 +121,9 @@ row counts, and versions. It never discovers files by listing a directory.
 - Optimization: projection pruning, safe filter movement, and conservative
   numeric row-group pruning with a residual filter retained for correctness.
 
-These execution boundaries describe the design target. Parsing, binding,
-vectorized expression evaluation, scan/filter/project execution, and bounded
-global or composite-key aggregation are available through an unoptimized
-physical planner or the documented pushdown/pruning mode. Page-index pruning,
-predicate evaluation inside the Parquet decoder, and cost-based rules are not.
+These execution boundaries apply to the implemented vector and scalar
+comparison paths. Vector execution is available through an unoptimized
+physical planner or the documented pushdown/pruning mode; scalar execution is
+constructed directly from the same bound expressions and decoded batches.
+Page-index pruning, predicate evaluation inside the Parquet decoder, and
+cost-based rules are not implemented.

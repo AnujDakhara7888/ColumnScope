@@ -2,11 +2,11 @@
 
 [![CI](https://github.com/AnujDakhara7888/ColumnScope/actions/workflows/ci.yml/badge.svg)](https://github.com/AnujDakhara7888/ColumnScope/actions/workflows/ci.yml)
 
-ColumnScope is a small columnar query engine being built in Rust to make query
-execution strategy visible and measurable. It will execute typed logical plans
-over Parquet, lower them into explicit physical operators, process Arrow arrays
-in batches, and compare that path with an independently inspectable scalar
-baseline.
+ColumnScope is a small columnar query engine built in Rust to make query
+execution strategy visible and measurable. It executes typed logical plans
+over Parquet, lowers them into explicit physical operators, processes Arrow
+arrays in batches, and compares that path with an independently inspectable
+scalar baseline.
 
 The project focuses on a deliberately narrow question: how do batching,
 projection pruning, filter placement, and conservative row-group pruning affect
@@ -14,8 +14,8 @@ correctness, runtime, and memory for the same query semantics?
 
 ## Current capabilities
 
-The storage foundation and initial vectorized execution path are implemented
-and verified:
+The storage foundation and comparison execution paths are implemented and
+verified:
 
 - a pinned Rust workspace using Arrow and Parquet 60.1.0;
 - a Python 3.14.5 development environment with DuckDB 2.0.0 reserved for the
@@ -35,6 +35,8 @@ and verified:
   and named expression projection over Arrow arrays;
 - global, single-key, and two-key hash aggregation for COUNT, SUM, MIN, MAX,
   and AVG, with an explicit retained-state budget and bounded output batches;
+- an independent row-at-a-time filter/project and aggregation path over the
+  same decoded Arrow buffers, with matching null, overflow, and failure rules;
 - unoptimized logical-to-physical planning with recursive schema checks and a
   stable physical explain tree;
 - an opt-in optimizer for safe Filter-through-Project movement, Parquet column
@@ -43,8 +45,8 @@ and verified:
 - a compatibility consumer that counts every decoded batch, column, and row;
 - Linux CI for formatting, strict Clippy linting, and tests.
 
-A scalar baseline, live SnapshotStore integration, and performance results are
-not yet implemented. Unoptimized mode preserves the bound logical tree;
+Live SnapshotStore integration and performance results are not yet implemented.
+Unoptimized mode preserves the bound logical tree;
 optimized mode applies only the documented pushdowns and keeps every filter as
 a residual correctness check. Hash aggregation is blocking and fails rather
 than spilling when its configured state budget is exceeded. The repository
@@ -102,9 +104,9 @@ cargo test --locked --workspace
 ```
 
 The current suite covers Parquet values/nulls, decode errors, scan lifecycle and
-counters, typed expression semantics, filter/project execution, aggregation
-boundaries, physical planning/schema checks, logical plan binding, and pinned
-snapshot validation. See
+counters, typed expression semantics, filter/project execution, scalar/vector
+aggregation parity and failure boundaries, physical planning/schema checks,
+logical plan binding, and pinned snapshot validation. See
 [Testing](docs/TESTING.md) for the latest observed counts. DuckDB supplies
 checked expected results only and is not used by the production Rust path.
 

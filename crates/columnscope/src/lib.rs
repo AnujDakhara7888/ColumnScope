@@ -5,7 +5,9 @@
 //! descriptor contract. Its initial physical path includes pull-based Parquet
 //! scan, vectorized filter/projection, bounded one- or two-key aggregation, and
 //! physical planning, safe pushdowns, conservative row-group pruning, schema
-//! validation, and explain output.
+//! validation, and explain output. An independent row-at-a-time path implements
+//! the same filter, projection, and aggregation semantics over shared Arrow
+//! buffers for correctness and performance comparisons.
 
 pub mod aggregate;
 pub mod bind;
@@ -17,6 +19,7 @@ pub mod logical;
 pub mod operators;
 pub mod optimizer;
 pub mod planner;
+pub mod scalar;
 pub mod scan;
 pub mod schema;
 pub mod snapshot;

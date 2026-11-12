@@ -27,3 +27,6 @@ All notable changes to ColumnScope will be documented here.
 - Opt-in Filter-through-Project and Parquet projection pushdown, conservative
   numeric row-group pruning, retained residual filters, and optimizer parity
   coverage.
+- Independent scalar filter/project and bounded aggregation execution over
+  shared Arrow buffers, with vector parity across nullable composite groups,
+  empty inputs, batch boundaries, overflow, and terminal failures.
