@@ -51,6 +51,10 @@ performance evidence can fail independently.
 | Unknown fields, versions, columns, aliases, and implicit coercion fail | pass |
 | Pinned snapshot canonical fingerprint and JSON round trip validate | pass |
 | Unsafe/duplicate object keys and schema mismatches fail | pass |
+| Q01–Q12 plans bind and pair with equivalent oracle SQL | pass |
+| Generated layouts match committed physical SHA-256 values | pass |
+| Both layouts contain the same one million unique logical rows | pass |
+| Cluster order, 100,000 customer keys, and exact selectivity counts validate | pass |
 
 The tests use temporary directories and do not depend on checked-in generated
 data. Run the complete current suite with:
@@ -79,7 +83,7 @@ DuckDB 2.0.0 has been installed and imported successfully with Python 3.14.5.
 Checked filter/project and grouped-aggregate results are stored as small JSON
 oracle fixtures.
 
-The latest local workspace run completed with 67 passed, 0 failed, and 0
+The latest local workspace run completed with 70 passed, 0 failed, and 0
 ignored integration tests. Both oracle fixtures were independently regenerated
 with DuckDB 2.0.0. The grouped fixture matched three region groups, including a
 null-only aggregate group. Composite nullable keys, terminal state-budget
@@ -89,7 +93,13 @@ unoptimized tree, checked explain/resource details, and rejected mismatched
 schemas before execution. The scalar comparison consumed the same decoded
 Arrow batches as the vector path and matched unordered result rows for empty,
 global, filtered, nullable composite-key, and all supported aggregate cases.
-Randomized differential cases and benchmark validation await later components.
+The frozen workload test regenerated both one-million-row layouts, matched the
+committed physical and logical checksums, checked 16 Snappy row groups per
+file, and observed exact Q03–Q07 counts of 1,000, 10,000, 100,000, 500,000,
+and 900,000 rows. All twelve equivalent SQL files executed against DuckDB; the
+observed result-row counts for Q01–Q12 were 1,000,000, 1,000,000, 1,000,
+10,000, 100,000, 500,000, 900,000, 1, 8, 32, 100,000, and 256. Randomized
+differential cases and timed benchmark validation await later components.
 
 Optimizer parity uses a separate twelve-row fixture written as three four-row
 groups. A `metric >= 12` predicate pruned the `[0, 3]` group, retained the
@@ -101,9 +111,9 @@ An unsupported `NOT` predicate retained all three groups.
 
 Optimized, unoptimized, and scalar results are compared over identical inputs,
 with DuckDB supplying checked fixtures for representative plans. Integer,
-string, and boolean results must match exactly. Floating aggregates will use a documented
-absolute-plus-relative tolerance. Result multisets will be compared outside
-the measured interval because the engine does not promise output order.
+string, and boolean results must match exactly. Floating aggregates will use a
+documented absolute-plus-relative tolerance. Result multisets will be compared
+outside the measured interval because the engine does not promise output order.
 
 Boundary coverage will include empty input, null-only columns, predicate nulls,
 multi-file scans, no/all matches, integer overflow, aggregation memory limits,

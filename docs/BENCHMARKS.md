@@ -1,17 +1,27 @@
 # Benchmarks
 
 No query performance results are published yet. Vectorized scan, filter,
-projection, bounded composite aggregation, and conservative pushdown/pruning
-exist alongside an independent scalar comparison path, but the fixed
-million-row workload and timing/RSS harness are not implemented. The small
-storage, optimizer, scalar-parity, and oracle checks are correctness evidence,
-not benchmarks.
+projection, bounded composite aggregation, conservative pushdown/pruning, and
+an independent scalar comparison path exist. The deterministic million-row
+dataset and twelve query families are frozen, but the fresh-process timing/RSS
+harness is not implemented. Storage, optimizer, scalar-parity, workload, and
+oracle checks are correctness evidence, not benchmarks.
+
+## Frozen inputs
+
+The [benchmark input contract](../benchmarks/README.md) defines Q01–Q12, their
+versioned plans and equivalent DuckDB SQL, and the deterministic dataset. The
+generator emits random-order and selectivity-key-clustered layouts with the
+same one million logical rows, one Snappy Parquet file per layout, and
+65,536-row groups. The committed manifest records generation parameters and
+verified physical and logical SHA-256 values; generated Parquet files remain
+outside Git.
 
 ## Measurement design
 
-The benchmark suite will use a deterministic one-million-row dataset and twelve
-fixed query families covering wide and projected scans, a selectivity curve,
-global aggregation, low- and high-cardinality grouping, and a combined
+The benchmark suite uses the frozen deterministic one-million-row dataset and
+twelve fixed query families covering wide and projected scans, a selectivity
+curve, global aggregation, low- and high-cardinality grouping, and a combined
 filter/two-key aggregation pipeline.
 
 Two comparisons will be reported separately:

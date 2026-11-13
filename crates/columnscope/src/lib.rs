@@ -10,6 +10,7 @@
 //! buffers for correctness and performance comparisons.
 
 pub mod aggregate;
+pub mod benchmark;
 pub mod bind;
 pub mod error;
 pub mod evaluate;

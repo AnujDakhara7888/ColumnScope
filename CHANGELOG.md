@@ -30,3 +30,6 @@ All notable changes to ColumnScope will be documented here.
 - Independent scalar filter/project and bounded aggregation execution over
   shared Arrow buffers, with vector parity across nullable composite groups,
   empty inputs, batch boundaries, overflow, and terminal failures.
+- Twelve frozen benchmark plan/SQL pairs and a deterministic one-million-row
+  generator for checksum-verified random and selectivity-key-clustered Parquet
+  layouts.
