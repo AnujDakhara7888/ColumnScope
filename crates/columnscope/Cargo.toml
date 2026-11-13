@@ -21,3 +21,7 @@ tempfile.workspace = true
 [[bin]]
 name = "parquet-fixture"
 path = "src/bin/parquet_fixture.rs"
+
+[[bin]]
+name = "generate-benchmark-data"
+path = "src/bin/generate_benchmark_data.rs"

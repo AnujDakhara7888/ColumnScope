@@ -19,6 +19,8 @@ The current API establishes the Arrow/Parquet storage boundary:
   MAX, and AVG results under explicit state and output-batch limits.
 - `ScalarFilterProject` and `ScalarAggregate` provide an independent
   row-at-a-time comparison path over the same decoded Arrow batches.
+- `generate_benchmark_datasets` writes the frozen one-million-row random and
+  clustered layouts and their checksum manifest.
 - `plan_query` lowers a bound tree in unoptimized mode, checks every physical
   schema, and retains a stable explain tree beside the live operator root.
 - `PlanningMode::Optimized` safely moves filters through projections, remaps

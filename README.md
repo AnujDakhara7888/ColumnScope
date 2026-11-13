@@ -37,6 +37,8 @@ verified:
   and AVG, with an explicit retained-state budget and bounded output batches;
 - an independent row-at-a-time filter/project and aggregation path over the
   same decoded Arrow buffers, with matching null, overflow, and failure rules;
+- twelve frozen plan/SQL workload pairs and a deterministic generator for
+  identical random and clustered one-million-row Parquet layouts;
 - unoptimized logical-to-physical planning with recursive schema checks and a
   stable physical explain tree;
 - an opt-in optimizer for safe Filter-through-Project movement, Parquet column
@@ -95,6 +97,17 @@ The default planner remains explicitly unoptimized for comparison. Optimized
 explain output additionally reports filter movement, decoded columns, selected
 row groups, and residual filters.
 
+To reproduce the benchmark inputs without committing generated Parquet files:
+
+```sh
+cargo run --locked --release --bin generate-benchmark-data -- \
+  artifacts/columnscope/datasets
+```
+
+See the [frozen benchmark inputs](benchmarks/README.md) for the dataset contract,
+checksums, and Q01–Q12 definitions. No runtime result is claimed until the
+measurement harness and result validation are complete.
+
 ## Verification
 
 ```sh
@@ -106,7 +119,8 @@ cargo test --locked --workspace
 The current suite covers Parquet values/nulls, decode errors, scan lifecycle and
 counters, typed expression semantics, filter/project execution, scalar/vector
 aggregation parity and failure boundaries, physical planning/schema checks,
-logical plan binding, and pinned snapshot validation. See
+logical plan binding, pinned snapshot validation, frozen workload contracts,
+and million-row layout identity. See
 [Testing](docs/TESTING.md) for the latest observed counts. DuckDB supplies
 checked expected results only and is not used by the production Rust path.
 
@@ -119,8 +133,9 @@ Apache Parquet supplies file encoding and decoding. DuckDB will be used only as
 an independent correctness oracle, never as the production query path.
 
 See [Plan format](docs/PLAN_FORMAT.md), [Snapshot descriptor](docs/SNAPSHOT_DESCRIPTOR.md),
-[Architecture](docs/ARCHITECTURE.md), [Testing](docs/TESTING.md), and
-[Benchmarks](docs/BENCHMARKS.md) for the public contracts and evidence boundaries.
+[Architecture](docs/ARCHITECTURE.md), [Testing](docs/TESTING.md),
+[frozen benchmark inputs](benchmarks/README.md), and [Benchmarks](docs/BENCHMARKS.md)
+for the public contracts and evidence boundaries.
 
 ## Scope and limitations
 

@@ -1,0 +1,25 @@
+{
+  "format_version": 1,
+  "input_schema": {
+    "fields": [
+      { "name": "id", "data_type": "int64", "nullable": false },
+      { "name": "customer_id", "data_type": "int64", "nullable": false },
+      { "name": "region", "data_type": "utf8", "nullable": false },
+      { "name": "category", "data_type": "utf8", "nullable": false },
+      { "name": "amount_cents", "data_type": "int64", "nullable": true },
+      { "name": "metric", "data_type": "float64", "nullable": true },
+      { "name": "active", "data_type": "boolean", "nullable": true },
+      { "name": "selectivity_key", "data_type": "int64", "nullable": false }
+    ]
+  },
+  "plan": {
+    "type": "aggregate",
+    "input": { "type": "scan" },
+    "group_by": [],
+    "aggregates": [
+      { "function": "count_star", "alias": "rows" },
+      { "function": "count", "alias": "amount_count", "expr": { "type": "column", "name": "amount_cents" } },
+      { "function": "sum", "alias": "amount_sum", "expr": { "type": "column", "name": "amount_cents" } }
+    ]
+  }
+}
