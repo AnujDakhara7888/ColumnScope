@@ -1,12 +1,11 @@
 # Benchmarks
 
-No query performance results are published yet. Vectorized scan, filter,
+No query performance conclusions are published yet. Vectorized scan, filter,
 projection, bounded composite aggregation, conservative pushdown/pruning, and
 an independent scalar comparison path exist. The deterministic million-row
-dataset and twelve query families are frozen, but the fresh-process timing/RSS
-harness has not yet produced an accepted Q01–Q12 result set. Storage,
-optimizer, scalar-parity, workload, harness, and oracle checks are correctness
-evidence, not performance results.
+dataset, twelve query families, and first complete 48-record validation matrix
+are retained. This single-sample pass is correctness and completeness evidence,
+not a runtime or memory comparison.
 
 ## Frozen inputs
 
@@ -90,8 +89,9 @@ target/release/columnscope-bench-runner \
 ```
 
 The runner executes one configuration at a time so an experiment matrix stays
-explicit. Generated datasets and result directories are intentionally outside
-version control. No runtime or memory comparison is accepted or published yet.
+explicit. Generated datasets and ad hoc result directories stay outside
+version control; small accepted evidence sets may be retained with their
+provenance. No runtime or memory comparison is accepted or published yet.
 
 ## Complete matrix validation
 
@@ -125,3 +125,18 @@ passes. The output directory must not already exist.
 This initial matrix is a completeness and correctness gate. A single sample is
 not sufficient for a runtime or memory comparison; the later matched trial set
 will use warmups and repeated measurements before reporting medians or p95.
+
+## Observed initial matrix
+
+The retained [initial result set](../benchmarks/results/initial/README.md) ran
+Q01–Q12 over the one-million-row random layout at batch size 8,192 and one
+thread. Its 48 measured records used distinct child process IDs. Every record
+had positive runtime and RSS fields, one source revision, and the committed
+random-layout checksum.
+
+DuckDB 2.0.0, batch execution, and scalar execution produced the same row count
+and typed multiset digest for every workload in both timing modes. Q01–Q12
+returned 1,000,000; 1,000,000; 1,000; 10,000; 100,000; 500,000; 900,000; 1;
+8; 32; 100,000; and 256 rows. The environment and raw samples are retained,
+but their single timings are deliberately not summarized as performance
+results.

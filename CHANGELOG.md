@@ -39,3 +39,6 @@ All notable changes to ColumnScope will be documented here.
 - A complete Q01–Q12 matrix driver that verifies manifest/source provenance,
   runs scalar and batch configurations, independently executes DuckDB SQL, and
   publishes raw artifacts only after every result multiset matches.
+- The first complete 48-record million-row matrix, with exact DuckDB parity for
+  every workload in execution-only and end-to-end modes, retained as a
+  single-sample correctness baseline with full provenance.

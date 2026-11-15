@@ -69,3 +69,7 @@ The complete Q01–Q12 scalar/batch matrix and independent DuckDB validation are
 orchestrated by [`scripts/run_benchmark_matrix.py`](../scripts/run_benchmark_matrix.py).
 The driver retains raw samples and provenance only after every result multiset
 matches.
+
+The [initial complete matrix](results/initial/README.md) retains 48 raw records
+and exact DuckDB parity for every workload and mode. It has one repetition per
+configuration and is not a performance comparison.
