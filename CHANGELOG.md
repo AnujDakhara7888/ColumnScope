@@ -36,3 +36,6 @@ All notable changes to ColumnScope will be documented here.
 - Release-only fresh-process benchmark trials with execution-only and
   end-to-end timing boundaries, order-independent result checksums, process
   peak-RSS capture, raw CSV samples, and source/environment provenance.
+- A complete Q01–Q12 matrix driver that verifies manifest/source provenance,
+  runs scalar and batch configurations, independently executes DuckDB SQL, and
+  publishes raw artifacts only after every result multiset matches.

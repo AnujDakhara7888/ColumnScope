@@ -76,6 +76,17 @@ cargo clippy --locked --workspace --all-targets -- -D warnings
 
 CI runs all three commands on Linux with the checked-in Rust toolchain.
 
+The benchmark-matrix digest helpers have focused Python coverage:
+
+```sh
+python3 -m unittest scripts/test_run_benchmark_matrix.py
+```
+
+These tests cover output-order independence, duplicate sensitivity, and the
+DuckDB-to-ColumnScope type mapping. The complete matrix additionally verifies
+all actual million-row workload outputs against independently executed DuckDB
+SQL before retaining raw samples.
+
 The oracle environment is pinned separately:
 
 ```sh

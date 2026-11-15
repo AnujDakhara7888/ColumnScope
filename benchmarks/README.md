@@ -64,3 +64,8 @@ raw timing, process peak RSS, result checksums, and provenance, but an accepted
 Q01–Q12 result set has not been published. Its timing boundaries, result sink,
 and invocation are documented in
 [`docs/BENCHMARKS.md`](../docs/BENCHMARKS.md).
+
+The complete Q01–Q12 scalar/batch matrix and independent DuckDB validation are
+orchestrated by [`scripts/run_benchmark_matrix.py`](../scripts/run_benchmark_matrix.py).
+The driver retains raw samples and provenance only after every result multiset
+matches.

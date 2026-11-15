@@ -92,3 +92,36 @@ target/release/columnscope-bench-runner \
 The runner executes one configuration at a time so an experiment matrix stays
 explicit. Generated datasets and result directories are intentionally outside
 version control. No runtime or memory comparison is accepted or published yet.
+
+## Complete matrix validation
+
+The matrix driver runs all twelve workloads through four configurations:
+execution-only batch and scalar, plus end-to-end optimized batch and
+unoptimized scalar. It requires the one-million-row input to match the selected
+manifest layout, rebuilds the release binaries, and refuses a dirty tree or a
+source revision other than `HEAD`.
+
+Create a pinned Python environment and run the initial one-sample matrix with:
+
+```sh
+python3 -m venv .venv
+.venv/bin/pip install -r requirements-dev.txt
+
+.venv/bin/python scripts/run_benchmark_matrix.py \
+  --input artifacts/columnscope/datasets/random.parquet \
+  --output-dir artifacts/columnscope/results/initial \
+  --source-sha "$(git rev-parse HEAD)" \
+  --warmups 0 --repetitions 1
+```
+
+DuckDB executes each paired SQL query with one thread. Its actual typed output
+rows pass through the same documented order-independent multiset digest as the
+ColumnScope sink. The driver requires equal row counts and digests for DuckDB,
+scalar execution, and batch execution in both modes before publishing any
+files. It writes `raw_trials.csv`, `environment.json`,
+`dataset_manifest.json`, and `query_validation.json` only after every workload
+passes. The output directory must not already exist.
+
+This initial matrix is a completeness and correctness gate. A single sample is
+not sufficient for a runtime or memory comparison; the later matched trial set
+will use warmups and repeated measurements before reporting medians or p95.
