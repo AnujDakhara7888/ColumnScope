@@ -785,7 +785,8 @@ fn cpu_model() -> Option<String> {
 fn total_memory_bytes() -> Option<u64> {
     #[cfg(target_os = "linux")]
     {
-        let value = fs::read_to_string("/proc/meminfo")?
+        let value = fs::read_to_string("/proc/meminfo")
+            .ok()?
             .lines()
             .find_map(|line| line.strip_prefix("MemTotal:"))?
             .split_whitespace()
