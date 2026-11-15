@@ -17,6 +17,7 @@ pub mod evaluate;
 pub mod execution;
 pub mod expr;
 pub mod logical;
+pub mod measurement;
 pub mod operators;
 pub mod optimizer;
 pub mod planner;

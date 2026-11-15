@@ -300,6 +300,7 @@ name = "columnscope"
 version = "0.1.0"
 dependencies = [
  "arrow",
+ "libc",
  "parquet",
  "serde",
  "serde_json",

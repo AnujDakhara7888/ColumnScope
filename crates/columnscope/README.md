@@ -21,6 +21,10 @@ The current API establishes the Arrow/Parquet storage boundary:
   row-at-a-time comparison path over the same decoded Arrow batches.
 - `generate_benchmark_datasets` writes the frozen one-million-row random and
   clustered layouts and their checksum manifest.
+- `run_trial` executes one release benchmark trial with an explicit timing
+  boundary, result checksum, process peak RSS, and observable counters.
+- `capture_environment` records the source, dependency lockfile, dataset,
+  compiler, build, operating system, CPU, and memory provenance.
 - `plan_query` lowers a bound tree in unoptimized mode, checks every physical
   schema, and retains a stable explain tree beside the live operator root.
 - `PlanningMode::Optimized` safely moves filters through projections, remaps
@@ -37,4 +41,5 @@ The JSON contracts are documented in [Plan format](../../docs/PLAN_FORMAT.md)
 and [Snapshot descriptor](../../docs/SNAPSHOT_DESCRIPTOR.md). Scan, filter,
 projection, and bounded composite aggregation physical operators are
 implemented and connected by unoptimized and optimized physical planning. See
-the [workspace README](../../README.md) for current limitations.
+the [benchmark protocol](../../docs/BENCHMARKS.md) and
+[workspace README](../../README.md) for current limitations.
