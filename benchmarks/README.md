@@ -59,6 +59,8 @@ Parquet compression and row groups, and verifies the exact selectivity counts.
 ## Evidence boundary
 
 These files define reproducible inputs and correctness contracts. They are not
-performance results. Runtime and peak-memory claims require the separate
-fresh-process measurement harness and accepted result parity checks described
-in [`docs/BENCHMARKS.md`](../docs/BENCHMARKS.md).
+performance results. The release-only fresh-process measurement harness records
+raw timing, process peak RSS, result checksums, and provenance, but an accepted
+Q01–Q12 result set has not been published. Its timing boundaries, result sink,
+and invocation are documented in
+[`docs/BENCHMARKS.md`](../docs/BENCHMARKS.md).

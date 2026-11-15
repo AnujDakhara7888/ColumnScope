@@ -55,6 +55,10 @@ performance evidence can fail independently.
 | Generated layouts match committed physical SHA-256 values | pass |
 | Both layouts contain the same one million unique logical rows | pass |
 | Cluster order, 100,000 customer keys, and exact selectivity counts validate | pass |
+| Execution-only scalar and batch Q03 trials share result counts/checksums | pass |
+| End-to-end optimized batch and scalar Q08/Q09 trials share result checksums | pass |
+| Unsupported benchmark planning/thread combinations fail before input open | pass |
+| Benchmark environment metadata binds source, lockfile, and dataset hashes | pass |
 
 The tests use temporary directories and do not depend on checked-in generated
 data. Run the complete current suite with:
@@ -83,7 +87,7 @@ DuckDB 2.0.0 has been installed and imported successfully with Python 3.14.5.
 Checked filter/project and grouped-aggregate results are stored as small JSON
 oracle fixtures.
 
-The latest local workspace run completed with 70 passed, 0 failed, and 0
+The latest local workspace run completed with 74 passed, 0 failed, and 0
 ignored integration tests. Both oracle fixtures were independently regenerated
 with DuckDB 2.0.0. The grouped fixture matched three region groups, including a
 null-only aggregate group. Composite nullable keys, terminal state-budget
@@ -99,7 +103,13 @@ file, and observed exact Q03–Q07 counts of 1,000, 10,000, 100,000, 500,000,
 and 900,000 rows. All twelve equivalent SQL files executed against DuckDB; the
 observed result-row counts for Q01–Q12 were 1,000,000, 1,000,000, 1,000,
 10,000, 100,000, 500,000, 900,000, 1, 8, 32, 100,000, and 256. Randomized
-differential cases and timed benchmark validation await later components.
+differential cases and the complete timed benchmark matrix await later
+components.
+
+The harness tests use a small deterministic Parquet fixture. They validate the
+timing-mode paths, scalar/batch result parity, counters, process RSS fields,
+configuration rejection, and provenance capture. Release runner smoke checks
+are not reported as performance measurements.
 
 Optimizer parity uses a separate twelve-row fixture written as three four-row
 groups. A `metric >= 12` predicate pruned the `[0, 3]` group, retained the

@@ -39,6 +39,9 @@ verified:
   same decoded Arrow buffers, with matching null, overflow, and failure rules;
 - twelve frozen plan/SQL workload pairs and a deterministic generator for
   identical random and clustered one-million-row Parquet layouts;
+- a release-only fresh-process benchmark harness with explicit execution-only
+  and end-to-end timing boundaries, process peak-RSS capture, result checksums,
+  raw samples, and source/environment provenance;
 - unoptimized logical-to-physical planning with recursive schema checks and a
   stable physical explain tree;
 - an opt-in optimizer for safe Filter-through-Project movement, Parquet column
@@ -105,8 +108,9 @@ cargo run --locked --release --bin generate-benchmark-data -- \
 ```
 
 See the [frozen benchmark inputs](benchmarks/README.md) for the dataset contract,
-checksums, and Q01–Q12 definitions. No runtime result is claimed until the
-measurement harness and result validation are complete.
+checksums, and Q01–Q12 definitions, and [Benchmarks](docs/BENCHMARKS.md) for the
+measurement command and evidence boundary. No runtime result is claimed until
+the complete matrix passes result validation.
 
 ## Verification
 

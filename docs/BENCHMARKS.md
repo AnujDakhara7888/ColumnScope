@@ -4,8 +4,9 @@ No query performance results are published yet. Vectorized scan, filter,
 projection, bounded composite aggregation, conservative pushdown/pruning, and
 an independent scalar comparison path exist. The deterministic million-row
 dataset and twelve query families are frozen, but the fresh-process timing/RSS
-harness is not implemented. Storage, optimizer, scalar-parity, workload, and
-oracle checks are correctness evidence, not benchmarks.
+harness has not yet produced an accepted Q01–Q12 result set. Storage,
+optimizer, scalar-parity, workload, harness, and oracle checks are correctness
+evidence, not performance results.
 
 ## Frozen inputs
 
@@ -40,3 +41,54 @@ samples will retain runtime, process peak RSS, output counts/checksums, source
 revision, dataset checksum, batch size, layout, flags, trial number, hardware,
 OS, compiler, and cache policy. Reports will include median and p95 without a
 minimum required speedup; regressions and negative results will remain visible.
+
+## Measurement harness
+
+`columnscope-bench-runner` launches a new release-mode
+`columnscope-bench-trial` process for every warmup and measured repetition. It
+writes measured samples to `raw_trials.csv`, records the build and host in
+`environment.json`, and copies the dataset manifest beside the samples. Warmup
+records are validated but excluded from the CSV.
+
+The two timing boundaries are explicit:
+
+- `execution_only` decodes the entire Parquet input before starting the timer.
+  Scalar and batch trials then consume the same Arrow representation with
+  unoptimized planning. The setup high-water RSS is reported separately.
+- `end_to_end` starts the timer before physical planning, file opening,
+  Parquet decode, execution, and result consumption. Batch trials may select
+  optimized or unoptimized planning; the scalar path is unoptimized.
+
+Both modes include an order-independent, duplicate-sensitive result sink in
+the timed region. Each output row is hashed without sorting or retaining the
+result set; four wrapping sums and four XOR accumulators form the final
+checksum. Accepted comparisons require equal output row counts and checksums.
+
+Peak RSS is the process high-water mark reported by `getrusage`. Linux values
+are normalized from KiB to bytes; macOS values are already bytes. This measures
+the whole trial process rather than engine allocations alone. Version 1 trials
+require one execution thread and reject unsupported flag combinations before
+opening the input.
+
+After generating the frozen inputs, run one configuration with:
+
+```sh
+cargo build --locked --release \
+  --bin columnscope-bench-trial --bin columnscope-bench-runner
+
+target/release/columnscope-bench-runner \
+  --trial-binary target/release/columnscope-bench-trial \
+  --input artifacts/columnscope/datasets/random.parquet \
+  --dataset-manifest benchmarks/dataset_manifest.json \
+  --cargo-lock Cargo.lock \
+  --workload Q03 --engine batch --mode end_to_end \
+  --planning optimized --layout random \
+  --batch-size 8192 --threads 1 \
+  --warmups 1 --repetitions 5 \
+  --source-sha "$(git rev-parse HEAD)" \
+  --output-dir artifacts/columnscope/results/q03-batch-optimized
+```
+
+The runner executes one configuration at a time so an experiment matrix stays
+explicit. Generated datasets and result directories are intentionally outside
+version control. No runtime or memory comparison is accepted or published yet.

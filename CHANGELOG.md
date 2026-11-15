@@ -33,3 +33,6 @@ All notable changes to ColumnScope will be documented here.
 - Twelve frozen benchmark plan/SQL pairs and a deterministic one-million-row
   generator for checksum-verified random and selectivity-key-clustered Parquet
   layouts.
+- Release-only fresh-process benchmark trials with execution-only and
+  end-to-end timing boundaries, order-independent result checksums, process
+  peak-RSS capture, raw CSV samples, and source/environment provenance.
