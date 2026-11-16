@@ -1,0 +1,275 @@
+{
+  "format_version": 1,
+  "source_sha": "9d3b5a4bbedc0c991fc9f486b202a99cfb8aaadc",
+  "layout": "random",
+  "batch_size": 8192,
+  "threads": 1,
+  "duckdb_version": "2.0.0",
+  "workloads": [
+    {
+      "workload": "Q01",
+      "oracle_rows": 1000000,
+      "oracle_checksum": "46f97d42a0223fb02c7d431c6b9359a7d9c49d0cd4bf58c1c19e9685ae13c810",
+      "comparisons": [
+        {
+          "mode": "execution_only",
+          "rows": 1000000,
+          "result_checksum": "46f97d42a0223fb02c7d431c6b9359a7d9c49d0cd4bf58c1c19e9685ae13c810",
+          "batch_scalar_match": true,
+          "duckdb_match": true
+        },
+        {
+          "mode": "end_to_end",
+          "rows": 1000000,
+          "result_checksum": "46f97d42a0223fb02c7d431c6b9359a7d9c49d0cd4bf58c1c19e9685ae13c810",
+          "batch_scalar_match": true,
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "workload": "Q02",
+      "oracle_rows": 1000000,
+      "oracle_checksum": "3d933f50809f37adad907b98bd3f9178270ed3219ad8882647847fc349ef8fb9",
+      "comparisons": [
+        {
+          "mode": "execution_only",
+          "rows": 1000000,
+          "result_checksum": "3d933f50809f37adad907b98bd3f9178270ed3219ad8882647847fc349ef8fb9",
+          "batch_scalar_match": true,
+          "duckdb_match": true
+        },
+        {
+          "mode": "end_to_end",
+          "rows": 1000000,
+          "result_checksum": "3d933f50809f37adad907b98bd3f9178270ed3219ad8882647847fc349ef8fb9",
+          "batch_scalar_match": true,
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "workload": "Q03",
+      "oracle_rows": 1000,
+      "oracle_checksum": "0e413c32179c99603fd9d5278b4174d8f3633c1ce810789dcb04e198a31e8c54",
+      "comparisons": [
+        {
+          "mode": "execution_only",
+          "rows": 1000,
+          "result_checksum": "0e413c32179c99603fd9d5278b4174d8f3633c1ce810789dcb04e198a31e8c54",
+          "batch_scalar_match": true,
+          "duckdb_match": true
+        },
+        {
+          "mode": "end_to_end",
+          "rows": 1000,
+          "result_checksum": "0e413c32179c99603fd9d5278b4174d8f3633c1ce810789dcb04e198a31e8c54",
+          "batch_scalar_match": true,
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "workload": "Q04",
+      "oracle_rows": 10000,
+      "oracle_checksum": "346235b83d1bd17fdc8851b917015963f9c46e57283e50db72f348994fdc0766",
+      "comparisons": [
+        {
+          "mode": "execution_only",
+          "rows": 10000,
+          "result_checksum": "346235b83d1bd17fdc8851b917015963f9c46e57283e50db72f348994fdc0766",
+          "batch_scalar_match": true,
+          "duckdb_match": true
+        },
+        {
+          "mode": "end_to_end",
+          "rows": 10000,
+          "result_checksum": "346235b83d1bd17fdc8851b917015963f9c46e57283e50db72f348994fdc0766",
+          "batch_scalar_match": true,
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "workload": "Q05",
+      "oracle_rows": 100000,
+      "oracle_checksum": "ffac78bc5619c526c6768ee26f0bd3546241fba5434e17ad9d221458fdbfcb4c",
+      "comparisons": [
+        {
+          "mode": "execution_only",
+          "rows": 100000,
+          "result_checksum": "ffac78bc5619c526c6768ee26f0bd3546241fba5434e17ad9d221458fdbfcb4c",
+          "batch_scalar_match": true,
+          "duckdb_match": true
+        },
+        {
+          "mode": "end_to_end",
+          "rows": 100000,
+          "result_checksum": "ffac78bc5619c526c6768ee26f0bd3546241fba5434e17ad9d221458fdbfcb4c",
+          "batch_scalar_match": true,
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "workload": "Q06",
+      "oracle_rows": 500000,
+      "oracle_checksum": "cff170e5efa717b6f435d377f6cc09f94150b74181e2005ceed1a82f838eea96",
+      "comparisons": [
+        {
+          "mode": "execution_only",
+          "rows": 500000,
+          "result_checksum": "cff170e5efa717b6f435d377f6cc09f94150b74181e2005ceed1a82f838eea96",
+          "batch_scalar_match": true,
+          "duckdb_match": true
+        },
+        {
+          "mode": "end_to_end",
+          "rows": 500000,
+          "result_checksum": "cff170e5efa717b6f435d377f6cc09f94150b74181e2005ceed1a82f838eea96",
+          "batch_scalar_match": true,
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "workload": "Q07",
+      "oracle_rows": 900000,
+      "oracle_checksum": "00b3349e55882b485cf703ff060a5ce04c32b4270b019e111ada0f3df3c5001f",
+      "comparisons": [
+        {
+          "mode": "execution_only",
+          "rows": 900000,
+          "result_checksum": "00b3349e55882b485cf703ff060a5ce04c32b4270b019e111ada0f3df3c5001f",
+          "batch_scalar_match": true,
+          "duckdb_match": true
+        },
+        {
+          "mode": "end_to_end",
+          "rows": 900000,
+          "result_checksum": "00b3349e55882b485cf703ff060a5ce04c32b4270b019e111ada0f3df3c5001f",
+          "batch_scalar_match": true,
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "workload": "Q08",
+      "oracle_rows": 1,
+      "oracle_checksum": "606f9ee338ee961cb2f537ab58659ba702f277b007ff18d648f8dbdc1de66631",
+      "comparisons": [
+        {
+          "mode": "execution_only",
+          "rows": 1,
+          "result_checksum": "606f9ee338ee961cb2f537ab58659ba702f277b007ff18d648f8dbdc1de66631",
+          "batch_scalar_match": true,
+          "duckdb_match": true
+        },
+        {
+          "mode": "end_to_end",
+          "rows": 1,
+          "result_checksum": "606f9ee338ee961cb2f537ab58659ba702f277b007ff18d648f8dbdc1de66631",
+          "batch_scalar_match": true,
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "workload": "Q09",
+      "oracle_rows": 8,
+      "oracle_checksum": "63dc6cec254c1924465c8acf6c36bd97a16a422db5684c83cd6b0f644d91741a",
+      "comparisons": [
+        {
+          "mode": "execution_only",
+          "rows": 8,
+          "result_checksum": "63dc6cec254c1924465c8acf6c36bd97a16a422db5684c83cd6b0f644d91741a",
+          "batch_scalar_match": true,
+          "duckdb_match": true
+        },
+        {
+          "mode": "end_to_end",
+          "rows": 8,
+          "result_checksum": "63dc6cec254c1924465c8acf6c36bd97a16a422db5684c83cd6b0f644d91741a",
+          "batch_scalar_match": true,
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "workload": "Q10",
+      "oracle_rows": 32,
+      "oracle_checksum": "8a3485129d4f76e8a4febebee9de1242c6d9d96ea514db2929d8783c01a5e92f",
+      "comparisons": [
+        {
+          "mode": "execution_only",
+          "rows": 32,
+          "result_checksum": "8a3485129d4f76e8a4febebee9de1242c6d9d96ea514db2929d8783c01a5e92f",
+          "batch_scalar_match": true,
+          "duckdb_match": true
+        },
+        {
+          "mode": "end_to_end",
+          "rows": 32,
+          "result_checksum": "8a3485129d4f76e8a4febebee9de1242c6d9d96ea514db2929d8783c01a5e92f",
+          "batch_scalar_match": true,
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "workload": "Q11",
+      "oracle_rows": 100000,
+      "oracle_checksum": "403299af681e25c47171ad302ed763689f233ae64b45d963755390ff171f79dd",
+      "comparisons": [
+        {
+          "mode": "execution_only",
+          "rows": 100000,
+          "result_checksum": "403299af681e25c47171ad302ed763689f233ae64b45d963755390ff171f79dd",
+          "batch_scalar_match": true,
+          "duckdb_match": true
+        },
+        {
+          "mode": "end_to_end",
+          "rows": 100000,
+          "result_checksum": "403299af681e25c47171ad302ed763689f233ae64b45d963755390ff171f79dd",
+          "batch_scalar_match": true,
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "workload": "Q12",
+      "oracle_rows": 256,
+      "oracle_checksum": "d5aebb5efac5da93a76bcd8c8413bc381486ea225444d345efc4146fd6d68dbf",
+      "comparisons": [
+        {
+          "mode": "execution_only",
+          "rows": 256,
+          "result_checksum": "d5aebb5efac5da93a76bcd8c8413bc381486ea225444d345efc4146fd6d68dbf",
+          "batch_scalar_match": true,
+          "duckdb_match": true
+        },
+        {
+          "mode": "end_to_end",
+          "rows": 256,
+          "result_checksum": "d5aebb5efac5da93a76bcd8c8413bc381486ea225444d345efc4146fd6d68dbf",
+          "batch_scalar_match": true,
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    }
+  ],
+  "status": "match"
+}

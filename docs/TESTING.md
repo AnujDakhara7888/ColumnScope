@@ -59,6 +59,7 @@ performance evidence can fail independently.
 | End-to-end optimized batch and scalar Q08/Q09 trials share result checksums | pass |
 | Unsupported benchmark planning/thread combinations fail before input open | pass |
 | Benchmark environment metadata binds source, lockfile, and dataset hashes | pass |
+| All 48 initial Q01–Q12 mode/engine records match DuckDB result multisets | pass |
 
 The tests use temporary directories and do not depend on checked-in generated
 data. Run the complete current suite with:
@@ -75,6 +76,17 @@ cargo clippy --locked --workspace --all-targets -- -D warnings
 ```
 
 CI runs all three commands on Linux with the checked-in Rust toolchain.
+
+The benchmark-matrix digest helpers have focused Python coverage:
+
+```sh
+python3 -m unittest scripts/test_run_benchmark_matrix.py
+```
+
+The three focused tests cover output-order independence, duplicate sensitivity, and the
+DuckDB-to-ColumnScope type mapping. The complete matrix additionally verifies
+all actual million-row workload outputs against independently executed DuckDB
+SQL before retaining raw samples.
 
 The oracle environment is pinned separately:
 

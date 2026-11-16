@@ -1,0 +1,15 @@
+{
+  "architecture": "aarch64",
+  "build_profile": "release",
+  "cargo_lock_sha256": "933789e6d20a88b41b4a04dbed26a36d0bf0c8f9f45d7e0277a4d796ce8cb1c3",
+  "cpu_model": "Apple M4",
+  "dataset_logical_rows_sha256": "a5361d567bfa8c1b4223a7a7abbcae9f56a8c6e3aa34c3fe8f270db53f5081e8",
+  "dataset_manifest_sha256": "256266697366d20b7b5e385ffaa9f621d4e3993337fd193ba5af0ad4740b4c52",
+  "format_version": 1,
+  "logical_cpus": 10,
+  "operating_system": "Darwin 25.6.0",
+  "package_version": "0.1.0",
+  "rustc_version": "rustc 1.96.0 (ac68faa20 2026-05-25) (Homebrew)\nbinary: rustc\ncommit-hash: ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96\ncommit-date: 2026-05-25\nhost: aarch64-apple-darwin\nrelease: 1.96.0\nLLVM version: 22.1.6",
+  "source_sha": "9d3b5a4bbedc0c991fc9f486b202a99cfb8aaadc",
+  "total_memory_bytes": 17179869184
+}
