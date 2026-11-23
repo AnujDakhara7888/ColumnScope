@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 use std::env;
 use std::error::Error;
+use std::fs;
 use std::io;
 use std::path::PathBuf;
 
@@ -28,33 +29,20 @@ fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
                 .iter()
                 .find(|workload| workload.id == workload_id)
                 .ok_or_else(|| invalid("workload must be Q01 through Q12"))?;
-            let record = run_trial(TrialConfig {
-                workload: workload.id.to_owned(),
-                plan_json: workload.plan_json.to_owned(),
-                input: PathBuf::from(required(&values, "input")?),
-                engine: required(&values, "engine")?.parse::<BenchmarkEngine>()?,
-                mode: required(&values, "mode")?.parse::<BenchmarkMode>()?,
-                planning: required(&values, "planning")?.parse::<BenchmarkPlanning>()?,
-                layout: required(&values, "layout")?.to_owned(),
-                batch_size: parse_usize(&values, "batch-size")?,
-                threads: parse_usize(&values, "threads")?,
-                trial: parse_usize(&values, "trial")?,
-                warmup: required(&values, "warmup")?.parse::<bool>()?,
-                source_sha: required(&values, "source-sha")?.to_owned(),
-                dataset_checksum: required(&values, "dataset-checksum")?.to_owned(),
-                aggregate: AggregateOptions {
-                    state_budget_bytes: parse_optional_usize(
-                        &values,
-                        "state-budget-bytes",
-                        AggregateOptions::default().state_budget_bytes,
-                    )?,
-                    output_batch_rows: parse_optional_usize(
-                        &values,
-                        "output-batch-rows",
-                        AggregateOptions::default().output_batch_rows,
-                    )?,
-                },
-            })?;
+            let record = run_trial(trial_config(
+                &values,
+                workload.id.to_owned(),
+                workload.plan_json.to_owned(),
+            )?)?;
+            println!("{}", serde_json::to_string(&record)?);
+        }
+        "plan-trial" => {
+            let plan_json = fs::read_to_string(required(&values, "plan")?)?;
+            let record = run_trial(trial_config(
+                &values,
+                required(&values, "workload")?.to_owned(),
+                plan_json,
+            )?)?;
             println!("{}", serde_json::to_string(&record)?);
         }
         "environment" => {
@@ -65,9 +53,45 @@ fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
             )?;
             println!("{}", serde_json::to_string_pretty(&environment)?);
         }
-        _ => return Err(invalid("command must be `trial` or `environment`").into()),
+        _ => {
+            return Err(invalid("command must be `trial`, `plan-trial`, or `environment`").into());
+        }
     }
     Ok(())
+}
+
+fn trial_config(
+    values: &HashMap<String, String>,
+    workload: String,
+    plan_json: String,
+) -> Result<TrialConfig, Box<dyn Error + Send + Sync>> {
+    Ok(TrialConfig {
+        workload,
+        plan_json,
+        input: PathBuf::from(required(values, "input")?),
+        engine: required(values, "engine")?.parse::<BenchmarkEngine>()?,
+        mode: required(values, "mode")?.parse::<BenchmarkMode>()?,
+        planning: required(values, "planning")?.parse::<BenchmarkPlanning>()?,
+        layout: required(values, "layout")?.to_owned(),
+        batch_size: parse_usize(values, "batch-size")?,
+        threads: parse_usize(values, "threads")?,
+        trial: parse_usize(values, "trial")?,
+        warmup: required(values, "warmup")?.parse::<bool>()?,
+        source_sha: required(values, "source-sha")?.to_owned(),
+        dataset_checksum: required(values, "dataset-checksum")?.to_owned(),
+        aggregate: AggregateOptions {
+            state_budget_bytes: parse_optional_usize(
+                values,
+                "state-budget-bytes",
+                AggregateOptions::default().state_budget_bytes,
+            )?,
+            output_batch_rows: parse_optional_usize(
+                values,
+                "output-batch-rows",
+                AggregateOptions::default().output_batch_rows,
+            )?,
+        },
+    })
 }
 
 fn parse_pairs(arguments: Vec<String>) -> Result<HashMap<String, String>, io::Error> {
