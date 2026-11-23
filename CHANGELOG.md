@@ -45,3 +45,7 @@ All notable changes to ColumnScope will be documented here.
 - A deterministic 120-case differential suite covering twelve query families,
   three execution/planning configurations, nullable data, and row counts around
   the 8,192-row batch boundary, with all 360 comparisons matched to DuckDB.
+- Ordered multi-file execution over immutable SnapshotStore descriptors, with
+  fail-before-output metadata/schema checks, explicit SHA-256 verification,
+  optimizer pushdowns, a checker CLI, Zstandard decoding, and a live version
+  pinning/replay integration result.

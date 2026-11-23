@@ -51,6 +51,11 @@ performance evidence can fail independently.
 | Unknown fields, versions, columns, aliases, and implicit coercion fail | pass |
 | Pinned snapshot canonical fingerprint and JSON round trip validate | pass |
 | Unsafe/duplicate object keys and schema mismatches fail | pass |
+| Two-file snapshot scan preserves descriptor order and sticky end-of-stream | pass |
+| Missing later files and size/row-count/schema mismatches fail before output | pass |
+| Explicit SHA-256 verification accepts matching files and rejects mismatch | pass |
+| Snapshot optimized projection/pruning matches unoptimized output | pass |
+| Snapshot checker reports the pinned version, files, rows, and checksum mode | pass |
 | Q01–Q12 plans bind and pair with equivalent oracle SQL | pass |
 | Generated layouts match committed physical SHA-256 values | pass |
 | Both layouts contain the same one million unique logical rows | pass |
@@ -105,7 +110,7 @@ DuckDB 2.0.0 has been installed and imported successfully with Python 3.14.5.
 Checked filter/project and grouped-aggregate results are stored as small JSON
 oracle fixtures.
 
-The latest local workspace run completed with 74 passed, 0 failed, and 0
+The latest local workspace run completed with 83 passed, 0 failed, and 0
 ignored integration tests. Both oracle fixtures were independently regenerated
 with DuckDB 2.0.0. The grouped fixture matched three region groups, including a
 null-only aggregate group. Composite nullable keys, terminal state-budget
@@ -148,8 +153,9 @@ use absolute `1e-9` plus relative `1e-8` tolerance.
 Current boundary coverage includes empty input, null-only aggregate groups,
 predicate nulls, no/all matches, integer overflow, aggregation memory limits,
 and row counts around the default 8,192-row batch boundary. Differential case
-seeds are retained for reproduction. Multi-file execution remains part of the
-separate snapshot-storage integration.
+seeds are retained for reproduction. The separate snapshot-storage integration
+checks ordered multi-file input, fail-before-output metadata/schema validation,
+explicit checksums, optimizer parity, version pinning, and replay stability.
 
 The fixed filter/project and grouped-aggregate plans and the retained seeded
 differential cases have oracle parity. See

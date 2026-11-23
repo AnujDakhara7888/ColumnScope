@@ -34,8 +34,51 @@ Field order is significant because it defines physical column positions.
 Object keys must be unique normalized relative paths using `/`. Absolute paths,
 empty components, `.`, `..`, and backslashes are rejected. Versions, byte sizes,
 and row counts are unsigned. Each file must declare the descriptor's schema
-fingerprint. File checksum verification will be a separately measured adapter
-step; this contract validates its algorithm and representation but does not read
-file contents.
+fingerprint.
+
+`SnapshotScan::try_new` resolves each key beneath a caller-supplied storage
+root, opens every file before returning an operator, and verifies its declared
+byte size, Parquet row count, and physical Arrow schema. It then scans files in
+descriptor order and never lists the storage directory. Missing or incompatible
+later files therefore fail before any earlier file can produce a partial
+result. Empty descriptors preserve their declared schema.
+
+`verify_snapshot_checksums` is a separate whole-file pass. The
+`columnscope-snapshot-check` command reports whether that pass was performed,
+then scans the descriptor and requires the observed row count to equal the sum
+of declared file rows:
+
+```sh
+target/release/columnscope-snapshot-check \
+  --storage-root ./demo-table \
+  --descriptor ./snapshot-v2.json \
+  --batch-size 8192 \
+  --verify-checksums true
+```
+
+Keeping checksum I/O explicit prevents it from being hidden inside benchmark
+timings. Planning through `plan_snapshot_query` applies the same column
+projection and conservative row-group pruning to every listed file and reports
+aggregate counts in the physical explain tree.
+
+## Observed SnapshotStore integration
+
+A live local integration run used SnapshotStore source
+`2032deab713466a3fff82881822ebc8854b05c29` to create a
+table, ingest a four-row batch, and export version 1. ColumnScope verified the
+exported file checksum and scanned one file, two output batches, and four rows.
+After a second committed batch, the pinned version-1 descriptor still returned
+four rows while version 2 returned two files, four batches, and eight rows. A
+replay of the second batch ID reported `replayed: true`, kept the table at
+version 2, and the fresh version-2 scan remained eight rows.
+
+The run also exposed a codec boundary: SnapshotStore currently rejects
+Snappy-compressed ingest input, and its committed files use Zstandard.
+ColumnScope therefore enables both Snappy and Zstandard decoding; the live test
+used uncompressed ingest input and consumed SnapshotStore's Zstandard output.
+This is a verified local-filesystem integration, not an S3 result.
+The scan currently keeps all listed files open to preserve fail-before-output
+construction, so descriptors with very large file counts may reach the process
+file-descriptor limit. Bounded handle pooling is not yet implemented.
 
 See the validated [version-1 fixture](../fixtures/snapshots/descriptor_v1.json).

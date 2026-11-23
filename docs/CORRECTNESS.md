@@ -63,8 +63,8 @@ coverage.
 
 The differential inputs are intentionally small and provide correctness
 coverage, not runtime or memory evidence. They use one Parquet file per case;
-multi-file snapshot execution is covered by the separate storage-integration
-work. The suite does not cover SQL parsing, joins, nested types, disk spill, or
+multi-file snapshot execution is covered separately by the pinned storage
+integration. The suite does not cover SQL parsing, joins, nested types, disk spill, or
 distributed execution because those features are outside the current engine
 scope.
 

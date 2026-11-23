@@ -11,6 +11,10 @@ The current API establishes the Arrow/Parquet storage boundary:
 - `bind_query` resolves columns, validates expressions, and infers output schema;
 - `SnapshotDescriptor::from_json` validates immutable file metadata and schema
   fingerprints;
+- `SnapshotScan` opens and validates every descriptor file before output, then
+  scans the immutable list in order;
+- `verify_snapshot_checksums` performs separately measurable SHA-256
+  verification over the pinned files;
 - `ParquetScan` implements the `BatchOperator` pull interface and reports
   cumulative pull, output-batch, and output-row counters;
 - `evaluate` applies bound typed expressions to Arrow arrays;
@@ -27,6 +31,8 @@ The current API establishes the Arrow/Parquet storage boundary:
   compiler, build, operating system, CPU, and memory provenance.
 - `plan_query` lowers a bound tree in unoptimized mode, checks every physical
   schema, and retains a stable explain tree beside the live operator root.
+- `plan_snapshot_query` applies the same physical planning and optimizer rules
+  across every file in an immutable descriptor.
 - `PlanningMode::Optimized` safely moves filters through projections, remaps
   column indexes, projects Parquet columns, and prunes impossible numeric row
   groups while retaining residual filters.
@@ -35,6 +41,14 @@ Run the verified storage example from the workspace root:
 
 ```sh
 cargo run --bin parquet-fixture -- /tmp/columnscope-fixture.parquet
+```
+
+Validate and consume an exported snapshot descriptor with:
+
+```sh
+cargo run --locked --bin columnscope-snapshot-check -- \
+  --storage-root ./demo-table --descriptor ./snapshot.json \
+  --batch-size 8192 --verify-checksums true
 ```
 
 The JSON contracts are documented in [Plan format](../../docs/PLAN_FORMAT.md)

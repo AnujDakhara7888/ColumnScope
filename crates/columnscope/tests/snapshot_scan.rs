@@ -4,12 +4,18 @@ use std::sync::Arc;
 use arrow::array::Int64Array;
 use arrow::datatypes::{DataType, Field, Schema};
 use arrow::record_batch::RecordBatch;
+use columnscope::bind::bind_query;
 use columnscope::error::{ExecutionError, SnapshotError};
 use columnscope::execution::{BatchOperator, OperatorMetrics, OperatorState};
+use columnscope::expr::{Expr, NamedExpr, ScalarValue};
 use columnscope::fixture_batch;
+use columnscope::logical::{LogicalPlan, QueryPlan};
+use columnscope::planner::{PlannerOptions, PlanningMode, plan_snapshot_query};
 use columnscope::snapshot::{ChecksumAlgorithm, FileChecksum, SnapshotDescriptor, SnapshotFile};
 use columnscope::snapshot_scan::{SnapshotScan, verify_snapshot_checksums};
 use parquet::arrow::ArrowWriter;
+use parquet::basic::{Compression, ZstdLevel};
+use parquet::file::properties::WriterProperties;
 use sha2::{Digest, Sha256};
 use tempfile::tempdir;
 
@@ -231,4 +237,107 @@ fn checksum_validation_is_explicit_and_covers_every_file() {
             object_key: "data/part-00001.parquet".to_owned(),
         }
     );
+}
+
+#[test]
+fn zstandard_snapshot_file_decodes_through_the_pinned_adapter() {
+    let directory = tempdir().expect("create snapshot root");
+    let data = directory.path().join("data");
+    fs::create_dir(&data).expect("create data directory");
+    let path = data.join("part-zstd.parquet");
+    let batch = fixture_batch().expect("build fixture batch");
+    let properties = WriterProperties::builder()
+        .set_compression(Compression::ZSTD(ZstdLevel::try_new(3).unwrap()))
+        .build();
+    let mut writer = ArrowWriter::try_new(
+        File::create(&path).expect("create Zstandard part"),
+        batch.schema(),
+        Some(properties),
+    )
+    .expect("create Zstandard writer");
+    writer.write(&batch).expect("write Zstandard part");
+    writer.close().expect("close Zstandard part");
+
+    let mut descriptor = SnapshotDescriptor::from_json(DESCRIPTOR).unwrap();
+    descriptor.files = vec![snapshot_file(
+        &path,
+        "data/part-zstd.parquet",
+        4,
+        &descriptor.schema_fingerprint,
+    )];
+    let mut scan =
+        SnapshotScan::try_new(directory.path(), &descriptor, 2).expect("open Zstandard snapshot");
+    let mut rows = 0;
+    while let Some(batch) = scan.next_batch().expect("decode Zstandard batch") {
+        rows += batch.num_rows();
+    }
+    assert_eq!(rows, 4);
+}
+
+#[test]
+fn optimized_snapshot_plan_matches_unoptimized_and_explains_pushdowns() {
+    let (directory, descriptor, _, _) = two_part_fixture();
+    let query = QueryPlan {
+        format_version: 1,
+        input_schema: descriptor.schema.clone(),
+        plan: LogicalPlan::Project {
+            input: Box::new(LogicalPlan::Filter {
+                input: Box::new(LogicalPlan::Scan),
+                predicate: Expr::Gt {
+                    left: Box::new(Expr::Column {
+                        name: "metric".to_owned(),
+                    }),
+                    right: Box::new(Expr::Literal {
+                        literal: ScalarValue::Float64 { value: Some(100.0) },
+                    }),
+                },
+            }),
+            expressions: vec![NamedExpr {
+                alias: "id".to_owned(),
+                expr: Expr::Column {
+                    name: "id".to_owned(),
+                },
+            }],
+        },
+    };
+    let unoptimized = plan_snapshot_query(
+        bind_query(query.clone()).expect("bind unoptimized snapshot plan"),
+        directory.path(),
+        &descriptor,
+        PlannerOptions {
+            scan_batch_rows: 2,
+            ..PlannerOptions::default()
+        },
+    )
+    .expect("plan unoptimized snapshot query");
+    let optimized = plan_snapshot_query(
+        bind_query(query).expect("bind optimized snapshot plan"),
+        directory.path(),
+        &descriptor,
+        PlannerOptions {
+            mode: PlanningMode::Optimized,
+            scan_batch_rows: 2,
+            ..PlannerOptions::default()
+        },
+    )
+    .expect("plan optimized snapshot query");
+
+    let explain = optimized.explain();
+    assert!(explain.contains("SnapshotScan [source=events@2, commit=commit-0002, files=2,"));
+    assert!(explain.contains("batch_rows=2, columns=2/4, row_groups=0/2, pruned_row_groups=2]"));
+    assert_eq!(unoptimized.mode, PlanningMode::Unoptimized);
+    let optimized_schema = optimized.root.schema();
+    let unoptimized_schema = unoptimized.root.schema();
+    let mut optimized_root = optimized.root;
+    let mut unoptimized_root = unoptimized.root;
+    let mut optimized_rows = 0;
+    while let Some(batch) = optimized_root.next_batch().unwrap() {
+        optimized_rows += batch.num_rows();
+    }
+    let mut unoptimized_rows = 0;
+    while let Some(batch) = unoptimized_root.next_batch().unwrap() {
+        unoptimized_rows += batch.num_rows();
+    }
+    assert_eq!((optimized_rows, unoptimized_rows), (0, 0));
+    assert_eq!(optimized_schema.as_ref(), unoptimized_schema.as_ref());
 }
