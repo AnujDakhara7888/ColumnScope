@@ -44,6 +44,8 @@ verified:
   raw samples, and source/environment provenance;
 - a retained one-million-row Q01–Q12 validation matrix in which scalar and
   batch outputs match independently executed DuckDB SQL in both timing modes;
+- a retained 120-case seeded differential suite in which optimized batch,
+  unoptimized batch, and scalar results match DuckDB across 360 comparisons;
 - unoptimized logical-to-physical planning with recursive schema checks and a
   stable physical explain tree;
 - an opt-in optimizer for safe Filter-through-Project movement, Parquet column
@@ -113,7 +115,9 @@ See the [frozen benchmark inputs](benchmarks/README.md) for the dataset contract
 checksums, and Q01–Q12 definitions, and [Benchmarks](docs/BENCHMARKS.md) for the
 measurement command and evidence boundary. No runtime result is claimed until
 repeated matched trials characterize variance. The retained initial matrix is
-a correctness baseline, not a speedup or memory claim.
+a correctness baseline, not a speedup or memory claim. The
+[correctness report](docs/CORRECTNESS.md) describes the independent oracle and
+the retained seeded differential run.
 
 ## Verification
 
@@ -141,6 +145,7 @@ an independent correctness oracle, never as the production query path.
 
 See [Plan format](docs/PLAN_FORMAT.md), [Snapshot descriptor](docs/SNAPSHOT_DESCRIPTOR.md),
 [Architecture](docs/ARCHITECTURE.md), [Testing](docs/TESTING.md),
+[Correctness validation](docs/CORRECTNESS.md),
 [frozen benchmark inputs](benchmarks/README.md), and [Benchmarks](docs/BENCHMARKS.md)
 for the public contracts and evidence boundaries.
 
