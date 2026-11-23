@@ -1,0 +1,3991 @@
+{
+  "format_version": 1,
+  "suite_seed": 20261207,
+  "case_count": 120,
+  "source_sha": "9f012a7115e8a365dbabc7397ea508bae22e1294",
+  "duckdb_version": "2.0.0",
+  "boundary_rows": [
+    0,
+    1,
+    8191,
+    8192,
+    8193
+  ],
+  "configurations": [
+    {
+      "engine": "batch",
+      "planning": "unoptimized"
+    },
+    {
+      "engine": "batch",
+      "planning": "optimized"
+    },
+    {
+      "engine": "scalar",
+      "planning": "unoptimized"
+    }
+  ],
+  "cases": [
+    {
+      "case": "D000",
+      "seed": 2859340598421075242,
+      "template": "int_lt_project",
+      "input_rows": 0,
+      "batch_size": 8192,
+      "oracle_rows": 0,
+      "oracle_checksum": "834a709ba2534ebe3ee1397fd4f7bd288b2acc1d20a08d6c862dcd99b6f04400",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 0,
+          "result_checksum": "834a709ba2534ebe3ee1397fd4f7bd288b2acc1d20a08d6c862dcd99b6f04400",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 0,
+          "result_checksum": "834a709ba2534ebe3ee1397fd4f7bd288b2acc1d20a08d6c862dcd99b6f04400",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 0,
+          "result_checksum": "834a709ba2534ebe3ee1397fd4f7bd288b2acc1d20a08d6c862dcd99b6f04400",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D001",
+      "seed": 1883545090569217013,
+      "template": "int_gte_project",
+      "input_rows": 1,
+      "batch_size": 8192,
+      "oracle_rows": 0,
+      "oracle_checksum": "834a709ba2534ebe3ee1397fd4f7bd288b2acc1d20a08d6c862dcd99b6f04400",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 0,
+          "result_checksum": "834a709ba2534ebe3ee1397fd4f7bd288b2acc1d20a08d6c862dcd99b6f04400",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 0,
+          "result_checksum": "834a709ba2534ebe3ee1397fd4f7bd288b2acc1d20a08d6c862dcd99b6f04400",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 0,
+          "result_checksum": "834a709ba2534ebe3ee1397fd4f7bd288b2acc1d20a08d6c862dcd99b6f04400",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D002",
+      "seed": 12933145472929788044,
+      "template": "boolean_and_project",
+      "input_rows": 8191,
+      "batch_size": 8192,
+      "oracle_rows": 568,
+      "oracle_checksum": "0bb737420274ba7437581287e1a28d5bcd3a71c08e59f859f898df2c4dfa48d4",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 568,
+          "result_checksum": "0bb737420274ba7437581287e1a28d5bcd3a71c08e59f859f898df2c4dfa48d4",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 568,
+          "result_checksum": "0bb737420274ba7437581287e1a28d5bcd3a71c08e59f859f898df2c4dfa48d4",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 568,
+          "result_checksum": "0bb737420274ba7437581287e1a28d5bcd3a71c08e59f859f898df2c4dfa48d4",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D003",
+      "seed": 2635057187990469066,
+      "template": "null_or_project",
+      "input_rows": 8192,
+      "batch_size": 8192,
+      "oracle_rows": 4292,
+      "oracle_checksum": "b6e2f16ce3000c50bb5c21dd5bf5ea0701be0f7ad91f81dac8e6b0c3b251c141",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 4292,
+          "result_checksum": "b6e2f16ce3000c50bb5c21dd5bf5ea0701be0f7ad91f81dac8e6b0c3b251c141",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 4292,
+          "result_checksum": "b6e2f16ce3000c50bb5c21dd5bf5ea0701be0f7ad91f81dac8e6b0c3b251c141",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 4292,
+          "result_checksum": "b6e2f16ce3000c50bb5c21dd5bf5ea0701be0f7ad91f81dac8e6b0c3b251c141",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D004",
+      "seed": 6064490564848264869,
+      "template": "float_not_project",
+      "input_rows": 8193,
+      "batch_size": 8192,
+      "oracle_rows": 4650,
+      "oracle_checksum": "73f579d7357a53ddc65d102b963a0dec5c3e1c8efe9380eb6fa33ecef80c70c1",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 4650,
+          "result_checksum": "73f579d7357a53ddc65d102b963a0dec5c3e1c8efe9380eb6fa33ecef80c70c1",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 4650,
+          "result_checksum": "73f579d7357a53ddc65d102b963a0dec5c3e1c8efe9380eb6fa33ecef80c70c1",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 4650,
+          "result_checksum": "73f579d7357a53ddc65d102b963a0dec5c3e1c8efe9380eb6fa33ecef80c70c1",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D005",
+      "seed": 5522931393954389036,
+      "template": "utf8_neq_project",
+      "input_rows": 86,
+      "batch_size": 1,
+      "oracle_rows": 46,
+      "oracle_checksum": "c8b282020a16bc20175b5fdc17f9e0384201cb5e446b46a96b59a1f9d8fb1a9a",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 46,
+          "result_checksum": "c8b282020a16bc20175b5fdc17f9e0384201cb5e446b46a96b59a1f9d8fb1a9a",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 46,
+          "result_checksum": "c8b282020a16bc20175b5fdc17f9e0384201cb5e446b46a96b59a1f9d8fb1a9a",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 46,
+          "result_checksum": "c8b282020a16bc20175b5fdc17f9e0384201cb5e446b46a96b59a1f9d8fb1a9a",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D006",
+      "seed": 458849163526149018,
+      "template": "global_aggregate",
+      "input_rows": 99,
+      "batch_size": 7,
+      "oracle_rows": 1,
+      "oracle_checksum": "f9f6be4afa81240b36eb26d84c8c2a871c6305e11905a5638c5d6e99ce1537d7",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "f9f6be4afa81240b36eb26d84c8c2a871c6305e11905a5638c5d6e99ce1537d7",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 1,
+          "result_checksum": "f9f6be4afa81240b36eb26d84c8c2a871c6305e11905a5638c5d6e99ce1537d7",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "f9f6be4afa81240b36eb26d84c8c2a871c6305e11905a5638c5d6e99ce1537d7",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D007",
+      "seed": 11201462192229737599,
+      "template": "utf8_group_aggregate",
+      "input_rows": 102,
+      "batch_size": 2,
+      "oracle_rows": 5,
+      "oracle_checksum": "52a03dcded8d2ac2262c3d639aca93ac460c553b6f375909c1fcdcf9190fae3d",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 5,
+          "result_checksum": "52a03dcded8d2ac2262c3d639aca93ac460c553b6f375909c1fcdcf9190fae3d",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 5,
+          "result_checksum": "52a03dcded8d2ac2262c3d639aca93ac460c553b6f375909c1fcdcf9190fae3d",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 5,
+          "result_checksum": "52a03dcded8d2ac2262c3d639aca93ac460c553b6f375909c1fcdcf9190fae3d",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D008",
+      "seed": 14893715750525048849,
+      "template": "boolean_group_aggregate",
+      "input_rows": 38,
+      "batch_size": 8192,
+      "oracle_rows": 3,
+      "oracle_checksum": "c4268b88bc80f897cdfaec2651015e1556bd4b9def0f54cf591ffe2d6875acd8",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 3,
+          "result_checksum": "c4268b88bc80f897cdfaec2651015e1556bd4b9def0f54cf591ffe2d6875acd8",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 3,
+          "result_checksum": "c4268b88bc80f897cdfaec2651015e1556bd4b9def0f54cf591ffe2d6875acd8",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 3,
+          "result_checksum": "c4268b88bc80f897cdfaec2651015e1556bd4b9def0f54cf591ffe2d6875acd8",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D009",
+      "seed": 17993046905573171424,
+      "template": "composite_group_aggregate",
+      "input_rows": 106,
+      "batch_size": 2,
+      "oracle_rows": 15,
+      "oracle_checksum": "1ba0f369f6688695c7f13c96751a538851e196b870597e0321feffa4589c8d97",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 15,
+          "result_checksum": "1ba0f369f6688695c7f13c96751a538851e196b870597e0321feffa4589c8d97",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 15,
+          "result_checksum": "1ba0f369f6688695c7f13c96751a538851e196b870597e0321feffa4589c8d97",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 15,
+          "result_checksum": "1ba0f369f6688695c7f13c96751a538851e196b870597e0321feffa4589c8d97",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D010",
+      "seed": 18260620113914460778,
+      "template": "filtered_group_aggregate",
+      "input_rows": 39,
+      "batch_size": 2,
+      "oracle_rows": 5,
+      "oracle_checksum": "ae91f40bbcd34dbf3b5e0470928cc0f5baf1c32438c2ce494bbedcaf883e8688",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 5,
+          "result_checksum": "ae91f40bbcd34dbf3b5e0470928cc0f5baf1c32438c2ce494bbedcaf883e8688",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 5,
+          "result_checksum": "ae91f40bbcd34dbf3b5e0470928cc0f5baf1c32438c2ce494bbedcaf883e8688",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 5,
+          "result_checksum": "ae91f40bbcd34dbf3b5e0470928cc0f5baf1c32438c2ce494bbedcaf883e8688",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D011",
+      "seed": 9906611427731786784,
+      "template": "not_null_global_aggregate",
+      "input_rows": 31,
+      "batch_size": 8192,
+      "oracle_rows": 1,
+      "oracle_checksum": "0bd0fa82c7ea874e598f479157e2f3c040f18c37fa44bdf2f4a22268d5e916a6",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "0bd0fa82c7ea874e598f479157e2f3c040f18c37fa44bdf2f4a22268d5e916a6",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 1,
+          "result_checksum": "0bd0fa82c7ea874e598f479157e2f3c040f18c37fa44bdf2f4a22268d5e916a6",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "0bd0fa82c7ea874e598f479157e2f3c040f18c37fa44bdf2f4a22268d5e916a6",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D012",
+      "seed": 16165532996301561987,
+      "template": "int_lt_project",
+      "input_rows": 29,
+      "batch_size": 8192,
+      "oracle_rows": 23,
+      "oracle_checksum": "829c2ef8c4103e341e8ac6bb5fb28976b9936e84638c464b8e056ad5e642dba5",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 23,
+          "result_checksum": "829c2ef8c4103e341e8ac6bb5fb28976b9936e84638c464b8e056ad5e642dba5",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 23,
+          "result_checksum": "829c2ef8c4103e341e8ac6bb5fb28976b9936e84638c464b8e056ad5e642dba5",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 23,
+          "result_checksum": "829c2ef8c4103e341e8ac6bb5fb28976b9936e84638c464b8e056ad5e642dba5",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D013",
+      "seed": 4180500574840345683,
+      "template": "int_gte_project",
+      "input_rows": 116,
+      "batch_size": 8192,
+      "oracle_rows": 84,
+      "oracle_checksum": "a298320b7a1097890214ad0a03031d8921cfdbebd14c05d748bf68ad528267f9",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 84,
+          "result_checksum": "a298320b7a1097890214ad0a03031d8921cfdbebd14c05d748bf68ad528267f9",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 84,
+          "result_checksum": "a298320b7a1097890214ad0a03031d8921cfdbebd14c05d748bf68ad528267f9",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 84,
+          "result_checksum": "a298320b7a1097890214ad0a03031d8921cfdbebd14c05d748bf68ad528267f9",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D014",
+      "seed": 12283944875672119087,
+      "template": "boolean_and_project",
+      "input_rows": 84,
+      "batch_size": 7,
+      "oracle_rows": 13,
+      "oracle_checksum": "c8eac2df30d21208f09723ac68a0871d1b03cc7c6edc861c61f6299ddb7b8637",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 13,
+          "result_checksum": "c8eac2df30d21208f09723ac68a0871d1b03cc7c6edc861c61f6299ddb7b8637",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 13,
+          "result_checksum": "c8eac2df30d21208f09723ac68a0871d1b03cc7c6edc861c61f6299ddb7b8637",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 13,
+          "result_checksum": "c8eac2df30d21208f09723ac68a0871d1b03cc7c6edc861c61f6299ddb7b8637",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D015",
+      "seed": 7467011729712962498,
+      "template": "null_or_project",
+      "input_rows": 109,
+      "batch_size": 2,
+      "oracle_rows": 48,
+      "oracle_checksum": "7f481d93f73044cf3b16d339ba87a07018b2404753687ef733ec6a9392c610c5",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 48,
+          "result_checksum": "7f481d93f73044cf3b16d339ba87a07018b2404753687ef733ec6a9392c610c5",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 48,
+          "result_checksum": "7f481d93f73044cf3b16d339ba87a07018b2404753687ef733ec6a9392c610c5",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 48,
+          "result_checksum": "7f481d93f73044cf3b16d339ba87a07018b2404753687ef733ec6a9392c610c5",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D016",
+      "seed": 2327163795679584668,
+      "template": "float_not_project",
+      "input_rows": 59,
+      "batch_size": 31,
+      "oracle_rows": 10,
+      "oracle_checksum": "b0bc26f718eb42fe1bc9502bcbc742f9563cbf0d3209f4141ab361eaec571a5b",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 10,
+          "result_checksum": "b0bc26f718eb42fe1bc9502bcbc742f9563cbf0d3209f4141ab361eaec571a5b",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 10,
+          "result_checksum": "b0bc26f718eb42fe1bc9502bcbc742f9563cbf0d3209f4141ab361eaec571a5b",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 10,
+          "result_checksum": "b0bc26f718eb42fe1bc9502bcbc742f9563cbf0d3209f4141ab361eaec571a5b",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D017",
+      "seed": 3763988513097367371,
+      "template": "utf8_neq_project",
+      "input_rows": 42,
+      "batch_size": 1,
+      "oracle_rows": 24,
+      "oracle_checksum": "5cce4b50c544bb265e426773eff0bc6862013c2422e898f3f9a7d433e3b055ff",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 24,
+          "result_checksum": "5cce4b50c544bb265e426773eff0bc6862013c2422e898f3f9a7d433e3b055ff",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 24,
+          "result_checksum": "5cce4b50c544bb265e426773eff0bc6862013c2422e898f3f9a7d433e3b055ff",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 24,
+          "result_checksum": "5cce4b50c544bb265e426773eff0bc6862013c2422e898f3f9a7d433e3b055ff",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D018",
+      "seed": 6955952132513120344,
+      "template": "global_aggregate",
+      "input_rows": 99,
+      "batch_size": 31,
+      "oracle_rows": 1,
+      "oracle_checksum": "88e18cf4811b9b1a8efea57fd727e8d71b25189d957afb0bd37f65cbc59fe8f0",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "88e18cf4811b9b1a8efea57fd727e8d71b25189d957afb0bd37f65cbc59fe8f0",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 1,
+          "result_checksum": "88e18cf4811b9b1a8efea57fd727e8d71b25189d957afb0bd37f65cbc59fe8f0",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "88e18cf4811b9b1a8efea57fd727e8d71b25189d957afb0bd37f65cbc59fe8f0",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D019",
+      "seed": 10958848177465619641,
+      "template": "utf8_group_aggregate",
+      "input_rows": 52,
+      "batch_size": 2,
+      "oracle_rows": 5,
+      "oracle_checksum": "cdf692fcb82b4ce606570c6159a7a5cd6efb8ba1c46f5d0fa8ef0a56be059ab5",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 5,
+          "result_checksum": "cdf692fcb82b4ce606570c6159a7a5cd6efb8ba1c46f5d0fa8ef0a56be059ab5",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 5,
+          "result_checksum": "cdf692fcb82b4ce606570c6159a7a5cd6efb8ba1c46f5d0fa8ef0a56be059ab5",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 5,
+          "result_checksum": "cdf692fcb82b4ce606570c6159a7a5cd6efb8ba1c46f5d0fa8ef0a56be059ab5",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D020",
+      "seed": 11305619979108267544,
+      "template": "boolean_group_aggregate",
+      "input_rows": 43,
+      "batch_size": 31,
+      "oracle_rows": 3,
+      "oracle_checksum": "24ed762eb00a9e270db864dbf2ef22083d14425984a32bf921cf29715249a140",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 3,
+          "result_checksum": "24ed762eb00a9e270db864dbf2ef22083d14425984a32bf921cf29715249a140",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 3,
+          "result_checksum": "24ed762eb00a9e270db864dbf2ef22083d14425984a32bf921cf29715249a140",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 3,
+          "result_checksum": "24ed762eb00a9e270db864dbf2ef22083d14425984a32bf921cf29715249a140",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D021",
+      "seed": 8759796871212970335,
+      "template": "composite_group_aggregate",
+      "input_rows": 15,
+      "batch_size": 31,
+      "oracle_rows": 9,
+      "oracle_checksum": "35c8ed6410d97a2d2d02ecc47f8f6c03cdef321630d181e9473c92bbfb54186b",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 9,
+          "result_checksum": "35c8ed6410d97a2d2d02ecc47f8f6c03cdef321630d181e9473c92bbfb54186b",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 9,
+          "result_checksum": "35c8ed6410d97a2d2d02ecc47f8f6c03cdef321630d181e9473c92bbfb54186b",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 9,
+          "result_checksum": "35c8ed6410d97a2d2d02ecc47f8f6c03cdef321630d181e9473c92bbfb54186b",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D022",
+      "seed": 18135251491746254887,
+      "template": "filtered_group_aggregate",
+      "input_rows": 1,
+      "batch_size": 2,
+      "oracle_rows": 1,
+      "oracle_checksum": "5a206fe6819b185db98b3ca391001bfb411685c8160135801d62e7f7bce3354a",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "5a206fe6819b185db98b3ca391001bfb411685c8160135801d62e7f7bce3354a",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 1,
+          "result_checksum": "5a206fe6819b185db98b3ca391001bfb411685c8160135801d62e7f7bce3354a",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "5a206fe6819b185db98b3ca391001bfb411685c8160135801d62e7f7bce3354a",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D023",
+      "seed": 4897308883373000268,
+      "template": "not_null_global_aggregate",
+      "input_rows": 34,
+      "batch_size": 1,
+      "oracle_rows": 1,
+      "oracle_checksum": "c12a6e89aa6c06816836763d6a8d2269a69d167a6d11cd9bee51e321ca130d7e",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "c12a6e89aa6c06816836763d6a8d2269a69d167a6d11cd9bee51e321ca130d7e",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 1,
+          "result_checksum": "c12a6e89aa6c06816836763d6a8d2269a69d167a6d11cd9bee51e321ca130d7e",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "c12a6e89aa6c06816836763d6a8d2269a69d167a6d11cd9bee51e321ca130d7e",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D024",
+      "seed": 2357000112996283452,
+      "template": "int_lt_project",
+      "input_rows": 85,
+      "batch_size": 1,
+      "oracle_rows": 17,
+      "oracle_checksum": "c10e6154d9da431d89d3e41fb8ccc42878284c7a287ff282edcf701069d40174",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 17,
+          "result_checksum": "c10e6154d9da431d89d3e41fb8ccc42878284c7a287ff282edcf701069d40174",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 17,
+          "result_checksum": "c10e6154d9da431d89d3e41fb8ccc42878284c7a287ff282edcf701069d40174",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 17,
+          "result_checksum": "c10e6154d9da431d89d3e41fb8ccc42878284c7a287ff282edcf701069d40174",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D025",
+      "seed": 15062966862731303536,
+      "template": "int_gte_project",
+      "input_rows": 1,
+      "batch_size": 7,
+      "oracle_rows": 0,
+      "oracle_checksum": "834a709ba2534ebe3ee1397fd4f7bd288b2acc1d20a08d6c862dcd99b6f04400",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 0,
+          "result_checksum": "834a709ba2534ebe3ee1397fd4f7bd288b2acc1d20a08d6c862dcd99b6f04400",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 0,
+          "result_checksum": "834a709ba2534ebe3ee1397fd4f7bd288b2acc1d20a08d6c862dcd99b6f04400",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 0,
+          "result_checksum": "834a709ba2534ebe3ee1397fd4f7bd288b2acc1d20a08d6c862dcd99b6f04400",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D026",
+      "seed": 14712051716569582016,
+      "template": "boolean_and_project",
+      "input_rows": 10,
+      "batch_size": 2,
+      "oracle_rows": 2,
+      "oracle_checksum": "70e6bf4f1494ff8c95ee3aae0efc6e26f615c78c27e4288bdb681b680b6bd773",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 2,
+          "result_checksum": "70e6bf4f1494ff8c95ee3aae0efc6e26f615c78c27e4288bdb681b680b6bd773",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 2,
+          "result_checksum": "70e6bf4f1494ff8c95ee3aae0efc6e26f615c78c27e4288bdb681b680b6bd773",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 2,
+          "result_checksum": "70e6bf4f1494ff8c95ee3aae0efc6e26f615c78c27e4288bdb681b680b6bd773",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D027",
+      "seed": 17992707935603054049,
+      "template": "null_or_project",
+      "input_rows": 51,
+      "batch_size": 8192,
+      "oracle_rows": 25,
+      "oracle_checksum": "51ce1631f477204b42578ac5c41fd6bcf7c1f9053ccedc133619274dd84f5c46",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 25,
+          "result_checksum": "51ce1631f477204b42578ac5c41fd6bcf7c1f9053ccedc133619274dd84f5c46",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 25,
+          "result_checksum": "51ce1631f477204b42578ac5c41fd6bcf7c1f9053ccedc133619274dd84f5c46",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 25,
+          "result_checksum": "51ce1631f477204b42578ac5c41fd6bcf7c1f9053ccedc133619274dd84f5c46",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D028",
+      "seed": 11470174382413771637,
+      "template": "float_not_project",
+      "input_rows": 46,
+      "batch_size": 1,
+      "oracle_rows": 27,
+      "oracle_checksum": "367ac1d199ef2854ebc40a764024956abae97e6d5a6c93fe01785d4cf9489c71",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 27,
+          "result_checksum": "367ac1d199ef2854ebc40a764024956abae97e6d5a6c93fe01785d4cf9489c71",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 27,
+          "result_checksum": "367ac1d199ef2854ebc40a764024956abae97e6d5a6c93fe01785d4cf9489c71",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 27,
+          "result_checksum": "367ac1d199ef2854ebc40a764024956abae97e6d5a6c93fe01785d4cf9489c71",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D029",
+      "seed": 11965509868334455282,
+      "template": "utf8_neq_project",
+      "input_rows": 31,
+      "batch_size": 1,
+      "oracle_rows": 16,
+      "oracle_checksum": "806389ae2e4bf91e5d5b80e95010a93725193a8e065dc87bd4a099a8ea035f28",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 16,
+          "result_checksum": "806389ae2e4bf91e5d5b80e95010a93725193a8e065dc87bd4a099a8ea035f28",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 16,
+          "result_checksum": "806389ae2e4bf91e5d5b80e95010a93725193a8e065dc87bd4a099a8ea035f28",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 16,
+          "result_checksum": "806389ae2e4bf91e5d5b80e95010a93725193a8e065dc87bd4a099a8ea035f28",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D030",
+      "seed": 12070784331249037007,
+      "template": "global_aggregate",
+      "input_rows": 12,
+      "batch_size": 8192,
+      "oracle_rows": 1,
+      "oracle_checksum": "2f6b99acb6c628291a1b2cca46186cd5d9ed169b1ee51b8f28babfe802117a36",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "2f6b99acb6c628291a1b2cca46186cd5d9ed169b1ee51b8f28babfe802117a36",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 1,
+          "result_checksum": "2f6b99acb6c628291a1b2cca46186cd5d9ed169b1ee51b8f28babfe802117a36",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "2f6b99acb6c628291a1b2cca46186cd5d9ed169b1ee51b8f28babfe802117a36",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D031",
+      "seed": 12122220665463665960,
+      "template": "utf8_group_aggregate",
+      "input_rows": 96,
+      "batch_size": 31,
+      "oracle_rows": 5,
+      "oracle_checksum": "d8297eb2dd59fc291b4aaf4a84eac6088d39c704ce3d552ff6fe2c51221691ec",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 5,
+          "result_checksum": "d8297eb2dd59fc291b4aaf4a84eac6088d39c704ce3d552ff6fe2c51221691ec",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 5,
+          "result_checksum": "d8297eb2dd59fc291b4aaf4a84eac6088d39c704ce3d552ff6fe2c51221691ec",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 5,
+          "result_checksum": "d8297eb2dd59fc291b4aaf4a84eac6088d39c704ce3d552ff6fe2c51221691ec",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D032",
+      "seed": 11696692111042258323,
+      "template": "boolean_group_aggregate",
+      "input_rows": 93,
+      "batch_size": 8192,
+      "oracle_rows": 3,
+      "oracle_checksum": "2cc3149ffb608c41b13f3a198d68752c13dfdaa0268690773e2750c57448d987",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 3,
+          "result_checksum": "2cc3149ffb608c41b13f3a198d68752c13dfdaa0268690773e2750c57448d987",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 3,
+          "result_checksum": "2cc3149ffb608c41b13f3a198d68752c13dfdaa0268690773e2750c57448d987",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 3,
+          "result_checksum": "2cc3149ffb608c41b13f3a198d68752c13dfdaa0268690773e2750c57448d987",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D033",
+      "seed": 17168039899578296391,
+      "template": "composite_group_aggregate",
+      "input_rows": 121,
+      "batch_size": 7,
+      "oracle_rows": 15,
+      "oracle_checksum": "7b6da23efb7ba7a5e3984a9a3c22a3b77fc6632f406ecf18cdc6861261f750e4",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 15,
+          "result_checksum": "7b6da23efb7ba7a5e3984a9a3c22a3b77fc6632f406ecf18cdc6861261f750e4",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 15,
+          "result_checksum": "7b6da23efb7ba7a5e3984a9a3c22a3b77fc6632f406ecf18cdc6861261f750e4",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 15,
+          "result_checksum": "7b6da23efb7ba7a5e3984a9a3c22a3b77fc6632f406ecf18cdc6861261f750e4",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D034",
+      "seed": 11426046576366956680,
+      "template": "filtered_group_aggregate",
+      "input_rows": 113,
+      "batch_size": 31,
+      "oracle_rows": 5,
+      "oracle_checksum": "505e657e65d76298acb4e4b849318799727b7a6b359750ae66e89df2e7011c72",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 5,
+          "result_checksum": "505e657e65d76298acb4e4b849318799727b7a6b359750ae66e89df2e7011c72",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 5,
+          "result_checksum": "505e657e65d76298acb4e4b849318799727b7a6b359750ae66e89df2e7011c72",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 5,
+          "result_checksum": "505e657e65d76298acb4e4b849318799727b7a6b359750ae66e89df2e7011c72",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D035",
+      "seed": 1984954285651829084,
+      "template": "not_null_global_aggregate",
+      "input_rows": 28,
+      "batch_size": 31,
+      "oracle_rows": 1,
+      "oracle_checksum": "fa29178c1b5d381b18f0cc755bb5e443fc74589b11f3b43cdcf1d4c09d6809c5",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "fa29178c1b5d381b18f0cc755bb5e443fc74589b11f3b43cdcf1d4c09d6809c5",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 1,
+          "result_checksum": "fa29178c1b5d381b18f0cc755bb5e443fc74589b11f3b43cdcf1d4c09d6809c5",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "fa29178c1b5d381b18f0cc755bb5e443fc74589b11f3b43cdcf1d4c09d6809c5",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D036",
+      "seed": 3120270507235878300,
+      "template": "int_lt_project",
+      "input_rows": 113,
+      "batch_size": 7,
+      "oracle_rows": 15,
+      "oracle_checksum": "e042ef0da31ba569bcaafec4224e41bfff157cb79d7a293dcc85fb51061a1c72",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 15,
+          "result_checksum": "e042ef0da31ba569bcaafec4224e41bfff157cb79d7a293dcc85fb51061a1c72",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 15,
+          "result_checksum": "e042ef0da31ba569bcaafec4224e41bfff157cb79d7a293dcc85fb51061a1c72",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 15,
+          "result_checksum": "e042ef0da31ba569bcaafec4224e41bfff157cb79d7a293dcc85fb51061a1c72",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D037",
+      "seed": 524242523172491903,
+      "template": "int_gte_project",
+      "input_rows": 21,
+      "batch_size": 8192,
+      "oracle_rows": 18,
+      "oracle_checksum": "a34005a1b950ea072188cff0eec1c3d7695f38faf73d0fcd2ce913c17332162f",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 18,
+          "result_checksum": "a34005a1b950ea072188cff0eec1c3d7695f38faf73d0fcd2ce913c17332162f",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 18,
+          "result_checksum": "a34005a1b950ea072188cff0eec1c3d7695f38faf73d0fcd2ce913c17332162f",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 18,
+          "result_checksum": "a34005a1b950ea072188cff0eec1c3d7695f38faf73d0fcd2ce913c17332162f",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D038",
+      "seed": 6669235886871865320,
+      "template": "boolean_and_project",
+      "input_rows": 104,
+      "batch_size": 8192,
+      "oracle_rows": 12,
+      "oracle_checksum": "c631fe8e3cd312ddf601d044b6f1307edf826fdc29455817a44705ab1ceb2c45",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 12,
+          "result_checksum": "c631fe8e3cd312ddf601d044b6f1307edf826fdc29455817a44705ab1ceb2c45",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 12,
+          "result_checksum": "c631fe8e3cd312ddf601d044b6f1307edf826fdc29455817a44705ab1ceb2c45",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 12,
+          "result_checksum": "c631fe8e3cd312ddf601d044b6f1307edf826fdc29455817a44705ab1ceb2c45",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D039",
+      "seed": 12263497357190503230,
+      "template": "null_or_project",
+      "input_rows": 28,
+      "batch_size": 8192,
+      "oracle_rows": 12,
+      "oracle_checksum": "55a0c88657309aef8a13022bda7543749c122c088822d6c6f2a0fa131eb242d7",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 12,
+          "result_checksum": "55a0c88657309aef8a13022bda7543749c122c088822d6c6f2a0fa131eb242d7",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 12,
+          "result_checksum": "55a0c88657309aef8a13022bda7543749c122c088822d6c6f2a0fa131eb242d7",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 12,
+          "result_checksum": "55a0c88657309aef8a13022bda7543749c122c088822d6c6f2a0fa131eb242d7",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D040",
+      "seed": 13012591718893104706,
+      "template": "float_not_project",
+      "input_rows": 81,
+      "batch_size": 2,
+      "oracle_rows": 7,
+      "oracle_checksum": "7a5801d877d80f2d34afa32fcc8f9fdbfe4963a1a3396e5e5344735df4ec01c5",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 7,
+          "result_checksum": "7a5801d877d80f2d34afa32fcc8f9fdbfe4963a1a3396e5e5344735df4ec01c5",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 7,
+          "result_checksum": "7a5801d877d80f2d34afa32fcc8f9fdbfe4963a1a3396e5e5344735df4ec01c5",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 7,
+          "result_checksum": "7a5801d877d80f2d34afa32fcc8f9fdbfe4963a1a3396e5e5344735df4ec01c5",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D041",
+      "seed": 15974387591956982592,
+      "template": "utf8_neq_project",
+      "input_rows": 12,
+      "batch_size": 2,
+      "oracle_rows": 7,
+      "oracle_checksum": "c3da4c78fdc51bd467613a4730ebd86a6bda306bb69e932f0811eb1b29030181",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 7,
+          "result_checksum": "c3da4c78fdc51bd467613a4730ebd86a6bda306bb69e932f0811eb1b29030181",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 7,
+          "result_checksum": "c3da4c78fdc51bd467613a4730ebd86a6bda306bb69e932f0811eb1b29030181",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 7,
+          "result_checksum": "c3da4c78fdc51bd467613a4730ebd86a6bda306bb69e932f0811eb1b29030181",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D042",
+      "seed": 6980754290901272541,
+      "template": "global_aggregate",
+      "input_rows": 106,
+      "batch_size": 1,
+      "oracle_rows": 1,
+      "oracle_checksum": "a39ce15f67182dca528a84e68bcffea432953b4fd86ea648ddb87048174efa16",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "a39ce15f67182dca528a84e68bcffea432953b4fd86ea648ddb87048174efa16",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 1,
+          "result_checksum": "a39ce15f67182dca528a84e68bcffea432953b4fd86ea648ddb87048174efa16",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "a39ce15f67182dca528a84e68bcffea432953b4fd86ea648ddb87048174efa16",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D043",
+      "seed": 15580502195690089237,
+      "template": "utf8_group_aggregate",
+      "input_rows": 83,
+      "batch_size": 1,
+      "oracle_rows": 5,
+      "oracle_checksum": "21e1c0c7eee5bb523950bc3be3213f2d531b02791c86d045545dfcf83c019643",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 5,
+          "result_checksum": "21e1c0c7eee5bb523950bc3be3213f2d531b02791c86d045545dfcf83c019643",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 5,
+          "result_checksum": "21e1c0c7eee5bb523950bc3be3213f2d531b02791c86d045545dfcf83c019643",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 5,
+          "result_checksum": "21e1c0c7eee5bb523950bc3be3213f2d531b02791c86d045545dfcf83c019643",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D044",
+      "seed": 17397034244494939149,
+      "template": "boolean_group_aggregate",
+      "input_rows": 5,
+      "batch_size": 2,
+      "oracle_rows": 3,
+      "oracle_checksum": "c4363cf08a3e6b9a7ad24c1895bffcb43bbb30e742d4830a9f57410e8bb07065",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 3,
+          "result_checksum": "c4363cf08a3e6b9a7ad24c1895bffcb43bbb30e742d4830a9f57410e8bb07065",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 3,
+          "result_checksum": "c4363cf08a3e6b9a7ad24c1895bffcb43bbb30e742d4830a9f57410e8bb07065",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 3,
+          "result_checksum": "c4363cf08a3e6b9a7ad24c1895bffcb43bbb30e742d4830a9f57410e8bb07065",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D045",
+      "seed": 7234275515477250497,
+      "template": "composite_group_aggregate",
+      "input_rows": 127,
+      "batch_size": 1,
+      "oracle_rows": 15,
+      "oracle_checksum": "944f57d433a40af0d429e4e43a81f97b9dba1e3f655ad086a31d644fb37d8357",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 15,
+          "result_checksum": "944f57d433a40af0d429e4e43a81f97b9dba1e3f655ad086a31d644fb37d8357",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 15,
+          "result_checksum": "944f57d433a40af0d429e4e43a81f97b9dba1e3f655ad086a31d644fb37d8357",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 15,
+          "result_checksum": "944f57d433a40af0d429e4e43a81f97b9dba1e3f655ad086a31d644fb37d8357",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D046",
+      "seed": 1164991641132929386,
+      "template": "filtered_group_aggregate",
+      "input_rows": 116,
+      "batch_size": 1,
+      "oracle_rows": 5,
+      "oracle_checksum": "e68848021d61f4f8f32f85e9ed8c3cf2dbd73b072d6b905868b79f4ee1336ada",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 5,
+          "result_checksum": "e68848021d61f4f8f32f85e9ed8c3cf2dbd73b072d6b905868b79f4ee1336ada",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 5,
+          "result_checksum": "e68848021d61f4f8f32f85e9ed8c3cf2dbd73b072d6b905868b79f4ee1336ada",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 5,
+          "result_checksum": "e68848021d61f4f8f32f85e9ed8c3cf2dbd73b072d6b905868b79f4ee1336ada",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D047",
+      "seed": 15919520313105408302,
+      "template": "not_null_global_aggregate",
+      "input_rows": 41,
+      "batch_size": 2,
+      "oracle_rows": 1,
+      "oracle_checksum": "555d703ad4fdc57c41d84b05e6b1013e559f9428c9ffc891de0a62402678176c",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "555d703ad4fdc57c41d84b05e6b1013e559f9428c9ffc891de0a62402678176c",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 1,
+          "result_checksum": "555d703ad4fdc57c41d84b05e6b1013e559f9428c9ffc891de0a62402678176c",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "555d703ad4fdc57c41d84b05e6b1013e559f9428c9ffc891de0a62402678176c",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D048",
+      "seed": 15960135499203332274,
+      "template": "int_lt_project",
+      "input_rows": 20,
+      "batch_size": 8192,
+      "oracle_rows": 12,
+      "oracle_checksum": "aa56d3bb0da721cbd2b9f8b27af19cfe559fc36ff49e568f0d46924b18abdda7",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 12,
+          "result_checksum": "aa56d3bb0da721cbd2b9f8b27af19cfe559fc36ff49e568f0d46924b18abdda7",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 12,
+          "result_checksum": "aa56d3bb0da721cbd2b9f8b27af19cfe559fc36ff49e568f0d46924b18abdda7",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 12,
+          "result_checksum": "aa56d3bb0da721cbd2b9f8b27af19cfe559fc36ff49e568f0d46924b18abdda7",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D049",
+      "seed": 15643161628561262782,
+      "template": "int_gte_project",
+      "input_rows": 48,
+      "batch_size": 7,
+      "oracle_rows": 9,
+      "oracle_checksum": "1f1eebe85a18edd454b1eb3f6f08eade2d52b6abba366aeb33da97e6ef983873",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 9,
+          "result_checksum": "1f1eebe85a18edd454b1eb3f6f08eade2d52b6abba366aeb33da97e6ef983873",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 9,
+          "result_checksum": "1f1eebe85a18edd454b1eb3f6f08eade2d52b6abba366aeb33da97e6ef983873",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 9,
+          "result_checksum": "1f1eebe85a18edd454b1eb3f6f08eade2d52b6abba366aeb33da97e6ef983873",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D050",
+      "seed": 9442710363708522539,
+      "template": "boolean_and_project",
+      "input_rows": 63,
+      "batch_size": 31,
+      "oracle_rows": 14,
+      "oracle_checksum": "07464edd6394e88c20cf4c4082f49e095156d7b282107fadaf0fa831c761d2a7",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 14,
+          "result_checksum": "07464edd6394e88c20cf4c4082f49e095156d7b282107fadaf0fa831c761d2a7",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 14,
+          "result_checksum": "07464edd6394e88c20cf4c4082f49e095156d7b282107fadaf0fa831c761d2a7",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 14,
+          "result_checksum": "07464edd6394e88c20cf4c4082f49e095156d7b282107fadaf0fa831c761d2a7",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D051",
+      "seed": 12271109617979967352,
+      "template": "null_or_project",
+      "input_rows": 53,
+      "batch_size": 31,
+      "oracle_rows": 24,
+      "oracle_checksum": "67aed942f9a6e39b9b324e2c2ead311092f96441d9009e3bf308697c515bc57e",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 24,
+          "result_checksum": "67aed942f9a6e39b9b324e2c2ead311092f96441d9009e3bf308697c515bc57e",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 24,
+          "result_checksum": "67aed942f9a6e39b9b324e2c2ead311092f96441d9009e3bf308697c515bc57e",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 24,
+          "result_checksum": "67aed942f9a6e39b9b324e2c2ead311092f96441d9009e3bf308697c515bc57e",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D052",
+      "seed": 9196149180295111886,
+      "template": "float_not_project",
+      "input_rows": 89,
+      "batch_size": 31,
+      "oracle_rows": 18,
+      "oracle_checksum": "43aa7126dddac90863fc1fbc5cce52162004216e63e6cbeb9b1b0208a14b7699",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 18,
+          "result_checksum": "43aa7126dddac90863fc1fbc5cce52162004216e63e6cbeb9b1b0208a14b7699",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 18,
+          "result_checksum": "43aa7126dddac90863fc1fbc5cce52162004216e63e6cbeb9b1b0208a14b7699",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 18,
+          "result_checksum": "43aa7126dddac90863fc1fbc5cce52162004216e63e6cbeb9b1b0208a14b7699",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D053",
+      "seed": 11951876814826469570,
+      "template": "utf8_neq_project",
+      "input_rows": 64,
+      "batch_size": 8192,
+      "oracle_rows": 47,
+      "oracle_checksum": "9569618d644f2b2e4e7316e4b0aa68a541ae751469c55454ba1d1dceab685b46",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 47,
+          "result_checksum": "9569618d644f2b2e4e7316e4b0aa68a541ae751469c55454ba1d1dceab685b46",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 47,
+          "result_checksum": "9569618d644f2b2e4e7316e4b0aa68a541ae751469c55454ba1d1dceab685b46",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 47,
+          "result_checksum": "9569618d644f2b2e4e7316e4b0aa68a541ae751469c55454ba1d1dceab685b46",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D054",
+      "seed": 3320368133324692093,
+      "template": "global_aggregate",
+      "input_rows": 35,
+      "batch_size": 8192,
+      "oracle_rows": 1,
+      "oracle_checksum": "287317562567d3d10a00d1a8fdaaa9b0ff14acd29e7a417d429b0bc2384a4fd1",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "287317562567d3d10a00d1a8fdaaa9b0ff14acd29e7a417d429b0bc2384a4fd1",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 1,
+          "result_checksum": "287317562567d3d10a00d1a8fdaaa9b0ff14acd29e7a417d429b0bc2384a4fd1",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "287317562567d3d10a00d1a8fdaaa9b0ff14acd29e7a417d429b0bc2384a4fd1",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D055",
+      "seed": 5915422572340286337,
+      "template": "utf8_group_aggregate",
+      "input_rows": 46,
+      "batch_size": 2,
+      "oracle_rows": 5,
+      "oracle_checksum": "13e2debcdd6b81cf0c018c97ee05c7e54332776740c2c4d591e1af086cf5fd7c",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 5,
+          "result_checksum": "13e2debcdd6b81cf0c018c97ee05c7e54332776740c2c4d591e1af086cf5fd7c",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 5,
+          "result_checksum": "13e2debcdd6b81cf0c018c97ee05c7e54332776740c2c4d591e1af086cf5fd7c",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 5,
+          "result_checksum": "13e2debcdd6b81cf0c018c97ee05c7e54332776740c2c4d591e1af086cf5fd7c",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D056",
+      "seed": 5961502406681101163,
+      "template": "boolean_group_aggregate",
+      "input_rows": 34,
+      "batch_size": 8192,
+      "oracle_rows": 3,
+      "oracle_checksum": "ac53e0cc73f12cad81dbb80f3d2d5d58170bdf39847f6679076715a76e21fdfb",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 3,
+          "result_checksum": "ac53e0cc73f12cad81dbb80f3d2d5d58170bdf39847f6679076715a76e21fdfb",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 3,
+          "result_checksum": "ac53e0cc73f12cad81dbb80f3d2d5d58170bdf39847f6679076715a76e21fdfb",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 3,
+          "result_checksum": "ac53e0cc73f12cad81dbb80f3d2d5d58170bdf39847f6679076715a76e21fdfb",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D057",
+      "seed": 15875709684835827264,
+      "template": "composite_group_aggregate",
+      "input_rows": 47,
+      "batch_size": 7,
+      "oracle_rows": 14,
+      "oracle_checksum": "f73c50832da30e5183ca114231b1f1cc3a6acf8d49966327fade1b14c71ec944",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 14,
+          "result_checksum": "f73c50832da30e5183ca114231b1f1cc3a6acf8d49966327fade1b14c71ec944",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 14,
+          "result_checksum": "f73c50832da30e5183ca114231b1f1cc3a6acf8d49966327fade1b14c71ec944",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 14,
+          "result_checksum": "f73c50832da30e5183ca114231b1f1cc3a6acf8d49966327fade1b14c71ec944",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D058",
+      "seed": 11517132658083654401,
+      "template": "filtered_group_aggregate",
+      "input_rows": 79,
+      "batch_size": 31,
+      "oracle_rows": 5,
+      "oracle_checksum": "a0af5c349ac94ada7cb9f0e6e6ba40f21610945270f80abe7757c52bc868fe07",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 5,
+          "result_checksum": "a0af5c349ac94ada7cb9f0e6e6ba40f21610945270f80abe7757c52bc868fe07",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 5,
+          "result_checksum": "a0af5c349ac94ada7cb9f0e6e6ba40f21610945270f80abe7757c52bc868fe07",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 5,
+          "result_checksum": "a0af5c349ac94ada7cb9f0e6e6ba40f21610945270f80abe7757c52bc868fe07",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D059",
+      "seed": 1640835244681946599,
+      "template": "not_null_global_aggregate",
+      "input_rows": 55,
+      "batch_size": 8192,
+      "oracle_rows": 1,
+      "oracle_checksum": "d0adb18db61df752fee0b39d46424ade1f0fe5ec48d9cd57e5226c81e46c4956",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "d0adb18db61df752fee0b39d46424ade1f0fe5ec48d9cd57e5226c81e46c4956",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 1,
+          "result_checksum": "d0adb18db61df752fee0b39d46424ade1f0fe5ec48d9cd57e5226c81e46c4956",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "d0adb18db61df752fee0b39d46424ade1f0fe5ec48d9cd57e5226c81e46c4956",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D060",
+      "seed": 15774261412887530360,
+      "template": "int_lt_project",
+      "input_rows": 91,
+      "batch_size": 1,
+      "oracle_rows": 53,
+      "oracle_checksum": "30a0bea584b9ea5f18d332482e217cecaa79b2c6e3a11aea9306c7c0d1f0f70e",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 53,
+          "result_checksum": "30a0bea584b9ea5f18d332482e217cecaa79b2c6e3a11aea9306c7c0d1f0f70e",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 53,
+          "result_checksum": "30a0bea584b9ea5f18d332482e217cecaa79b2c6e3a11aea9306c7c0d1f0f70e",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 53,
+          "result_checksum": "30a0bea584b9ea5f18d332482e217cecaa79b2c6e3a11aea9306c7c0d1f0f70e",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D061",
+      "seed": 10720683965329504843,
+      "template": "int_gte_project",
+      "input_rows": 35,
+      "batch_size": 31,
+      "oracle_rows": 17,
+      "oracle_checksum": "1798771e73795de370a45fc509acd0255199595cde4d2fddceec7eef387015a2",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 17,
+          "result_checksum": "1798771e73795de370a45fc509acd0255199595cde4d2fddceec7eef387015a2",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 17,
+          "result_checksum": "1798771e73795de370a45fc509acd0255199595cde4d2fddceec7eef387015a2",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 17,
+          "result_checksum": "1798771e73795de370a45fc509acd0255199595cde4d2fddceec7eef387015a2",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D062",
+      "seed": 10787816237753914750,
+      "template": "boolean_and_project",
+      "input_rows": 104,
+      "batch_size": 2,
+      "oracle_rows": 30,
+      "oracle_checksum": "c9318f31ec9f8f994622eacbdc543fc342027e8d1da61f6676eb92e478833504",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 30,
+          "result_checksum": "c9318f31ec9f8f994622eacbdc543fc342027e8d1da61f6676eb92e478833504",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 30,
+          "result_checksum": "c9318f31ec9f8f994622eacbdc543fc342027e8d1da61f6676eb92e478833504",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 30,
+          "result_checksum": "c9318f31ec9f8f994622eacbdc543fc342027e8d1da61f6676eb92e478833504",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D063",
+      "seed": 15976789215444055718,
+      "template": "null_or_project",
+      "input_rows": 115,
+      "batch_size": 2,
+      "oracle_rows": 63,
+      "oracle_checksum": "73379afd382eef78d5736e453effd480ba7cc7a72057e16af3525ca3266366f4",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 63,
+          "result_checksum": "73379afd382eef78d5736e453effd480ba7cc7a72057e16af3525ca3266366f4",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 63,
+          "result_checksum": "73379afd382eef78d5736e453effd480ba7cc7a72057e16af3525ca3266366f4",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 63,
+          "result_checksum": "73379afd382eef78d5736e453effd480ba7cc7a72057e16af3525ca3266366f4",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D064",
+      "seed": 10388929495200930209,
+      "template": "float_not_project",
+      "input_rows": 96,
+      "batch_size": 1,
+      "oracle_rows": 37,
+      "oracle_checksum": "7e8ac67be547a318edd3972917fee7cf432c631fd50d100b98f5e3861506a861",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 37,
+          "result_checksum": "7e8ac67be547a318edd3972917fee7cf432c631fd50d100b98f5e3861506a861",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 37,
+          "result_checksum": "7e8ac67be547a318edd3972917fee7cf432c631fd50d100b98f5e3861506a861",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 37,
+          "result_checksum": "7e8ac67be547a318edd3972917fee7cf432c631fd50d100b98f5e3861506a861",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D065",
+      "seed": 16673580752538617404,
+      "template": "utf8_neq_project",
+      "input_rows": 98,
+      "batch_size": 2,
+      "oracle_rows": 63,
+      "oracle_checksum": "2f0164843347494ff5f064179f64edadc8789ccd1223fa2bb952fd28dd4e915e",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 63,
+          "result_checksum": "2f0164843347494ff5f064179f64edadc8789ccd1223fa2bb952fd28dd4e915e",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 63,
+          "result_checksum": "2f0164843347494ff5f064179f64edadc8789ccd1223fa2bb952fd28dd4e915e",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 63,
+          "result_checksum": "2f0164843347494ff5f064179f64edadc8789ccd1223fa2bb952fd28dd4e915e",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D066",
+      "seed": 6090631363780227355,
+      "template": "global_aggregate",
+      "input_rows": 75,
+      "batch_size": 7,
+      "oracle_rows": 1,
+      "oracle_checksum": "f4916c01990014d869453e25a1ff1beb433d93ddffe76bfe4c00763529f2adfe",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "f4916c01990014d869453e25a1ff1beb433d93ddffe76bfe4c00763529f2adfe",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 1,
+          "result_checksum": "f4916c01990014d869453e25a1ff1beb433d93ddffe76bfe4c00763529f2adfe",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "f4916c01990014d869453e25a1ff1beb433d93ddffe76bfe4c00763529f2adfe",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D067",
+      "seed": 14440700352181892942,
+      "template": "utf8_group_aggregate",
+      "input_rows": 82,
+      "batch_size": 31,
+      "oracle_rows": 5,
+      "oracle_checksum": "9b5e668e7dc4c2bf619bc642fa56ac7083186e58f383ebd4a82149ee96cbad7d",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 5,
+          "result_checksum": "9b5e668e7dc4c2bf619bc642fa56ac7083186e58f383ebd4a82149ee96cbad7d",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 5,
+          "result_checksum": "9b5e668e7dc4c2bf619bc642fa56ac7083186e58f383ebd4a82149ee96cbad7d",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 5,
+          "result_checksum": "9b5e668e7dc4c2bf619bc642fa56ac7083186e58f383ebd4a82149ee96cbad7d",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D068",
+      "seed": 1525280891726593593,
+      "template": "boolean_group_aggregate",
+      "input_rows": 61,
+      "batch_size": 8192,
+      "oracle_rows": 3,
+      "oracle_checksum": "7fe4b23bbf59f3986592394cc15e03ead5e76717c06a3826b0040bddefbbbf55",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 3,
+          "result_checksum": "7fe4b23bbf59f3986592394cc15e03ead5e76717c06a3826b0040bddefbbbf55",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 3,
+          "result_checksum": "7fe4b23bbf59f3986592394cc15e03ead5e76717c06a3826b0040bddefbbbf55",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 3,
+          "result_checksum": "7fe4b23bbf59f3986592394cc15e03ead5e76717c06a3826b0040bddefbbbf55",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D069",
+      "seed": 14659210925125619334,
+      "template": "composite_group_aggregate",
+      "input_rows": 58,
+      "batch_size": 31,
+      "oracle_rows": 15,
+      "oracle_checksum": "dc0d24af10b7083a27a623e4e97fe966927a2c5368c8f0f0383ac0c8dd469234",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 15,
+          "result_checksum": "dc0d24af10b7083a27a623e4e97fe966927a2c5368c8f0f0383ac0c8dd469234",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 15,
+          "result_checksum": "dc0d24af10b7083a27a623e4e97fe966927a2c5368c8f0f0383ac0c8dd469234",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 15,
+          "result_checksum": "dc0d24af10b7083a27a623e4e97fe966927a2c5368c8f0f0383ac0c8dd469234",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D070",
+      "seed": 15282927904633021904,
+      "template": "filtered_group_aggregate",
+      "input_rows": 122,
+      "batch_size": 2,
+      "oracle_rows": 5,
+      "oracle_checksum": "755af0e6914e52adb56443954f5db464491800ad0f249599637068c17b495c5c",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 5,
+          "result_checksum": "755af0e6914e52adb56443954f5db464491800ad0f249599637068c17b495c5c",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 5,
+          "result_checksum": "755af0e6914e52adb56443954f5db464491800ad0f249599637068c17b495c5c",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 5,
+          "result_checksum": "755af0e6914e52adb56443954f5db464491800ad0f249599637068c17b495c5c",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D071",
+      "seed": 12233544114341995068,
+      "template": "not_null_global_aggregate",
+      "input_rows": 41,
+      "batch_size": 1,
+      "oracle_rows": 1,
+      "oracle_checksum": "53eb1eb8f90fdb0f141d7b66fe764af8860bdafb2b33b1baf78f1e998725036f",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "53eb1eb8f90fdb0f141d7b66fe764af8860bdafb2b33b1baf78f1e998725036f",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 1,
+          "result_checksum": "53eb1eb8f90fdb0f141d7b66fe764af8860bdafb2b33b1baf78f1e998725036f",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "53eb1eb8f90fdb0f141d7b66fe764af8860bdafb2b33b1baf78f1e998725036f",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D072",
+      "seed": 13526427933418447231,
+      "template": "int_lt_project",
+      "input_rows": 96,
+      "batch_size": 2,
+      "oracle_rows": 25,
+      "oracle_checksum": "1145bf61e702b294ff4e1032209b382d9d356d250ba89dbe4ef68155cbfbe582",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 25,
+          "result_checksum": "1145bf61e702b294ff4e1032209b382d9d356d250ba89dbe4ef68155cbfbe582",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 25,
+          "result_checksum": "1145bf61e702b294ff4e1032209b382d9d356d250ba89dbe4ef68155cbfbe582",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 25,
+          "result_checksum": "1145bf61e702b294ff4e1032209b382d9d356d250ba89dbe4ef68155cbfbe582",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D073",
+      "seed": 7317944580794804196,
+      "template": "int_gte_project",
+      "input_rows": 43,
+      "batch_size": 7,
+      "oracle_rows": 31,
+      "oracle_checksum": "7da11ed949aa3d7430efcb7e15d8f39dbf986fa8eb958237e093c1a352eb3064",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 31,
+          "result_checksum": "7da11ed949aa3d7430efcb7e15d8f39dbf986fa8eb958237e093c1a352eb3064",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 31,
+          "result_checksum": "7da11ed949aa3d7430efcb7e15d8f39dbf986fa8eb958237e093c1a352eb3064",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 31,
+          "result_checksum": "7da11ed949aa3d7430efcb7e15d8f39dbf986fa8eb958237e093c1a352eb3064",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D074",
+      "seed": 14630098572204953150,
+      "template": "boolean_and_project",
+      "input_rows": 124,
+      "batch_size": 1,
+      "oracle_rows": 22,
+      "oracle_checksum": "b525535bf5c6ba535ed60271f6bb53a1d1897375a2f0ac1774c0872477710363",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 22,
+          "result_checksum": "b525535bf5c6ba535ed60271f6bb53a1d1897375a2f0ac1774c0872477710363",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 22,
+          "result_checksum": "b525535bf5c6ba535ed60271f6bb53a1d1897375a2f0ac1774c0872477710363",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 22,
+          "result_checksum": "b525535bf5c6ba535ed60271f6bb53a1d1897375a2f0ac1774c0872477710363",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D075",
+      "seed": 2373227202631529990,
+      "template": "null_or_project",
+      "input_rows": 57,
+      "batch_size": 31,
+      "oracle_rows": 28,
+      "oracle_checksum": "c765f379772a12513a7abdc7f9e1c7dd8ed54604053a8bd1af559c125712e654",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 28,
+          "result_checksum": "c765f379772a12513a7abdc7f9e1c7dd8ed54604053a8bd1af559c125712e654",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 28,
+          "result_checksum": "c765f379772a12513a7abdc7f9e1c7dd8ed54604053a8bd1af559c125712e654",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 28,
+          "result_checksum": "c765f379772a12513a7abdc7f9e1c7dd8ed54604053a8bd1af559c125712e654",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D076",
+      "seed": 15302731701043086358,
+      "template": "float_not_project",
+      "input_rows": 72,
+      "batch_size": 2,
+      "oracle_rows": 37,
+      "oracle_checksum": "86bb9bc0e4b5a96c52a2e2b862719eea63ceea81849ff9bd42a99030e6a3f4fe",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 37,
+          "result_checksum": "86bb9bc0e4b5a96c52a2e2b862719eea63ceea81849ff9bd42a99030e6a3f4fe",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 37,
+          "result_checksum": "86bb9bc0e4b5a96c52a2e2b862719eea63ceea81849ff9bd42a99030e6a3f4fe",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 37,
+          "result_checksum": "86bb9bc0e4b5a96c52a2e2b862719eea63ceea81849ff9bd42a99030e6a3f4fe",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D077",
+      "seed": 2245014179303319820,
+      "template": "utf8_neq_project",
+      "input_rows": 64,
+      "batch_size": 2,
+      "oracle_rows": 38,
+      "oracle_checksum": "bdc41dd9a316d1fa411e287a7ed90d86ebdc8b230a336e7d647edd9b7d848b45",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 38,
+          "result_checksum": "bdc41dd9a316d1fa411e287a7ed90d86ebdc8b230a336e7d647edd9b7d848b45",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 38,
+          "result_checksum": "bdc41dd9a316d1fa411e287a7ed90d86ebdc8b230a336e7d647edd9b7d848b45",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 38,
+          "result_checksum": "bdc41dd9a316d1fa411e287a7ed90d86ebdc8b230a336e7d647edd9b7d848b45",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D078",
+      "seed": 793500540051570721,
+      "template": "global_aggregate",
+      "input_rows": 113,
+      "batch_size": 8192,
+      "oracle_rows": 1,
+      "oracle_checksum": "30330b9231160dae2877014df40aa2b9eaf59439fdd594ceb61ba456814ecf79",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "30330b9231160dae2877014df40aa2b9eaf59439fdd594ceb61ba456814ecf79",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 1,
+          "result_checksum": "30330b9231160dae2877014df40aa2b9eaf59439fdd594ceb61ba456814ecf79",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "30330b9231160dae2877014df40aa2b9eaf59439fdd594ceb61ba456814ecf79",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D079",
+      "seed": 11241192690072364304,
+      "template": "utf8_group_aggregate",
+      "input_rows": 115,
+      "batch_size": 8192,
+      "oracle_rows": 5,
+      "oracle_checksum": "0ec4eafb091cbd07cbd9ac28a80681b19adf7bf7bebdd47ffdd8efd76a32bcb5",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 5,
+          "result_checksum": "0ec4eafb091cbd07cbd9ac28a80681b19adf7bf7bebdd47ffdd8efd76a32bcb5",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 5,
+          "result_checksum": "0ec4eafb091cbd07cbd9ac28a80681b19adf7bf7bebdd47ffdd8efd76a32bcb5",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 5,
+          "result_checksum": "0ec4eafb091cbd07cbd9ac28a80681b19adf7bf7bebdd47ffdd8efd76a32bcb5",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D080",
+      "seed": 3184628913365660493,
+      "template": "boolean_group_aggregate",
+      "input_rows": 78,
+      "batch_size": 8192,
+      "oracle_rows": 3,
+      "oracle_checksum": "71dca4fd6acee34918f795c143c0e93c6cb2e7c18e46f0dbf76e712139dbc159",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 3,
+          "result_checksum": "71dca4fd6acee34918f795c143c0e93c6cb2e7c18e46f0dbf76e712139dbc159",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 3,
+          "result_checksum": "71dca4fd6acee34918f795c143c0e93c6cb2e7c18e46f0dbf76e712139dbc159",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 3,
+          "result_checksum": "71dca4fd6acee34918f795c143c0e93c6cb2e7c18e46f0dbf76e712139dbc159",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D081",
+      "seed": 6003173589709426937,
+      "template": "composite_group_aggregate",
+      "input_rows": 16,
+      "batch_size": 31,
+      "oracle_rows": 10,
+      "oracle_checksum": "2643ddd24990a4e73c95b3ae01568660ed593701bb2687622356d57048a69255",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 10,
+          "result_checksum": "2643ddd24990a4e73c95b3ae01568660ed593701bb2687622356d57048a69255",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 10,
+          "result_checksum": "2643ddd24990a4e73c95b3ae01568660ed593701bb2687622356d57048a69255",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 10,
+          "result_checksum": "2643ddd24990a4e73c95b3ae01568660ed593701bb2687622356d57048a69255",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D082",
+      "seed": 10325447016497852656,
+      "template": "filtered_group_aggregate",
+      "input_rows": 3,
+      "batch_size": 31,
+      "oracle_rows": 1,
+      "oracle_checksum": "89a81a14098714ab2ee389d8ed1aca9888b4101c74f9c6df2f1e8766938fbf37",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "89a81a14098714ab2ee389d8ed1aca9888b4101c74f9c6df2f1e8766938fbf37",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 1,
+          "result_checksum": "89a81a14098714ab2ee389d8ed1aca9888b4101c74f9c6df2f1e8766938fbf37",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "89a81a14098714ab2ee389d8ed1aca9888b4101c74f9c6df2f1e8766938fbf37",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D083",
+      "seed": 2769005077840965597,
+      "template": "not_null_global_aggregate",
+      "input_rows": 94,
+      "batch_size": 2,
+      "oracle_rows": 1,
+      "oracle_checksum": "7b6efad7c3e5c6bd7608f3db4a844f708bba9ab5ba32855ff3272e0be199610a",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "7b6efad7c3e5c6bd7608f3db4a844f708bba9ab5ba32855ff3272e0be199610a",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 1,
+          "result_checksum": "7b6efad7c3e5c6bd7608f3db4a844f708bba9ab5ba32855ff3272e0be199610a",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "7b6efad7c3e5c6bd7608f3db4a844f708bba9ab5ba32855ff3272e0be199610a",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D084",
+      "seed": 629532244728749949,
+      "template": "int_lt_project",
+      "input_rows": 9,
+      "batch_size": 8192,
+      "oracle_rows": 2,
+      "oracle_checksum": "f2af97c5c35ea4fc191272b3fe0c10a396ca89d19e27f2b473eab9283d6a093d",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 2,
+          "result_checksum": "f2af97c5c35ea4fc191272b3fe0c10a396ca89d19e27f2b473eab9283d6a093d",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 2,
+          "result_checksum": "f2af97c5c35ea4fc191272b3fe0c10a396ca89d19e27f2b473eab9283d6a093d",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 2,
+          "result_checksum": "f2af97c5c35ea4fc191272b3fe0c10a396ca89d19e27f2b473eab9283d6a093d",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D085",
+      "seed": 11968475338596033419,
+      "template": "int_gte_project",
+      "input_rows": 84,
+      "batch_size": 1,
+      "oracle_rows": 53,
+      "oracle_checksum": "a2918d16797a3739a618d17a22292da6dd3adbd971e0adecea56c9f3959956eb",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 53,
+          "result_checksum": "a2918d16797a3739a618d17a22292da6dd3adbd971e0adecea56c9f3959956eb",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 53,
+          "result_checksum": "a2918d16797a3739a618d17a22292da6dd3adbd971e0adecea56c9f3959956eb",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 53,
+          "result_checksum": "a2918d16797a3739a618d17a22292da6dd3adbd971e0adecea56c9f3959956eb",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D086",
+      "seed": 2733594011463971398,
+      "template": "boolean_and_project",
+      "input_rows": 55,
+      "batch_size": 7,
+      "oracle_rows": 10,
+      "oracle_checksum": "fddf873a6d165fd8d85fdfa18a25134ab0bd824883fe191a1c1a7c6fc99c4d2d",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 10,
+          "result_checksum": "fddf873a6d165fd8d85fdfa18a25134ab0bd824883fe191a1c1a7c6fc99c4d2d",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 10,
+          "result_checksum": "fddf873a6d165fd8d85fdfa18a25134ab0bd824883fe191a1c1a7c6fc99c4d2d",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 10,
+          "result_checksum": "fddf873a6d165fd8d85fdfa18a25134ab0bd824883fe191a1c1a7c6fc99c4d2d",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D087",
+      "seed": 9878391313129041263,
+      "template": "null_or_project",
+      "input_rows": 25,
+      "batch_size": 8192,
+      "oracle_rows": 12,
+      "oracle_checksum": "3931e3a0ebde742d1c77aa023ba4f66a2a264f2cf193d750c4501ea49ffe6ba7",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 12,
+          "result_checksum": "3931e3a0ebde742d1c77aa023ba4f66a2a264f2cf193d750c4501ea49ffe6ba7",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 12,
+          "result_checksum": "3931e3a0ebde742d1c77aa023ba4f66a2a264f2cf193d750c4501ea49ffe6ba7",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 12,
+          "result_checksum": "3931e3a0ebde742d1c77aa023ba4f66a2a264f2cf193d750c4501ea49ffe6ba7",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D088",
+      "seed": 13145147283970948947,
+      "template": "float_not_project",
+      "input_rows": 77,
+      "batch_size": 31,
+      "oracle_rows": 49,
+      "oracle_checksum": "5636ea6a355febd804cafaf2510311a8e1a5d1f2d1cbf356d1f5956de1f78e04",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 49,
+          "result_checksum": "5636ea6a355febd804cafaf2510311a8e1a5d1f2d1cbf356d1f5956de1f78e04",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 49,
+          "result_checksum": "5636ea6a355febd804cafaf2510311a8e1a5d1f2d1cbf356d1f5956de1f78e04",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 49,
+          "result_checksum": "5636ea6a355febd804cafaf2510311a8e1a5d1f2d1cbf356d1f5956de1f78e04",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D089",
+      "seed": 7267529243982576955,
+      "template": "utf8_neq_project",
+      "input_rows": 125,
+      "batch_size": 1,
+      "oracle_rows": 66,
+      "oracle_checksum": "d7c190964f98ecd0eaa932726f4358f73326d923c034500401c9557fa5d84efa",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 66,
+          "result_checksum": "d7c190964f98ecd0eaa932726f4358f73326d923c034500401c9557fa5d84efa",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 66,
+          "result_checksum": "d7c190964f98ecd0eaa932726f4358f73326d923c034500401c9557fa5d84efa",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 66,
+          "result_checksum": "d7c190964f98ecd0eaa932726f4358f73326d923c034500401c9557fa5d84efa",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D090",
+      "seed": 10956723630069217568,
+      "template": "global_aggregate",
+      "input_rows": 44,
+      "batch_size": 8192,
+      "oracle_rows": 1,
+      "oracle_checksum": "d0469a45595d9a475aff6eccc06e7c9c9f38552cef3c50dce1364f8ba75f90a2",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "d0469a45595d9a475aff6eccc06e7c9c9f38552cef3c50dce1364f8ba75f90a2",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 1,
+          "result_checksum": "d0469a45595d9a475aff6eccc06e7c9c9f38552cef3c50dce1364f8ba75f90a2",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "d0469a45595d9a475aff6eccc06e7c9c9f38552cef3c50dce1364f8ba75f90a2",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D091",
+      "seed": 17959190523849052798,
+      "template": "utf8_group_aggregate",
+      "input_rows": 110,
+      "batch_size": 7,
+      "oracle_rows": 5,
+      "oracle_checksum": "7f1cefdea1f9f2b354bdc02bc3d7d098e172012859dc9740230a99716ef6094a",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 5,
+          "result_checksum": "7f1cefdea1f9f2b354bdc02bc3d7d098e172012859dc9740230a99716ef6094a",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 5,
+          "result_checksum": "7f1cefdea1f9f2b354bdc02bc3d7d098e172012859dc9740230a99716ef6094a",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 5,
+          "result_checksum": "7f1cefdea1f9f2b354bdc02bc3d7d098e172012859dc9740230a99716ef6094a",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D092",
+      "seed": 17300710924463752785,
+      "template": "boolean_group_aggregate",
+      "input_rows": 74,
+      "batch_size": 8192,
+      "oracle_rows": 3,
+      "oracle_checksum": "6bbff7b06fd1df0a24c380aa28a9774814f577ec553705f906a2fd7a890a2637",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 3,
+          "result_checksum": "6bbff7b06fd1df0a24c380aa28a9774814f577ec553705f906a2fd7a890a2637",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 3,
+          "result_checksum": "6bbff7b06fd1df0a24c380aa28a9774814f577ec553705f906a2fd7a890a2637",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 3,
+          "result_checksum": "6bbff7b06fd1df0a24c380aa28a9774814f577ec553705f906a2fd7a890a2637",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D093",
+      "seed": 5185595442286722639,
+      "template": "composite_group_aggregate",
+      "input_rows": 122,
+      "batch_size": 1,
+      "oracle_rows": 15,
+      "oracle_checksum": "be0d00e188ea8aebacdf48c0f733d095060fb1f8de4d4ad6eaa67faf27bf9a81",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 15,
+          "result_checksum": "be0d00e188ea8aebacdf48c0f733d095060fb1f8de4d4ad6eaa67faf27bf9a81",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 15,
+          "result_checksum": "be0d00e188ea8aebacdf48c0f733d095060fb1f8de4d4ad6eaa67faf27bf9a81",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 15,
+          "result_checksum": "be0d00e188ea8aebacdf48c0f733d095060fb1f8de4d4ad6eaa67faf27bf9a81",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D094",
+      "seed": 16854368819046206291,
+      "template": "filtered_group_aggregate",
+      "input_rows": 1,
+      "batch_size": 2,
+      "oracle_rows": 1,
+      "oracle_checksum": "054713812a6717ce841584775a4763958d3e15703fbf91b010fe4a3827c1ef0d",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "054713812a6717ce841584775a4763958d3e15703fbf91b010fe4a3827c1ef0d",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 1,
+          "result_checksum": "054713812a6717ce841584775a4763958d3e15703fbf91b010fe4a3827c1ef0d",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "054713812a6717ce841584775a4763958d3e15703fbf91b010fe4a3827c1ef0d",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D095",
+      "seed": 12362066685748411023,
+      "template": "not_null_global_aggregate",
+      "input_rows": 52,
+      "batch_size": 31,
+      "oracle_rows": 1,
+      "oracle_checksum": "1aa803746f0b049be6da5c138166973ad6e197e10c280f4960706fbaf0e9df68",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "1aa803746f0b049be6da5c138166973ad6e197e10c280f4960706fbaf0e9df68",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 1,
+          "result_checksum": "1aa803746f0b049be6da5c138166973ad6e197e10c280f4960706fbaf0e9df68",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "1aa803746f0b049be6da5c138166973ad6e197e10c280f4960706fbaf0e9df68",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D096",
+      "seed": 13373554222512812249,
+      "template": "int_lt_project",
+      "input_rows": 43,
+      "batch_size": 31,
+      "oracle_rows": 16,
+      "oracle_checksum": "bc115f1477b2387a81f80b365ad87db2aa5544eb88d313653c843a69513e3773",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 16,
+          "result_checksum": "bc115f1477b2387a81f80b365ad87db2aa5544eb88d313653c843a69513e3773",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 16,
+          "result_checksum": "bc115f1477b2387a81f80b365ad87db2aa5544eb88d313653c843a69513e3773",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 16,
+          "result_checksum": "bc115f1477b2387a81f80b365ad87db2aa5544eb88d313653c843a69513e3773",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D097",
+      "seed": 498490965496305626,
+      "template": "int_gte_project",
+      "input_rows": 76,
+      "batch_size": 2,
+      "oracle_rows": 16,
+      "oracle_checksum": "155049bdb93d546d9b192354f970fa3156240b7599fa9e661b89d14a1eac25c3",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 16,
+          "result_checksum": "155049bdb93d546d9b192354f970fa3156240b7599fa9e661b89d14a1eac25c3",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 16,
+          "result_checksum": "155049bdb93d546d9b192354f970fa3156240b7599fa9e661b89d14a1eac25c3",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 16,
+          "result_checksum": "155049bdb93d546d9b192354f970fa3156240b7599fa9e661b89d14a1eac25c3",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D098",
+      "seed": 5174724674187680994,
+      "template": "boolean_and_project",
+      "input_rows": 57,
+      "batch_size": 1,
+      "oracle_rows": 16,
+      "oracle_checksum": "ae61fc1e0e08ee848770cff7cea6f157ff6639d6df8f017bdfea93f73eb10f81",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 16,
+          "result_checksum": "ae61fc1e0e08ee848770cff7cea6f157ff6639d6df8f017bdfea93f73eb10f81",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 16,
+          "result_checksum": "ae61fc1e0e08ee848770cff7cea6f157ff6639d6df8f017bdfea93f73eb10f81",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 16,
+          "result_checksum": "ae61fc1e0e08ee848770cff7cea6f157ff6639d6df8f017bdfea93f73eb10f81",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D099",
+      "seed": 16647407836473503916,
+      "template": "null_or_project",
+      "input_rows": 60,
+      "batch_size": 31,
+      "oracle_rows": 33,
+      "oracle_checksum": "5e2b6e43f20ceb2fe9cce692dc3ca0c0544c9ace45d41ee7aa3701947ccef4e8",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 33,
+          "result_checksum": "5e2b6e43f20ceb2fe9cce692dc3ca0c0544c9ace45d41ee7aa3701947ccef4e8",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 33,
+          "result_checksum": "5e2b6e43f20ceb2fe9cce692dc3ca0c0544c9ace45d41ee7aa3701947ccef4e8",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 33,
+          "result_checksum": "5e2b6e43f20ceb2fe9cce692dc3ca0c0544c9ace45d41ee7aa3701947ccef4e8",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D100",
+      "seed": 16563683357347882500,
+      "template": "float_not_project",
+      "input_rows": 108,
+      "batch_size": 8192,
+      "oracle_rows": 60,
+      "oracle_checksum": "af2c17a489951b72efb81754617a0169147f91a4288117cf94eede2485dcea36",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 60,
+          "result_checksum": "af2c17a489951b72efb81754617a0169147f91a4288117cf94eede2485dcea36",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 60,
+          "result_checksum": "af2c17a489951b72efb81754617a0169147f91a4288117cf94eede2485dcea36",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 60,
+          "result_checksum": "af2c17a489951b72efb81754617a0169147f91a4288117cf94eede2485dcea36",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D101",
+      "seed": 14515019188992078593,
+      "template": "utf8_neq_project",
+      "input_rows": 42,
+      "batch_size": 1,
+      "oracle_rows": 26,
+      "oracle_checksum": "d9f3efeeff8b1c14b8182c26cedadf78b1f1aefa7480a2e53ad8d95145721e43",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 26,
+          "result_checksum": "d9f3efeeff8b1c14b8182c26cedadf78b1f1aefa7480a2e53ad8d95145721e43",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 26,
+          "result_checksum": "d9f3efeeff8b1c14b8182c26cedadf78b1f1aefa7480a2e53ad8d95145721e43",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 26,
+          "result_checksum": "d9f3efeeff8b1c14b8182c26cedadf78b1f1aefa7480a2e53ad8d95145721e43",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D102",
+      "seed": 14631571395710736525,
+      "template": "global_aggregate",
+      "input_rows": 106,
+      "batch_size": 2,
+      "oracle_rows": 1,
+      "oracle_checksum": "3534ff3c212b8171ab79011720883cc7e7247463f50248e68a52fca9fb2a8fdd",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "3534ff3c212b8171ab79011720883cc7e7247463f50248e68a52fca9fb2a8fdd",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 1,
+          "result_checksum": "3534ff3c212b8171ab79011720883cc7e7247463f50248e68a52fca9fb2a8fdd",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "3534ff3c212b8171ab79011720883cc7e7247463f50248e68a52fca9fb2a8fdd",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D103",
+      "seed": 12063705133791055365,
+      "template": "utf8_group_aggregate",
+      "input_rows": 42,
+      "batch_size": 7,
+      "oracle_rows": 5,
+      "oracle_checksum": "11166b47a304b53221c07913c9da326f32ce2566131ddb67982c802cb95c0229",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 5,
+          "result_checksum": "11166b47a304b53221c07913c9da326f32ce2566131ddb67982c802cb95c0229",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 5,
+          "result_checksum": "11166b47a304b53221c07913c9da326f32ce2566131ddb67982c802cb95c0229",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 5,
+          "result_checksum": "11166b47a304b53221c07913c9da326f32ce2566131ddb67982c802cb95c0229",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D104",
+      "seed": 8287981801292042148,
+      "template": "boolean_group_aggregate",
+      "input_rows": 106,
+      "batch_size": 2,
+      "oracle_rows": 3,
+      "oracle_checksum": "25f3095887b399362febbe73154378bc773dea18d4d9035822a6756e6dee882b",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 3,
+          "result_checksum": "25f3095887b399362febbe73154378bc773dea18d4d9035822a6756e6dee882b",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 3,
+          "result_checksum": "25f3095887b399362febbe73154378bc773dea18d4d9035822a6756e6dee882b",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 3,
+          "result_checksum": "25f3095887b399362febbe73154378bc773dea18d4d9035822a6756e6dee882b",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D105",
+      "seed": 12903860382988675232,
+      "template": "composite_group_aggregate",
+      "input_rows": 73,
+      "batch_size": 7,
+      "oracle_rows": 15,
+      "oracle_checksum": "e6d07b5a08533c8c3ea492e6ae57ee585bebf17a9e770f657366dcca66b5cb12",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 15,
+          "result_checksum": "e6d07b5a08533c8c3ea492e6ae57ee585bebf17a9e770f657366dcca66b5cb12",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 15,
+          "result_checksum": "e6d07b5a08533c8c3ea492e6ae57ee585bebf17a9e770f657366dcca66b5cb12",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 15,
+          "result_checksum": "e6d07b5a08533c8c3ea492e6ae57ee585bebf17a9e770f657366dcca66b5cb12",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D106",
+      "seed": 13458288775401195066,
+      "template": "filtered_group_aggregate",
+      "input_rows": 62,
+      "batch_size": 1,
+      "oracle_rows": 5,
+      "oracle_checksum": "77045b2f1e7039777a75e8962174c5a26142cb67a1bb8bb98f80aa59991ad130",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 5,
+          "result_checksum": "77045b2f1e7039777a75e8962174c5a26142cb67a1bb8bb98f80aa59991ad130",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 5,
+          "result_checksum": "77045b2f1e7039777a75e8962174c5a26142cb67a1bb8bb98f80aa59991ad130",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 5,
+          "result_checksum": "77045b2f1e7039777a75e8962174c5a26142cb67a1bb8bb98f80aa59991ad130",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D107",
+      "seed": 697409938252656371,
+      "template": "not_null_global_aggregate",
+      "input_rows": 100,
+      "batch_size": 2,
+      "oracle_rows": 1,
+      "oracle_checksum": "b5eb1290bb00b7080f9d607e218c55aae4a071a03e3172e2043a3a9417cf54e1",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "b5eb1290bb00b7080f9d607e218c55aae4a071a03e3172e2043a3a9417cf54e1",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 1,
+          "result_checksum": "b5eb1290bb00b7080f9d607e218c55aae4a071a03e3172e2043a3a9417cf54e1",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "b5eb1290bb00b7080f9d607e218c55aae4a071a03e3172e2043a3a9417cf54e1",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D108",
+      "seed": 6085409028129625050,
+      "template": "int_lt_project",
+      "input_rows": 111,
+      "batch_size": 7,
+      "oracle_rows": 63,
+      "oracle_checksum": "aa281f7d4b8d5ddf35f87713a86269c4095295931ffe7d03dbefaf1f8c53a8c4",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 63,
+          "result_checksum": "aa281f7d4b8d5ddf35f87713a86269c4095295931ffe7d03dbefaf1f8c53a8c4",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 63,
+          "result_checksum": "aa281f7d4b8d5ddf35f87713a86269c4095295931ffe7d03dbefaf1f8c53a8c4",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 63,
+          "result_checksum": "aa281f7d4b8d5ddf35f87713a86269c4095295931ffe7d03dbefaf1f8c53a8c4",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D109",
+      "seed": 717028465635658533,
+      "template": "int_gte_project",
+      "input_rows": 11,
+      "batch_size": 31,
+      "oracle_rows": 2,
+      "oracle_checksum": "a4b07babc793e75b1ccb250efcc606453763ccb5ecfdb22d86a2c87cb617199a",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 2,
+          "result_checksum": "a4b07babc793e75b1ccb250efcc606453763ccb5ecfdb22d86a2c87cb617199a",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 2,
+          "result_checksum": "a4b07babc793e75b1ccb250efcc606453763ccb5ecfdb22d86a2c87cb617199a",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 2,
+          "result_checksum": "a4b07babc793e75b1ccb250efcc606453763ccb5ecfdb22d86a2c87cb617199a",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D110",
+      "seed": 2193278138199448594,
+      "template": "boolean_and_project",
+      "input_rows": 86,
+      "batch_size": 1,
+      "oracle_rows": 20,
+      "oracle_checksum": "9875e181cbcd1af0174979f615bd9750f6851512898616b72d6691a4b186b4f6",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 20,
+          "result_checksum": "9875e181cbcd1af0174979f615bd9750f6851512898616b72d6691a4b186b4f6",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 20,
+          "result_checksum": "9875e181cbcd1af0174979f615bd9750f6851512898616b72d6691a4b186b4f6",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 20,
+          "result_checksum": "9875e181cbcd1af0174979f615bd9750f6851512898616b72d6691a4b186b4f6",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D111",
+      "seed": 12629442388260852052,
+      "template": "null_or_project",
+      "input_rows": 66,
+      "batch_size": 1,
+      "oracle_rows": 29,
+      "oracle_checksum": "44a78c1f4b5609c08d8f0501d42ff0d40cf1493bf9ac48805ad6dd429d614aef",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 29,
+          "result_checksum": "44a78c1f4b5609c08d8f0501d42ff0d40cf1493bf9ac48805ad6dd429d614aef",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 29,
+          "result_checksum": "44a78c1f4b5609c08d8f0501d42ff0d40cf1493bf9ac48805ad6dd429d614aef",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 29,
+          "result_checksum": "44a78c1f4b5609c08d8f0501d42ff0d40cf1493bf9ac48805ad6dd429d614aef",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D112",
+      "seed": 10020550786091340190,
+      "template": "float_not_project",
+      "input_rows": 61,
+      "batch_size": 31,
+      "oracle_rows": 23,
+      "oracle_checksum": "dae10b969bea8bb2a1a27c35b9e52f8541693f6e2ab0bea8f6be575bfdad5a52",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 23,
+          "result_checksum": "dae10b969bea8bb2a1a27c35b9e52f8541693f6e2ab0bea8f6be575bfdad5a52",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 23,
+          "result_checksum": "dae10b969bea8bb2a1a27c35b9e52f8541693f6e2ab0bea8f6be575bfdad5a52",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 23,
+          "result_checksum": "dae10b969bea8bb2a1a27c35b9e52f8541693f6e2ab0bea8f6be575bfdad5a52",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D113",
+      "seed": 9664154672488685510,
+      "template": "utf8_neq_project",
+      "input_rows": 34,
+      "batch_size": 8192,
+      "oracle_rows": 15,
+      "oracle_checksum": "66f36729088111e5dacec30369b9d235ce6bea3c453a6d7c5f903c830037ce09",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 15,
+          "result_checksum": "66f36729088111e5dacec30369b9d235ce6bea3c453a6d7c5f903c830037ce09",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 15,
+          "result_checksum": "66f36729088111e5dacec30369b9d235ce6bea3c453a6d7c5f903c830037ce09",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 15,
+          "result_checksum": "66f36729088111e5dacec30369b9d235ce6bea3c453a6d7c5f903c830037ce09",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D114",
+      "seed": 4750489942186972628,
+      "template": "global_aggregate",
+      "input_rows": 127,
+      "batch_size": 7,
+      "oracle_rows": 1,
+      "oracle_checksum": "4f17636ca7d518daf3fd19ea1d0589d92827cb27c6284bbb42df2f4f2ff9df48",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "4f17636ca7d518daf3fd19ea1d0589d92827cb27c6284bbb42df2f4f2ff9df48",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 1,
+          "result_checksum": "4f17636ca7d518daf3fd19ea1d0589d92827cb27c6284bbb42df2f4f2ff9df48",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "4f17636ca7d518daf3fd19ea1d0589d92827cb27c6284bbb42df2f4f2ff9df48",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D115",
+      "seed": 7391643314054556222,
+      "template": "utf8_group_aggregate",
+      "input_rows": 31,
+      "batch_size": 7,
+      "oracle_rows": 5,
+      "oracle_checksum": "bf820265380a24883863de00cc61b6fbada6df0ad5b864816261e7310e2aa261",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 5,
+          "result_checksum": "bf820265380a24883863de00cc61b6fbada6df0ad5b864816261e7310e2aa261",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 5,
+          "result_checksum": "bf820265380a24883863de00cc61b6fbada6df0ad5b864816261e7310e2aa261",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 5,
+          "result_checksum": "bf820265380a24883863de00cc61b6fbada6df0ad5b864816261e7310e2aa261",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D116",
+      "seed": 9143531793455733609,
+      "template": "boolean_group_aggregate",
+      "input_rows": 94,
+      "batch_size": 2,
+      "oracle_rows": 3,
+      "oracle_checksum": "8d04f53fd93f20cad472e91f4d697697cdbb074afa324ca0879846b6d69c7e68",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 3,
+          "result_checksum": "8d04f53fd93f20cad472e91f4d697697cdbb074afa324ca0879846b6d69c7e68",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 3,
+          "result_checksum": "8d04f53fd93f20cad472e91f4d697697cdbb074afa324ca0879846b6d69c7e68",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 3,
+          "result_checksum": "8d04f53fd93f20cad472e91f4d697697cdbb074afa324ca0879846b6d69c7e68",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D117",
+      "seed": 13435281694931037031,
+      "template": "composite_group_aggregate",
+      "input_rows": 48,
+      "batch_size": 31,
+      "oracle_rows": 14,
+      "oracle_checksum": "34ab00b58501363c425e4694ef0e971ad17a5fab63109578547836160b3db4f8",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 14,
+          "result_checksum": "34ab00b58501363c425e4694ef0e971ad17a5fab63109578547836160b3db4f8",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 14,
+          "result_checksum": "34ab00b58501363c425e4694ef0e971ad17a5fab63109578547836160b3db4f8",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 14,
+          "result_checksum": "34ab00b58501363c425e4694ef0e971ad17a5fab63109578547836160b3db4f8",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D118",
+      "seed": 7369977903256109346,
+      "template": "filtered_group_aggregate",
+      "input_rows": 9,
+      "batch_size": 1,
+      "oracle_rows": 2,
+      "oracle_checksum": "99ccdf5380d96a52436599ccbc07c3f861cc1a665974af8913f2e3135b8ff4bc",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 2,
+          "result_checksum": "99ccdf5380d96a52436599ccbc07c3f861cc1a665974af8913f2e3135b8ff4bc",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 2,
+          "result_checksum": "99ccdf5380d96a52436599ccbc07c3f861cc1a665974af8913f2e3135b8ff4bc",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 2,
+          "result_checksum": "99ccdf5380d96a52436599ccbc07c3f861cc1a665974af8913f2e3135b8ff4bc",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    },
+    {
+      "case": "D119",
+      "seed": 16724135288240316171,
+      "template": "not_null_global_aggregate",
+      "input_rows": 112,
+      "batch_size": 1,
+      "oracle_rows": 1,
+      "oracle_checksum": "c1e93e2b1461f810c4e0f52b191ec8ab15c6a3f023f10a7a836debbb667d67cd",
+      "comparisons": [
+        {
+          "engine": "batch",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "c1e93e2b1461f810c4e0f52b191ec8ab15c6a3f023f10a7a836debbb667d67cd",
+          "duckdb_match": true
+        },
+        {
+          "engine": "batch",
+          "planning": "optimized",
+          "rows": 1,
+          "result_checksum": "c1e93e2b1461f810c4e0f52b191ec8ab15c6a3f023f10a7a836debbb667d67cd",
+          "duckdb_match": true
+        },
+        {
+          "engine": "scalar",
+          "planning": "unoptimized",
+          "rows": 1,
+          "result_checksum": "c1e93e2b1461f810c4e0f52b191ec8ab15c6a3f023f10a7a836debbb667d67cd",
+          "duckdb_match": true
+        }
+      ],
+      "status": "match"
+    }
+  ],
+  "status": "match"
+}

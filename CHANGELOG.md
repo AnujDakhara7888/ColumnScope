@@ -42,3 +42,6 @@ All notable changes to ColumnScope will be documented here.
 - The first complete 48-record million-row matrix, with exact DuckDB parity for
   every workload in execution-only and end-to-end modes, retained as a
   single-sample correctness baseline with full provenance.
+- A deterministic 120-case differential suite covering twelve query families,
+  three execution/planning configurations, nullable data, and row counts around
+  the 8,192-row batch boundary, with all 360 comparisons matched to DuckDB.

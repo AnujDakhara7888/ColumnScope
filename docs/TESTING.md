@@ -60,6 +60,8 @@ performance evidence can fail independently.
 | Unsupported benchmark planning/thread combinations fail before input open | pass |
 | Benchmark environment metadata binds source, lockfile, and dataset hashes | pass |
 | All 48 initial Q01–Q12 mode/engine records match DuckDB result multisets | pass |
+| All 120 seeded cases match DuckDB in three execution/planning configurations | pass |
+| Row counts 0/1/8191/8192/8193 cross the default batch boundary | pass |
 
 The tests use temporary directories and do not depend on checked-in generated
 data. Run the complete current suite with:
@@ -77,16 +79,20 @@ cargo clippy --locked --workspace --all-targets -- -D warnings
 
 CI runs all three commands on Linux with the checked-in Rust toolchain.
 
-The benchmark-matrix digest helpers have focused Python coverage:
+The benchmark and differential digest helpers have focused Python coverage:
 
 ```sh
-python3 -m unittest scripts/test_run_benchmark_matrix.py
+python3 -m unittest \
+  scripts/test_run_benchmark_matrix.py \
+  scripts/test_run_differential_suite.py
 ```
 
-The three focused tests cover output-order independence, duplicate sensitivity, and the
-DuckDB-to-ColumnScope type mapping. The complete matrix additionally verifies
-all actual million-row workload outputs against independently executed DuckDB
-SQL before retaining raw samples.
+The nine focused tests cover output-order independence, duplicate sensitivity,
+DuckDB-to-ColumnScope type mapping, deterministic plan families and data,
+physical Parquet nullability, required boundary sizes, and aggregate coverage.
+The complete matrix additionally verifies all actual million-row workload
+outputs against independently executed DuckDB SQL before retaining raw
+samples.
 
 The oracle environment is pinned separately:
 
@@ -115,8 +121,9 @@ file, and observed exact Q03–Q07 counts of 1,000, 10,000, 100,000, 500,000,
 and 900,000 rows. All twelve equivalent SQL files executed against DuckDB; the
 observed result-row counts for Q01–Q12 were 1,000,000, 1,000,000, 1,000,
 10,000, 100,000, 500,000, 900,000, 1, 8, 32, 100,000, and 256. Randomized
-differential cases and the complete timed benchmark matrix await later
-components.
+differential coverage retained 120 cases and 360 comparisons: optimized batch,
+unoptimized batch, and scalar output all matched DuckDB. The complete repeated
+timed benchmark matrix awaits later measurement work.
 
 The harness tests use a small deterministic Parquet fixture. They validate the
 timing-mode paths, scalar/batch result parity, counters, process RSS fields,
@@ -132,15 +139,18 @@ An unsupported `NOT` predicate retained all three groups.
 ## Correctness strategy for engine operators
 
 Optimized, unoptimized, and scalar results are compared over identical inputs,
-with DuckDB supplying checked fixtures for representative plans. Integer,
-string, and boolean results must match exactly. Floating aggregates will use a
-documented absolute-plus-relative tolerance. Result multisets will be compared
-outside the measured interval because the engine does not promise output order.
+with DuckDB supplying independently executed results. Integer, string, Boolean,
+null, and the currently generated floating values match exactly. Result
+multisets are compared outside measured intervals because the engine does not
+promise output order. Floating aggregates with valid evaluation-order variance
+use absolute `1e-9` plus relative `1e-8` tolerance.
 
-Boundary coverage will include empty input, null-only columns, predicate nulls,
-multi-file scans, no/all matches, integer overflow, aggregation memory limits,
-and row counts around the default 8,192-row batch boundary. Randomized cases
-will retain their seeds for reproduction.
+Current boundary coverage includes empty input, null-only aggregate groups,
+predicate nulls, no/all matches, integer overflow, aggregation memory limits,
+and row counts around the default 8,192-row batch boundary. Differential case
+seeds are retained for reproduction. Multi-file execution remains part of the
+separate snapshot-storage integration.
 
-The fixed filter/project and grouped-aggregate plans have oracle parity.
-Randomized-query results are not claimed yet.
+The fixed filter/project and grouped-aggregate plans and the retained seeded
+differential cases have oracle parity. See
+[Correctness validation](CORRECTNESS.md) for method, result, and limitations.
