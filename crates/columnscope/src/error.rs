@@ -61,6 +61,8 @@ pub enum ExecutionError {
     UnsupportedArrowType(String),
     #[error("non-finite Float64 input is not supported")]
     NonFiniteFloatInput,
+    #[error(transparent)]
+    Snapshot(#[from] SnapshotError),
 }
 
 /// Errors produced while parsing, validating, or binding a query contract.
@@ -121,4 +123,22 @@ pub enum SnapshotError {
     FileSchemaMismatch { object_key: String },
     #[error("invalid descriptor schema: {0}")]
     InvalidSchema(String),
+    #[error("failed to access snapshot file `{object_key}`: {reason}")]
+    FileAccess { object_key: String, reason: String },
+    #[error("snapshot file `{object_key}` has byte size {actual}, expected {expected}")]
+    FileSizeMismatch {
+        object_key: String,
+        expected: u64,
+        actual: u64,
+    },
+    #[error("snapshot file `{object_key}` has {actual} rows, expected {expected}")]
+    FileRowCountMismatch {
+        object_key: String,
+        expected: u64,
+        actual: u64,
+    },
+    #[error("snapshot file `{object_key}` does not match the descriptor schema")]
+    PhysicalFileSchemaMismatch { object_key: String },
+    #[error("snapshot file `{object_key}` does not match its declared SHA-256")]
+    FileChecksumMismatch { object_key: String },
 }

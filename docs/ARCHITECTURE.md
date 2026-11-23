@@ -12,7 +12,10 @@ versioned JSON plan
 parse -> bind/type-check -> logical plan -> rule optimizer -> physical plan
                                                         |
                                                         v
-ParquetScan -> FilterExec -> ProjectExec -> HashAggregateExec -> result sink
+ParquetScan or SnapshotScan -> FilterExec -> ProjectExec -> HashAggregateExec
+                                                                  |
+                                                                  v
+                                                             result sink
 ```
 
 Logical nodes describe scans, filters, projections, and aggregation. Binding
@@ -20,8 +23,10 @@ resolves names against the input schema and rejects invalid types before
 execution. The physical layer uses a pull interface that returns at most one
 Arrow `RecordBatch` at a time and exposes operator metrics.
 
-`plan_query` recursively lowers the bound tree into `ParquetScan`, `FilterExec`,
-`ProjectExec`, and `HashAggregateExec`. The current `Unoptimized` mode applies
+`plan_query` recursively lowers a standalone file into `ParquetScan`, while
+`plan_snapshot_query` lowers an immutable descriptor into `SnapshotScan`.
+Both connect to `FilterExec`, `ProjectExec`, and `HashAggregateExec`. The
+current `Unoptimized` mode applies
 no rewrites: operator nesting exactly preserves the logical tree. Construction
 checks the Parquet fields and every operator output against the corresponding
 bound schema, so a mismatch fails before a runnable query is returned. A stable
@@ -53,9 +58,25 @@ retained-state limit, terminal failures, and unspecified output ordering.
 
 A deterministic Arrow batch is written with the Apache Parquet writer using
 Snappy compression and decoded through `ParquetRecordBatchReaderBuilder` with a
-caller-selected batch size. `ParquetScan` wraps that decoder behind the
+caller-selected batch size. The decoder enables both Snappy and Zstandard so it
+can read standalone fixtures and SnapshotStore's committed files.
+`ParquetScan` wraps one decoder behind the
 `BatchOperator` contract. Each pull returns one batch, a decode error, or an
 end-of-stream marker without introducing custom row materialization.
+
+`SnapshotScan` validates the descriptor and opens every listed file before a
+runnable operator is returned. It rejects missing files, byte-size or row-count
+mismatches, and physical schema drift before producing output, then drains the
+open readers in descriptor order. An empty snapshot still exposes the declared
+schema. Projection and conservative row-group pruning are applied independently
+to each file, with aggregate file/column/row-group counts in explain output.
+Whole-file SHA-256 verification is a separate API and CLI step so its I/O cost
+cannot be mistaken for query execution.
+
+The current fail-before-output design keeps one open handle per listed file.
+That makes missing later files impossible to discover after partial output, but
+very large descriptors may reach the process file-descriptor limit. Bounded
+handle pooling is not implemented in version 1.
 
 Every operator exposes its output schema, lifecycle state, and cumulative pull,
 output-batch, and output-row counters. Successful end-of-stream is sticky, so
@@ -105,7 +126,8 @@ inspectable.
 The snapshot boundary accepts an immutable version-1 descriptor. It validates
 the canonical schema fingerprint, file-level schema agreement, lowercase
 SHA-256 values, unique normalized relative object keys, and nonnegative sizes,
-row counts, and versions. It never discovers files by listing a directory.
+row counts, and versions. It never discovers files by listing a directory or
+refreshes the current table version between batches.
 
 ## Semantic boundaries
 

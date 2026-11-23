@@ -13,6 +13,8 @@ use crate::operators::{FilterExec, ProjectExec};
 use crate::optimizer::optimize_query;
 use crate::scan::{ParquetScan, ScanPushdowns};
 use crate::schema::SchemaDef;
+use crate::snapshot::SnapshotDescriptor;
+use crate::snapshot_scan::SnapshotScan;
 
 /// Planning behavior selected for a physical query.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -54,6 +56,7 @@ impl Default for PlannerOptions {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum PhysicalOperatorKind {
     ParquetScan,
+    SnapshotScan,
     FilterExec,
     ProjectExec,
     HashAggregateExec,
@@ -63,6 +66,7 @@ impl fmt::Display for PhysicalOperatorKind {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         let name = match self {
             Self::ParquetScan => "ParquetScan",
+            Self::SnapshotScan => "SnapshotScan",
             Self::FilterExec => "FilterExec",
             Self::ProjectExec => "ProjectExec",
             Self::HashAggregateExec => "HashAggregateExec",
@@ -132,6 +136,43 @@ pub fn plan_query(
     parquet_path: impl AsRef<Path>,
     options: PlannerOptions,
 ) -> Result<PlannedQuery, ExecutionError> {
+    plan_query_source(query, ScanSource::Parquet(parquet_path.as_ref()), options)
+}
+
+/// Lowers a bound plan over the exact files in an immutable snapshot.
+///
+/// This validates file metadata and physical schemas before returning a query.
+/// Call `verify_snapshot_checksums` separately when whole-file verification is
+/// required so its I/O cost remains explicit.
+pub fn plan_snapshot_query(
+    query: BoundQueryPlan,
+    storage_root: impl AsRef<Path>,
+    descriptor: &SnapshotDescriptor,
+    options: PlannerOptions,
+) -> Result<PlannedQuery, ExecutionError> {
+    plan_query_source(
+        query,
+        ScanSource::Snapshot {
+            storage_root: storage_root.as_ref(),
+            descriptor,
+        },
+        options,
+    )
+}
+
+enum ScanSource<'a> {
+    Parquet(&'a Path),
+    Snapshot {
+        storage_root: &'a Path,
+        descriptor: &'a SnapshotDescriptor,
+    },
+}
+
+fn plan_query_source(
+    query: BoundQueryPlan,
+    source: ScanSource<'_>,
+    options: PlannerOptions,
+) -> Result<PlannedQuery, ExecutionError> {
     ensure_schema_defs("QueryOutput", &query.output_schema, query.plan.schema())?;
     let (query, context) = match options.mode {
         PlanningMode::Unoptimized => (
@@ -155,7 +196,7 @@ pub fn plan_query(
         }
     };
     ensure_schema_defs("QueryOutput", &query.output_schema, query.plan.schema())?;
-    let (root, explain_root) = build_node(query.plan, parquet_path.as_ref(), &context)?;
+    let (root, explain_root) = build_node(query.plan, &source, &context)?;
     ensure_physical_schema("QueryOutput", &query.output_schema, root.schema())?;
     Ok(PlannedQuery {
         root,
@@ -174,61 +215,18 @@ struct BuildContext {
 
 fn build_node(
     plan: BoundLogicalPlan,
-    parquet_path: &Path,
+    source: &ScanSource<'_>,
     context: &BuildContext,
 ) -> Result<(Box<dyn BatchOperator>, ExplainNode), ExecutionError> {
     match plan {
-        BoundLogicalPlan::Scan { schema } => {
-            let scan = ParquetScan::try_new_with_pushdowns(
-                parquet_path,
-                context.options.scan_batch_rows,
-                ScanPushdowns {
-                    projection: context.scan_projection.clone(),
-                    pruning_predicate: context.pruning_predicate.clone(),
-                },
-            )?;
-            ensure_physical_schema("ParquetScan", &schema, scan.schema())?;
-            let mut properties = vec![
-                (
-                    "source".to_owned(),
-                    display_path(parquet_path).to_string_lossy().into_owned(),
-                ),
-                (
-                    "batch_rows".to_owned(),
-                    context.options.scan_batch_rows.to_string(),
-                ),
-            ];
-            if context.options.mode == PlanningMode::Optimized {
-                properties.extend([
-                    (
-                        "columns".to_owned(),
-                        format!("{}/{}", scan.projected_columns(), scan.source_columns()),
-                    ),
-                    (
-                        "row_groups".to_owned(),
-                        format!("{}/{}", scan.selected_row_groups(), scan.total_row_groups()),
-                    ),
-                    (
-                        "pruned_row_groups".to_owned(),
-                        (scan.total_row_groups() - scan.selected_row_groups()).to_string(),
-                    ),
-                ]);
-            }
-            let explain = ExplainNode {
-                operator: PhysicalOperatorKind::ParquetScan,
-                schema,
-                properties,
-                children: Vec::new(),
-            };
-            Ok((Box::new(scan), explain))
-        }
+        BoundLogicalPlan::Scan { schema } => build_scan(schema, source, context),
         BoundLogicalPlan::Filter {
             input,
             predicate,
             schema,
         } => {
             let predicate_type = predicate.result;
-            let (input, child) = build_node(*input, parquet_path, context)?;
+            let (input, child) = build_node(*input, source, context)?;
             let operator = FilterExec::try_new(input, predicate)?;
             ensure_physical_schema("FilterExec", &schema, operator.schema())?;
             let explain = ExplainNode {
@@ -258,7 +256,7 @@ fn build_node(
             schema,
         } => {
             let expression_count = expressions.len();
-            let (input, child) = build_node(*input, parquet_path, context)?;
+            let (input, child) = build_node(*input, source, context)?;
             let operator = ProjectExec::new(input, expressions);
             ensure_physical_schema("ProjectExec", &schema, operator.schema())?;
             let explain = ExplainNode {
@@ -277,7 +275,7 @@ fn build_node(
         } => {
             let group_count = group_by.len();
             let aggregate_count = aggregates.len();
-            let (input, child) = build_node(*input, parquet_path, context)?;
+            let (input, child) = build_node(*input, source, context)?;
             let operator = HashAggregateExec::try_new_with_options(
                 input,
                 group_by,
@@ -304,6 +302,125 @@ fn build_node(
             };
             Ok((Box::new(operator), explain))
         }
+    }
+}
+
+fn build_scan(
+    schema: SchemaDef,
+    source: &ScanSource<'_>,
+    context: &BuildContext,
+) -> Result<(Box<dyn BatchOperator>, ExplainNode), ExecutionError> {
+    let pushdowns = ScanPushdowns {
+        projection: context.scan_projection.clone(),
+        pruning_predicate: context.pruning_predicate.clone(),
+    };
+    match source {
+        ScanSource::Parquet(parquet_path) => {
+            let scan = ParquetScan::try_new_with_pushdowns(
+                parquet_path,
+                context.options.scan_batch_rows,
+                pushdowns,
+            )?;
+            ensure_physical_schema("ParquetScan", &schema, scan.schema())?;
+            let mut properties = vec![
+                (
+                    "source".to_owned(),
+                    display_path(parquet_path).to_string_lossy().into_owned(),
+                ),
+                (
+                    "batch_rows".to_owned(),
+                    context.options.scan_batch_rows.to_string(),
+                ),
+            ];
+            append_optimization_properties(
+                &mut properties,
+                context.options.mode,
+                scan.projected_columns(),
+                scan.source_columns(),
+                scan.selected_row_groups(),
+                scan.total_row_groups(),
+            );
+            Ok((
+                Box::new(scan),
+                ExplainNode {
+                    operator: PhysicalOperatorKind::ParquetScan,
+                    schema,
+                    properties,
+                    children: Vec::new(),
+                },
+            ))
+        }
+        ScanSource::Snapshot {
+            storage_root,
+            descriptor,
+        } => {
+            let scan = SnapshotScan::try_new_with_pushdowns(
+                storage_root,
+                descriptor,
+                context.options.scan_batch_rows,
+                pushdowns,
+            )?;
+            ensure_physical_schema("SnapshotScan", &schema, scan.schema())?;
+            let mut properties = vec![
+                (
+                    "source".to_owned(),
+                    format!("{}@{}", descriptor.table_id, descriptor.version),
+                ),
+                ("commit".to_owned(), descriptor.commit_id.clone()),
+                ("files".to_owned(), scan.file_count().to_string()),
+                (
+                    "root".to_owned(),
+                    display_path(storage_root).to_string_lossy().into_owned(),
+                ),
+                (
+                    "batch_rows".to_owned(),
+                    context.options.scan_batch_rows.to_string(),
+                ),
+            ];
+            append_optimization_properties(
+                &mut properties,
+                context.options.mode,
+                scan.projected_columns(),
+                scan.source_columns(),
+                scan.selected_row_groups(),
+                scan.total_row_groups(),
+            );
+            Ok((
+                Box::new(scan),
+                ExplainNode {
+                    operator: PhysicalOperatorKind::SnapshotScan,
+                    schema,
+                    properties,
+                    children: Vec::new(),
+                },
+            ))
+        }
+    }
+}
+
+fn append_optimization_properties(
+    properties: &mut Vec<(String, String)>,
+    mode: PlanningMode,
+    projected_columns: usize,
+    source_columns: usize,
+    selected_row_groups: usize,
+    total_row_groups: usize,
+) {
+    if mode == PlanningMode::Optimized {
+        properties.extend([
+            (
+                "columns".to_owned(),
+                format!("{projected_columns}/{source_columns}"),
+            ),
+            (
+                "row_groups".to_owned(),
+                format!("{selected_row_groups}/{total_row_groups}"),
+            ),
+            (
+                "pruned_row_groups".to_owned(),
+                (total_row_groups - selected_row_groups).to_string(),
+            ),
+        ]);
     }
 }
 

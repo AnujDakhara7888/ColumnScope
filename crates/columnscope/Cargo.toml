@@ -34,3 +34,7 @@ path = "src/bin/columnscope_bench_trial.rs"
 [[bin]]
 name = "columnscope-bench-runner"
 path = "src/bin/columnscope_bench_runner.rs"
+
+[[bin]]
+name = "columnscope-snapshot-check"
+path = "src/bin/columnscope_snapshot_check.rs"

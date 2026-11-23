@@ -29,6 +29,9 @@ verified:
   validation before execution;
 - a validated version-1 pinned snapshot descriptor with canonical schema
   fingerprints and normalized relative object keys;
+- a fail-before-output multi-file snapshot scan that validates every listed
+  file's size, row count, and physical schema, with separately measurable
+  SHA-256 verification;
 - a pull-based Parquet scan operator with a stable output schema, cumulative
   pull/batch/row counters, and repeatable end-of-stream behavior;
 - vectorized typed comparisons, Kleene Boolean/null evaluation, batch filtering,
@@ -54,7 +57,8 @@ verified:
 - a compatibility consumer that counts every decoded batch, column, and row;
 - Linux CI for formatting, strict Clippy linting, and tests.
 
-Live SnapshotStore integration and performance results are not yet implemented.
+The local SnapshotStore descriptor integration is implemented and verified;
+remote storage adapters and final performance results are not yet implemented.
 Unoptimized mode preserves the bound logical tree;
 optimized mode applies only the documented pushdowns and keeps every filter as
 a residual correctness check. Hash aggregation is blocking and fails rather
@@ -77,6 +81,19 @@ the output, and prints a summary similar to:
 ```text
 wrote and decoded 4 rows in 2 batches (4 columns): /tmp/columnscope-fixture.parquet
 ```
+
+To validate and consume a descriptor exported by SnapshotStore:
+
+```sh
+cargo run --locked --bin columnscope-snapshot-check -- \
+  --storage-root ./demo-table \
+  --descriptor ./snapshot-v2.json \
+  --batch-size 8192 \
+  --verify-checksums true
+```
+
+The checker scans exactly the descriptor's ordered file list. It does not list
+the storage directory or refresh the table's current version.
 
 To lower a versioned plan into physical operators, inspect it, and pull result
 batches:

@@ -25,6 +25,7 @@ pub mod scalar;
 pub mod scan;
 pub mod schema;
 pub mod snapshot;
+pub mod snapshot_scan;
 
 use std::error::Error;
 use std::fs::File;

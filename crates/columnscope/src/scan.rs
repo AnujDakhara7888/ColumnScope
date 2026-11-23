@@ -28,12 +28,14 @@ pub struct ScanPushdowns {
 pub struct ParquetScan {
     reader: ParquetRecordBatchReader,
     schema: SchemaRef,
+    source_schema: SchemaRef,
     metrics: OperatorMetrics,
     state: OperatorState,
     source_columns: usize,
     projected_columns: usize,
     total_row_groups: usize,
     selected_row_groups: usize,
+    source_rows: u64,
 }
 
 impl ParquetScan {
@@ -54,6 +56,7 @@ impl ParquetScan {
 
         let file = File::open(path)?;
         let mut builder = ParquetRecordBatchReaderBuilder::try_new(file)?;
+        let source_schema = builder.schema().clone();
         let source_columns = builder.schema().fields().len();
         let mut projection = pushdowns
             .projection
@@ -62,6 +65,12 @@ impl ParquetScan {
         projection.sort_unstable();
 
         let total_row_groups = builder.metadata().num_row_groups();
+        let source_rows = builder
+            .metadata()
+            .row_groups()
+            .iter()
+            .map(|row_group| row_group.num_rows() as u64)
+            .sum();
         let row_groups = pushdowns.pruning_predicate.as_ref().map(|predicate| {
             builder
                 .metadata()
@@ -85,12 +94,14 @@ impl ParquetScan {
         Ok(Self {
             reader,
             schema,
+            source_schema,
             metrics: OperatorMetrics::default(),
             state: OperatorState::Ready,
             source_columns,
             projected_columns: projection.len(),
             total_row_groups,
             selected_row_groups,
+            source_rows,
         })
     }
 
@@ -108,6 +119,14 @@ impl ParquetScan {
 
     pub fn selected_row_groups(&self) -> usize {
         self.selected_row_groups
+    }
+
+    pub fn source_schema(&self) -> SchemaRef {
+        self.source_schema.clone()
+    }
+
+    pub fn source_rows(&self) -> u64 {
+        self.source_rows
     }
 
     fn fail<T>(&mut self, error: ExecutionError) -> Result<T, ExecutionError> {
