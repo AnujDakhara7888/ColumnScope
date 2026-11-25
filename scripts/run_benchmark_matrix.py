@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run and independently validate the first complete ColumnScope matrix."""
+"""Run and independently validate a matched ColumnScope benchmark matrix."""
 
 from __future__ import annotations
 
@@ -7,6 +7,8 @@ import argparse
 import csv
 import hashlib
 import json
+import platform
+import random
 import shutil
 import struct
 import subprocess
@@ -38,17 +40,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--cargo-lock", type=Path, default=Path("Cargo.lock"))
     parser.add_argument("--benchmarks-dir", type=Path, default=Path("benchmarks"))
     parser.add_argument(
-        "--runner-binary",
-        type=Path,
-        default=Path("target/release/columnscope-bench-runner"),
-    )
-    parser.add_argument(
         "--trial-binary",
         type=Path,
         default=Path("target/release/columnscope-bench-trial"),
     )
     parser.add_argument("--warmups", type=int, default=0)
     parser.add_argument("--repetitions", type=int, default=1)
+    parser.add_argument("--order-seed", type=int, default=42)
     parser.add_argument("--batch-size", type=int, default=8192)
     parser.add_argument("--threads", type=int, default=1)
     parser.add_argument("--layout", default="random")
@@ -63,10 +61,15 @@ def parse_args() -> argparse.Namespace:
 def run(command: Sequence[str], *, capture: bool = False) -> str:
     completed = subprocess.run(
         command,
-        check=True,
+        check=False,
         text=True,
         capture_output=capture,
     )
+    if completed.returncode:
+        raise RuntimeError(
+            f"{command[0]} exited with {completed.returncode}: "
+            f"{(completed.stderr or '').strip()}"
+        )
     return completed.stdout.strip() if capture else ""
 
 
@@ -181,149 +184,126 @@ def load_manifest(path: Path, layout: str, input_path: Path) -> tuple[dict, dict
     return manifest, layout_record
 
 
-def execute_matrix(args: argparse.Namespace, dataset_sha: str) -> tuple[list[dict], dict]:
-    all_records: list[dict] = []
-    fieldnames: list[str] | None = None
-    environment: dict | None = None
-    with tempfile.TemporaryDirectory(prefix="columnscope-matrix-") as temporary:
-        temporary_root = Path(temporary)
-        for number in range(1, 13):
-            workload = f"Q{number:02d}"
-            for mode, engine, planning in CONFIGURATIONS:
-                configuration = temporary_root / f"{workload}-{mode}-{engine}"
-                run(
-                    [
-                        str(args.runner_binary),
-                        "--trial-binary",
-                        str(args.trial_binary),
-                        "--input",
-                        str(args.input),
-                        "--dataset-manifest",
-                        str(args.dataset_manifest),
-                        "--cargo-lock",
-                        str(args.cargo_lock),
-                        "--workload",
-                        workload,
-                        "--engine",
-                        engine,
-                        "--mode",
-                        mode,
-                        "--planning",
-                        planning,
-                        "--layout",
-                        args.layout,
-                        "--batch-size",
-                        str(args.batch_size),
-                        "--threads",
-                        str(args.threads),
-                        "--warmups",
-                        str(args.warmups),
-                        "--repetitions",
-                        str(args.repetitions),
-                        "--source-sha",
-                        args.source_sha,
-                        "--output-dir",
-                        str(configuration),
-                    ]
-                )
-                with (configuration / "raw_trials.csv").open(newline="") as source:
-                    reader = csv.DictReader(source)
-                    if fieldnames is None:
-                        fieldnames = list(reader.fieldnames or [])
-                    elif fieldnames != reader.fieldnames:
-                        raise ValueError("trial CSV schemas changed within the matrix")
-                    records = list(reader)
-                if len(records) != args.repetitions:
-                    raise ValueError(f"{workload} {mode} {engine} emitted the wrong trial count")
-                for record in records:
-                    if record["dataset_checksum"] != dataset_sha:
-                        raise ValueError("trial dataset checksum does not match the manifest")
-                    if record["source_sha"] != args.source_sha:
-                        raise ValueError("trial source SHA does not match the requested revision")
-                all_records.extend(records)
-
-                candidate_environment = json.loads(
-                    (configuration / "environment.json").read_text()
-                )
-                if environment is None:
-                    environment = candidate_environment
-                elif environment != candidate_environment:
-                    raise ValueError("environment metadata changed within the matrix")
-
-    if fieldnames is None or environment is None:
-        raise ValueError("matrix did not produce records")
-    return all_records, {"fieldnames": fieldnames, "environment": environment}
-
-
-def record_result(records: list[dict], workload: str, mode: str, engine: str) -> tuple[int, str]:
-    selected = [
-        record
-        for record in records
-        if record["workload"] == workload
-        and record["mode"] == mode
-        and record["engine"] == engine
+def trial_schedule(warmups: int, repetitions: int, seed: int):
+    rng = random.Random(seed)
+    configurations = [
+        (f"Q{number:02d}", mode, engine, planning)
+        for number in range(1, 13)
+        for mode, engine, planning in CONFIGURATIONS
     ]
-    if not selected:
-        raise ValueError(f"missing records for {workload} {mode} {engine}")
-    values = {(int(record["result_rows"]), record["result_checksum"]) for record in selected}
-    if len(values) != 1:
-        raise ValueError(f"result drift across repetitions for {workload} {mode} {engine}")
-    return values.pop()
+    for warmup, rounds in ((True, warmups), (False, repetitions)):
+        for trial in range(rounds):
+            order = configurations.copy()
+            rng.shuffle(order)
+            for configuration in order:
+                yield warmup, trial, configuration
 
 
-def validate_oracle(args: argparse.Namespace, records: list[dict]) -> dict:
+def execute_matrix(
+    args: argparse.Namespace, dataset_sha: str, oracle: dict[str, tuple[int, str]]
+) -> tuple[list[dict], dict]:
+    binary = str(args.trial_binary)
+    environment = json.loads(run([
+        binary, "environment",
+        "--source-sha", args.source_sha,
+        "--cargo-lock", str(args.cargo_lock),
+        "--dataset-manifest", str(args.dataset_manifest),
+    ], capture=True))
+    environment["matrix"] = {
+        "host_release": platform.platform(),
+        "python_version": platform.python_version(),
+        "trial_binary_sha256": sha256_file(args.trial_binary),
+        "order_seed": args.order_seed,
+        "order": "shuffled configurations within each serial round",
+        "cache_policy": "OS page cache retained, no cache eviction",
+        "warmups": args.warmups,
+        "repetitions": args.repetitions,
+    }
+    records = []
+    for sequence, (warmup, trial, configuration) in enumerate(
+        trial_schedule(args.warmups, args.repetitions, args.order_seed)
+    ):
+        workload, mode, engine, planning = configuration
+        expected = {
+            "workload": workload, "mode": mode, "engine": engine,
+            "planning": planning, "layout": args.layout, "batch_size": args.batch_size,
+            "threads": args.threads, "trial": trial, "warmup": warmup,
+            "source_sha": args.source_sha, "dataset_checksum": dataset_sha,
+        }
+        command = [binary, "trial", "--input", str(args.input)]
+        for key, value in expected.items():
+            argument = str(value).lower() if isinstance(value, bool) else str(value)
+            command.extend(("--" + key.replace("_", "-"), argument))
+        record = json.loads(run(command, capture=True))
+        if any(record[key] != value for key, value in expected.items()):
+            raise ValueError(f"trial {sequence} returned unexpected configuration metadata")
+        if not 0 < record["setup_peak_rss_bytes"] <= record["peak_rss_bytes"]:
+            raise ValueError(f"trial {sequence} returned invalid peak RSS")
+        if record["runtime_ns"] <= 0:
+            raise ValueError(f"trial {sequence} returned invalid runtime")
+        result = (record["result_rows"], record["result_checksum"])
+        if result != oracle[workload]:
+            raise ValueError(
+                f"DuckDB mismatch for trial {sequence} {configuration}: "
+                f"ColumnScope={result}, DuckDB={oracle[workload]}"
+            )
+        if warmup:
+            continue
+        counters = record.pop("counters")
+        counters["operator_output_rows"] = counters.pop("output_rows")
+        del record["warmup"]
+        records.append({**record, **counters, "sequence": sequence})
+    return records, environment
+
+
+def read_oracle(args: argparse.Namespace) -> tuple[dict[str, tuple[int, str]], str]:
     import duckdb
 
-    connection = duckdb.connect(":memory:")
-    connection.execute("SET threads TO 1")
-    connection.from_parquet(str(args.input)).create_view("benchmark_data")
-    validations = []
-    try:
+    results = {}
+    with duckdb.connect(":memory:") as connection:
+        connection.execute("SET threads TO 1")
+        connection.from_parquet(str(args.input)).create_view("benchmark_data")
         for number in range(1, 13):
-            workload = f"Q{number:02d}"
             sql = (args.benchmarks_dir / "oracle" / f"q{number:02d}.sql").read_text()
             cursor = connection.execute(sql)
             kinds = [value_kind(column[1]) for column in cursor.description]
-            oracle_rows, oracle_checksum = result_checksum(cursor_rows(cursor), kinds)
-            comparisons = []
-            for mode in ("execution_only", "end_to_end"):
-                batch = record_result(records, workload, mode, "batch")
-                scalar = record_result(records, workload, mode, "scalar")
-                if batch != scalar:
-                    raise ValueError(f"scalar/batch mismatch for {workload} {mode}")
-                if batch != (oracle_rows, oracle_checksum):
-                    raise ValueError(
-                        f"DuckDB mismatch for {workload} {mode}: "
-                        f"ColumnScope={batch}, DuckDB={(oracle_rows, oracle_checksum)}"
-                    )
-                comparisons.append(
-                    {
-                        "mode": mode,
-                        "rows": batch[0],
-                        "result_checksum": batch[1],
-                        "batch_scalar_match": True,
-                        "duckdb_match": True,
-                    }
-                )
-            validations.append(
-                {
-                    "workload": workload,
-                    "oracle_rows": oracle_rows,
-                    "oracle_checksum": oracle_checksum,
-                    "comparisons": comparisons,
-                    "status": "match",
-                }
-            )
-    finally:
-        connection.close()
+            results[f"Q{number:02d}"] = result_checksum(cursor_rows(cursor), kinds)
+    return results, duckdb.__version__
+
+
+def validation_report(
+    args: argparse.Namespace,
+    oracle: dict[str, tuple[int, str]],
+    duckdb_version: str,
+) -> dict:
     return {
         "format_version": 1,
         "source_sha": args.source_sha,
         "layout": args.layout,
         "batch_size": args.batch_size,
         "threads": args.threads,
-        "duckdb_version": duckdb.__version__,
-        "workloads": validations,
+        "duckdb_version": duckdb_version,
+        "warmups_per_configuration": args.warmups,
+        "measured_trials_per_configuration": args.repetitions,
+        "workloads": [
+            {
+                "workload": workload,
+                "oracle_rows": rows,
+                "oracle_checksum": checksum,
+                "comparisons": [
+                    {
+                        "mode": mode,
+                        "rows": rows,
+                        "result_checksum": checksum,
+                        "batch_scalar_match": True,
+                        "duckdb_match": True,
+                    }
+                    for mode in ("execution_only", "end_to_end")
+                ],
+                "status": "match",
+            }
+            for workload, (rows, checksum) in oracle.items()
+        ],
         "status": "match",
     }
 
@@ -331,27 +311,29 @@ def validate_oracle(args: argparse.Namespace, records: list[dict]) -> dict:
 def write_outputs(
     args: argparse.Namespace,
     records: list[dict],
-    metadata: dict,
+    environment: dict,
     validation: dict,
 ) -> None:
     if args.output_dir.exists():
         raise FileExistsError(f"output directory already exists: {args.output_dir}")
-    args.output_dir.mkdir(parents=True)
-    with (args.output_dir / "raw_trials.csv").open("w", newline="") as destination:
-        writer = csv.DictWriter(destination, fieldnames=metadata["fieldnames"])
-        writer.writeheader()
-        writer.writerows(records)
-    (args.output_dir / "environment.json").write_text(
-        json.dumps(metadata["environment"], indent=2) + "\n"
-    )
-    shutil.copyfile(args.dataset_manifest, args.output_dir / "dataset_manifest.json")
-    (args.output_dir / "query_validation.json").write_text(
-        json.dumps(validation, indent=2) + "\n"
-    )
+    args.output_dir.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(dir=args.output_dir.parent) as temporary:
+        staging = Path(temporary) / "results"
+        staging.mkdir()
+        with (staging / "raw_trials.csv").open("w", newline="") as destination:
+            writer = csv.DictWriter(destination, fieldnames=list(records[0]))
+            writer.writeheader()
+            writer.writerows(records)
+        (staging / "environment.json").write_text(json.dumps(environment, indent=2) + "\n")
+        shutil.copyfile(args.dataset_manifest, staging / "dataset_manifest.json")
+        (staging / "query_validation.json").write_text(json.dumps(validation, indent=2) + "\n")
+        staging.rename(args.output_dir)
 
 
 def main() -> None:
     args = parse_args()
+    if args.output_dir.exists():
+        raise FileExistsError(f"output directory already exists: {args.output_dir}")
     if args.warmups < 0 or args.repetitions <= 0:
         raise ValueError("warmups must be nonnegative and repetitions must be positive")
     if args.batch_size <= 0 or args.threads != 1:
@@ -367,12 +349,12 @@ def main() -> None:
                 "--release",
                 "--bin",
                 "columnscope-bench-trial",
-                "--bin",
-                "columnscope-bench-runner",
             ]
         )
-    records, metadata = execute_matrix(args, layout_record["sha256"])
-    validation = validate_oracle(args, records)
+    oracle, duckdb_version = read_oracle(args)
+    records, metadata = execute_matrix(args, layout_record["sha256"], oracle)
+    load_manifest(args.dataset_manifest, args.layout, args.input)
+    validation = validation_report(args, oracle, duckdb_version)
     write_outputs(args, records, metadata, validation)
     print(
         f"validated {len(validation['workloads'])} workloads and wrote "
