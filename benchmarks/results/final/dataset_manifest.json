@@ -1,0 +1,39 @@
+{
+  "format_version": 1,
+  "row_count": 1000000,
+  "seed": 42,
+  "file_count": 1,
+  "batch_rows": 8192,
+  "row_group_rows": 65536,
+  "compression": "snappy",
+  "customer_cardinality": 100000,
+  "selectivity_cardinality": 10000,
+  "nullable_probability": "1/20",
+  "region_weights_percent": [
+    35,
+    20,
+    15,
+    10,
+    8,
+    6,
+    4,
+    2
+  ],
+  "logical_rows_sha256": "a5361d567bfa8c1b4223a7a7abbcae9f56a8c6e3aa34c3fe8f270db53f5081e8",
+  "layouts": [
+    {
+      "name": "random",
+      "file": "random.parquet",
+      "sha256": "c4ad8701e4723cbf3199767a4eb2602597d50974d941a0681f231e9850a70d32",
+      "byte_size": 28792214,
+      "row_groups": 16
+    },
+    {
+      "name": "clustered",
+      "file": "clustered.parquet",
+      "sha256": "6fffc1886ef67d10f72dafde9bbc5e2335370ea98779aaa976a267752c592463",
+      "byte_size": 21297245,
+      "row_groups": 16
+    }
+  ]
+}

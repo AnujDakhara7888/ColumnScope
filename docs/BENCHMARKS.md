@@ -4,8 +4,8 @@ No query performance conclusions are published yet. Vectorized scan, filter,
 projection, bounded composite aggregation, conservative pushdown/pruning, and
 an independent scalar comparison path exist. The deterministic million-row
 dataset, twelve query families, and first complete 48-record validation matrix
-are retained. This single-sample pass is correctness and completeness evidence,
-not a runtime or memory comparison.
+are retained alongside a repeated matrix with 480 runtime and peak-RSS
+samples. The initial single-sample pass established correctness and coverage.
 
 ## Frozen inputs
 
@@ -124,6 +124,13 @@ environment records the cache policy and repetition counts.
 The driver publishes `raw_trials.csv`, `environment.json`,
 `dataset_manifest.json`, and `query_validation.json` together after every
 comparison passes. The output directory must not already exist.
+
+## Observed matched matrix
+
+All 144 warmups and 480 measured trials matched DuckDB 2.0.0 across Q01–Q12.
+Every measured trial had a distinct process ID. The matrix used the frozen
+random layout on one Apple M4 host, with ten measured repetitions per
+configuration. See the [raw results and provenance](../benchmarks/results/final/README.md).
 
 This initial matrix is a completeness and correctness gate. A single sample is
 not sufficient for a runtime or memory comparison; the later matched trial set
