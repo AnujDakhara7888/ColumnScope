@@ -4,8 +4,8 @@ No query performance conclusions are published yet. Vectorized scan, filter,
 projection, bounded composite aggregation, conservative pushdown/pruning, and
 an independent scalar comparison path exist. The deterministic million-row
 dataset, twelve query families, and first complete 48-record validation matrix
-are retained. This single-sample pass is correctness and completeness evidence,
-not a runtime or memory comparison.
+are retained alongside a repeated matrix with 480 runtime and peak-RSS
+samples. The initial single-sample pass established correctness and coverage.
 
 ## Frozen inputs
 
@@ -101,7 +101,7 @@ unoptimized scalar. It requires the one-million-row input to match the selected
 manifest layout, rebuilds the release binaries, and refuses a dirty tree or a
 source revision other than `HEAD`.
 
-Create a pinned Python environment and run the initial one-sample matrix with:
+Create a pinned Python environment and run the matched matrix with:
 
 ```sh
 python3 -m venv .venv
@@ -109,18 +109,28 @@ python3 -m venv .venv
 
 .venv/bin/python scripts/run_benchmark_matrix.py \
   --input artifacts/columnscope/datasets/random.parquet \
-  --output-dir artifacts/columnscope/results/initial \
+  --output-dir artifacts/columnscope/results/final \
   --source-sha "$(git rev-parse HEAD)" \
-  --warmups 0 --repetitions 1
+  --warmups 3 --repetitions 10 --order-seed 42
 ```
 
-DuckDB executes each paired SQL query with one thread. Its actual typed output
-rows pass through the same documented order-independent multiset digest as the
-ColumnScope sink. The driver requires equal row counts and digests for DuckDB,
-scalar execution, and batch execution in both modes before publishing any
-files. It writes `raw_trials.csv`, `environment.json`,
-`dataset_manifest.json`, and `query_validation.json` only after every workload
-passes. The output directory must not already exist.
+DuckDB executes each paired SQL query with one thread before sample collection.
+The driver compares each fresh process, including each warmup, against the
+DuckDB row count and typed multiset digest. It shuffles the 48 configurations
+within each serial round using the recorded order seed. The run retains the OS
+page cache throughout. The CSV preserves measured launch order and the
+environment records the cache policy and repetition counts.
+
+The driver publishes `raw_trials.csv`, `environment.json`,
+`dataset_manifest.json`, and `query_validation.json` together after every
+comparison passes. The output directory must not already exist.
+
+## Observed matched matrix
+
+All 144 warmups and 480 measured trials matched DuckDB 2.0.0 across Q01–Q12.
+Every measured trial had a distinct process ID. The matrix used the frozen
+random layout on one Apple M4 host, with ten measured repetitions per
+configuration. See the [raw results and provenance](../benchmarks/results/final/README.md).
 
 This initial matrix is a completeness and correctness gate. A single sample is
 not sufficient for a runtime or memory comparison; the later matched trial set
