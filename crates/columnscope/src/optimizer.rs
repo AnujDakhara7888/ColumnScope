@@ -22,9 +22,26 @@ pub struct OptimizedQuery {
 /// Filters remain in the returned tree as residual correctness checks. The
 /// pruning predicate is a copy used only to reject impossible row groups.
 pub fn optimize_query(query: BoundQueryPlan) -> Result<OptimizedQuery, ExecutionError> {
+    optimize_with_rules(query, true, true)
+}
+
+pub(crate) fn optimize_with_rules(
+    query: BoundQueryPlan,
+    move_filters: bool,
+    prune_row_groups: bool,
+) -> Result<OptimizedQuery, ExecutionError> {
     let mut filter_pushdowns = 0;
-    let pushed = push_filters(query.plan, &mut filter_pushdowns)?;
-    let pruning_predicate = find_scan_predicate(&pushed);
+    let pushed = if move_filters {
+        push_filters(query.plan, &mut filter_pushdowns)?
+    } else {
+        query.plan
+    };
+    // Parquet statistics use source indexes, before projection remaps them.
+    let pruning_predicate = if prune_row_groups {
+        find_scan_predicate(&pushed)
+    } else {
+        None
+    };
     let required = (0..pushed.schema().fields.len()).collect::<BTreeSet<_>>();
     let pruned = prune_columns(pushed, &required)?;
     Ok(OptimizedQuery {

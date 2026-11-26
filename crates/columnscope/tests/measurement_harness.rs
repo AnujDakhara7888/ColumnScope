@@ -17,6 +17,35 @@ const SOURCE_SHA: &str = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 const DATASET_SHA: &str = "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
 
 #[test]
+fn end_to_end_ablation_stages_keep_the_same_result() {
+    let directory = tempdir().expect("create trial directory");
+    let input = directory.path().join("fixture.parquet");
+    write_benchmark_fixture(&input);
+    let mut checksums = Vec::new();
+    for stage in [
+        "unoptimized",
+        "projection_only",
+        "filter_pushdown",
+        "optimized",
+    ] {
+        let planning = stage.parse().expect("parse ablation stage");
+        let record = run_trial(config(
+            &input,
+            "Q03",
+            BenchmarkEngine::Batch,
+            BenchmarkMode::EndToEnd,
+            planning,
+        ))
+        .expect("run ablation trial");
+        assert_eq!(record.result_rows, 2);
+        assert_eq!(record.flags, format!("planning={stage}"));
+        assert_eq!(serde_json::to_value(record.planning).unwrap(), stage);
+        checksums.push(record.result_checksum);
+    }
+    assert!(checksums.iter().all(|checksum| checksum == &checksums[0]));
+}
+
+#[test]
 fn execution_only_scalar_and_batch_trials_share_predecoded_results() {
     let directory = tempdir().expect("create trial directory");
     let input = directory.path().join("fixture.parquet");

@@ -93,6 +93,8 @@ impl fmt::Display for BenchmarkMode {
 #[serde(rename_all = "snake_case")]
 pub enum BenchmarkPlanning {
     Unoptimized,
+    ProjectionOnly,
+    FilterPushdown,
     Optimized,
 }
 
@@ -100,6 +102,8 @@ impl BenchmarkPlanning {
     fn planner_mode(self) -> PlanningMode {
         match self {
             Self::Unoptimized => PlanningMode::Unoptimized,
+            Self::ProjectionOnly => PlanningMode::ProjectionOnly,
+            Self::FilterPushdown => PlanningMode::FilterPushdown,
             Self::Optimized => PlanningMode::Optimized,
         }
     }
@@ -111,9 +115,11 @@ impl FromStr for BenchmarkPlanning {
     fn from_str(value: &str) -> Result<Self, Self::Err> {
         match value {
             "unoptimized" => Ok(Self::Unoptimized),
+            "projection_only" => Ok(Self::ProjectionOnly),
+            "filter_pushdown" => Ok(Self::FilterPushdown),
             "optimized" => Ok(Self::Optimized),
             _ => Err(invalid_input(
-                "planning must be `unoptimized` or `optimized`",
+                "planning must be `unoptimized`, `projection_only`, `filter_pushdown`, or `optimized`",
             )),
         }
     }
@@ -121,10 +127,7 @@ impl FromStr for BenchmarkPlanning {
 
 impl fmt::Display for BenchmarkPlanning {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            Self::Unoptimized => formatter.write_str("unoptimized"),
-            Self::Optimized => formatter.write_str("optimized"),
-        }
+        self.planner_mode().fmt(formatter)
     }
 }
 

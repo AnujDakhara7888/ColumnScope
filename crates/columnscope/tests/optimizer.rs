@@ -171,7 +171,20 @@ fn filter_moves_below_projection_and_remains_residual() {
     assert!(unoptimized.explain().contains(
         "FilterExec [predicate=Boolean!] schema=[event_id:Int64!, score:Float64!]\n  ProjectExec"
     ));
+    let projection = plan(&path, query.clone(), PlanningMode::ProjectionOnly);
+    let movement = plan(&path, query.clone(), PlanningMode::FilterPushdown);
     let optimized = plan(&path, query, PlanningMode::Optimized);
+    assert!(projection.explain().contains(
+        "FilterExec [predicate=Boolean!, residual=true] schema=[event_id:Int64!, score:Float64!]\n  ProjectExec"
+    ));
+    assert!(projection.explain().contains("columns=2/3, row_groups=3/3"));
+    assert!(movement.explain().contains(
+        "ProjectExec [expressions=2] schema=[event_id:Int64!, score:Float64!]\n  FilterExec"
+    ));
+    assert!(movement.explain().contains("columns=2/3, row_groups=3/3"));
+    assert!(optimized.explain().contains("columns=2/3, row_groups=2/3"));
+    assert_eq!(projection.filter_pushdowns, 0);
+    assert_eq!(movement.filter_pushdowns, 1);
     assert!(optimized.explain().contains(
         "ProjectExec [expressions=2] schema=[event_id:Int64!, score:Float64!]\n  FilterExec [predicate=Boolean!, residual=true]"
     ));
@@ -179,6 +192,8 @@ fn filter_moves_below_projection_and_remains_residual() {
 
     let expected = vec![6, 7, 8, 9, 10, 11];
     assert_eq!(collect_ids(unoptimized), expected);
+    assert_eq!(collect_ids(projection), expected);
+    assert_eq!(collect_ids(movement), expected);
     assert_eq!(
         std::thread::spawn(move || collect_ids(optimized))
             .join()
