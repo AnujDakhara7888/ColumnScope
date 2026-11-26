@@ -10,7 +10,7 @@ use crate::error::ExecutionError;
 use crate::execution::BatchOperator;
 use crate::logical::{BoundLogicalPlan, BoundQueryPlan};
 use crate::operators::{FilterExec, ProjectExec};
-use crate::optimizer::optimize_query;
+use crate::optimizer::optimize_with_rules;
 use crate::scan::{ParquetScan, ScanPushdowns};
 use crate::schema::SchemaDef;
 use crate::snapshot::SnapshotDescriptor;
@@ -21,6 +21,10 @@ use crate::snapshot_scan::SnapshotScan;
 pub enum PlanningMode {
     /// Preserve the bound logical tree without applying rewrite rules.
     Unoptimized,
+    /// Decode only needed columns, preserving the original filter placement.
+    ProjectionOnly,
+    /// Decode only needed columns and move eligible filters past projections.
+    FilterPushdown,
     /// Apply safe filter/projection pushdown and conservative row-group pruning.
     Optimized,
 }
@@ -29,6 +33,8 @@ impl fmt::Display for PlanningMode {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::Unoptimized => formatter.write_str("unoptimized"),
+            Self::ProjectionOnly => formatter.write_str("projection_only"),
+            Self::FilterPushdown => formatter.write_str("filter_pushdown"),
             Self::Optimized => formatter.write_str("optimized"),
         }
     }
@@ -114,7 +120,7 @@ pub struct PlannedQuery {
 impl PlannedQuery {
     /// Renders the selected planning mode and physical operator tree.
     pub fn explain(&self) -> String {
-        let mut output = if self.mode == PlanningMode::Optimized {
+        let mut output = if self.mode != PlanningMode::Unoptimized {
             format!(
                 "mode={} [filter_pushdowns={}]\n",
                 self.mode, self.filter_pushdowns
@@ -184,8 +190,12 @@ fn plan_query_source(
                 filter_pushdowns: 0,
             },
         ),
-        PlanningMode::Optimized => {
-            let optimized = optimize_query(query)?;
+        PlanningMode::ProjectionOnly | PlanningMode::FilterPushdown | PlanningMode::Optimized => {
+            let optimized = optimize_with_rules(
+                query,
+                options.mode != PlanningMode::ProjectionOnly,
+                options.mode == PlanningMode::Optimized,
+            )?;
             let context = BuildContext {
                 options,
                 scan_projection: Some(optimized.scan_projection),
@@ -241,7 +251,7 @@ fn build_node(
                             if predicate_type.nullable { "?" } else { "!" }
                         ),
                     )];
-                    if context.options.mode == PlanningMode::Optimized {
+                    if context.options.mode != PlanningMode::Unoptimized {
                         properties.push(("residual".to_owned(), "true".to_owned()));
                     }
                     properties
@@ -406,7 +416,7 @@ fn append_optimization_properties(
     selected_row_groups: usize,
     total_row_groups: usize,
 ) {
-    if mode == PlanningMode::Optimized {
+    if mode != PlanningMode::Unoptimized {
         properties.extend([
             (
                 "columns".to_owned(),

@@ -93,6 +93,21 @@ explicit. Generated datasets and ad hoc result directories stay outside
 version control; small accepted evidence sets may be retained with their
 provenance. No runtime or memory comparison is accepted or published yet.
 
+For end-to-end batch trials, `--planning` selects a cumulative set of rules.
+
+| Planning mode | Column projection | Filter movement | Row-group pruning |
+|---|---|---|---|
+| `unoptimized` | Off | Off | Off |
+| `projection_only` | On | Off | Off |
+| `filter_pushdown` | On | On | Off |
+| `optimized` | On | On | On |
+
+Filter movement applies only when a filter can move below a projection.
+For plans that already place a filter directly above the scan, the two
+intermediate modes can produce the same physical plan. All modes evaluate
+the filter on the rows that reach it. Scalar and execution-only trials
+continue to use `unoptimized` planning.
+
 ## Complete matrix validation
 
 The matrix driver runs all twelve workloads through four configurations:
